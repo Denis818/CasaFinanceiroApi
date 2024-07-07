@@ -69,7 +69,8 @@ namespace Web.Extensios.DependencyManagers
                     .WithOrigins(
                         "https://casa-financeiro-dev.netlify.app",
                         "https://casa-financeiro-app.netlify.app",
-                        "http://192.168.18.52:4200"
+                        "http://192.168.18.52:4200",
+                        "http://localhost:4200"
                     )
                     .AllowAnyMethod()
                     .AllowAnyHeader()
