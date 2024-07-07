@@ -70,7 +70,7 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Essa categoria faz parta da regra de negócio. Não pode ser alterada..
+        ///   Looks up a localized string similar to Essa categoria não pode ser alterada devido a políticas internas..
         /// </summary>
         public static string AvisoCategoriaImutavel {
             get {
@@ -79,7 +79,7 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Esse membro faz parta da regra de negócio. Não pode ser alterado..
+        ///   Looks up a localized string similar to Esse membro não pode ser alterado devido a políticas internas..
         /// </summary>
         public static string AvisoMembroImutavel {
             get {
