@@ -13,7 +13,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 .GetSection("CompanyConnectionStrings:List")
                 .Get<List<CompanyInfo>>();
 
-            foreach(var company in connectionStrings)
+            foreach (var company in connectionStrings)
             {
                 services.AddDbContext<FinanceDbContext>(options =>
                     options.UseMySql(

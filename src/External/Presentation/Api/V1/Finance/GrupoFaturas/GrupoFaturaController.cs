@@ -27,6 +27,10 @@ namespace Presentation.Api.V1.Finance.GrupoFaturas
         public async Task<IEnumerable<GrupoFatura>> GetAllAsync() =>
             await _grupoFaturaServices.GetAllAsync();
 
+        [HttpGet("{id}")]
+        public async Task<string> GetNameFatura(int id) =>
+            await _grupoFaturaServices.GetNameFatura(id);
+
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<GrupoFatura> PostAsync(GrupoFaturaDto grupoFaturaDto) =>
@@ -47,13 +51,15 @@ namespace Presentation.Api.V1.Finance.GrupoFaturas
         [HttpGet("status-fatura")]
         [GetIdGroupInHeaderFilter]
         public async Task<StatusFaturaDto> GetStatusFaturaDtoByNameAsync(string status) =>
-           await _statusFaturaServices.GetStatusFaturaDtoByNameAsync(status);
+            await _statusFaturaServices.GetStatusFaturaDtoByNameAsync(status);
 
         [HttpPut("status-fatura")]
         [GetIdGroupInHeaderFilter]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task<StatusFatura> PutStatusFaturaAsync(EnumFaturaTipo faturaNome, EnumStatusFatura status) =>
-            await _statusFaturaServices.UpdateAsync(faturaNome, status);
+        public async Task<StatusFatura> PutStatusFaturaAsync(
+            EnumFaturaTipo faturaNome,
+            EnumStatusFatura status
+        ) => await _statusFaturaServices.UpdateAsync(faturaNome, status);
 
         #endregion
     }

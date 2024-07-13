@@ -30,13 +30,13 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             string email = "master@gmail.com";
             string senha = "Master@123456";
 
-            if(nomeDominio.Contains("dev") || nomeDominio.Contains("railway"))
+            if (nomeDominio.Contains("dev") || nomeDominio.Contains("railway"))
             {
                 email = "dev@gmail.com";
                 senha = "dev@123";
             }
 
-            if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
+            if (usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
                 return;
 
             var (Salt, PasswordHash) = new PasswordHasherHelper().CriarHashSenha(senha);
@@ -70,7 +70,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             string email = "visitante";
             string senha = "123456";
 
-            if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
+            if (usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
                 return;
 
             var (Salt, PasswordHash) = new PasswordHasherHelper().CriarHashSenha(senha);
@@ -93,7 +93,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             var memberRepository = service.GetRequiredService<IMembroRepository>();
             var grupoFaturaRepository = service.GetRequiredService<IGrupoFaturaRepository>();
 
-            if(categoriaRepository.Get().ToList().Count < 1)
+            if (categoriaRepository.Get().ToList().Count < 1)
             {
                 var listCategoria = new List<Categoria>
                 {
@@ -111,29 +111,53 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 await categoriaRepository.SaveChangesAsync();
             }
 
-            if(memberRepository.Get().ToList().Count < 1)
+            if (memberRepository.Get().ToList().Count < 1)
             {
                 var dataInicio = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
 
                 var listMember = new List<Membro>
                 {
-                    new() { Nome = "Bruno", Telefone = "(38) 99805-5965", DataInicio =  dataInicio},
-                    new() { Nome = "Denis", Telefone = "(38) 997282407", DataInicio =  dataInicio},
-                    new() { Nome = "Valdirene", Telefone = "(31) 99797-7731", DataInicio =  dataInicio},
-                    new() { Nome = "Peu", Telefone = "(38) 99995-4309", DataInicio =  dataInicio },
-                    new() { Nome = "Jhon Lenon", Telefone = "(31) 99566-4815", DataInicio =  dataInicio}
+                    new()
+                    {
+                        Nome = "Bruno",
+                        Telefone = "(38) 99805-5965",
+                        DataInicio = dataInicio
+                    },
+                    new()
+                    {
+                        Nome = "Denis",
+                        Telefone = "(38) 997282407",
+                        DataInicio = dataInicio
+                    },
+                    new()
+                    {
+                        Nome = "Valdirene",
+                        Telefone = "(31) 99797-7731",
+                        DataInicio = dataInicio
+                    },
+                    new()
+                    {
+                        Nome = "Peu",
+                        Telefone = "(38) 99995-4309",
+                        DataInicio = dataInicio
+                    },
+                    new()
+                    {
+                        Nome = "Jhon Lenon",
+                        Telefone = "(31) 99566-4815",
+                        DataInicio = dataInicio
+                    }
                 };
 
                 await memberRepository.InsertRangeAsync(listMember);
                 await memberRepository.SaveChangesAsync();
             }
 
-            if(grupoFaturaRepository.Get().ToList().Count < 1)
+            if (grupoFaturaRepository.Get().ToList().Count < 1)
             {
                 var dataCriacao = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
 
-                string mesAtualName = dataCriacao
-                    .ToString("MMMM", new CultureInfo("pt-BR"));
+                string mesAtualName = dataCriacao.ToString("MMMM", new CultureInfo("pt-BR"));
 
                 mesAtualName = char.ToUpper(mesAtualName[0]) + mesAtualName[1..].ToLower();
 

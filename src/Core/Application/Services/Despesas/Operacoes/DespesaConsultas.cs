@@ -54,16 +54,16 @@ namespace Application.Services.Despesas.Operacoes
             var categorias = await _categoriaRepository.Get().ToListAsync();
             List<SugestaoDeFornecedorDto> sugestoes = new();
 
-            foreach(var categoria in categorias)
+            foreach (var categoria in categorias)
             {
                 var itensAgrupados = await GetDespesasCasa()
                     .Where(d => d.CategoriaId == categoria.Id)
                     .GroupBy(d => d.Item.ToLower())
                     .ToListAsync();
 
-                foreach(var grupoItem in itensAgrupados)
+                foreach (var grupoItem in itensAgrupados)
                 {
-                    if(grupoItem.Count() <= 1)
+                    if (grupoItem.Count() <= 1)
                     {
                         continue;
                     }
@@ -85,7 +85,7 @@ namespace Application.Services.Despesas.Operacoes
                 }
             }
 
-            if(sugestoes.Count == 0)
+            if (sugestoes.Count == 0)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -116,7 +116,7 @@ namespace Application.Services.Despesas.Operacoes
             EnumFiltroDespesa tipoFiltro
         )
         {
-            if(string.IsNullOrEmpty(filter))
+            if (string.IsNullOrEmpty(filter))
             {
                 return await GetAllDespesas(_queryDespesasPorGrupo, paginaAtual, itensPorPagina);
             }
@@ -148,7 +148,7 @@ namespace Application.Services.Despesas.Operacoes
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoFatura);
 
-            if(string.IsNullOrEmpty(filter))
+            if (string.IsNullOrEmpty(filter))
             {
                 return await GetAllDespesas(queryDespesasAllGrupo, paginaAtual, itensPorPagina);
             }
@@ -175,7 +175,7 @@ namespace Application.Services.Despesas.Operacoes
         {
             var listDespesas = await _queryDespesasPorGrupo.ToListAsync();
 
-            if(listDespesas.Count <= 0)
+            if (listDespesas.Count <= 0)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -266,7 +266,7 @@ namespace Application.Services.Despesas.Operacoes
             EnumFiltroDespesa tipoFiltro
         )
         {
-            switch(tipoFiltro)
+            switch (tipoFiltro)
             {
                 case EnumFiltroDespesa.Item:
                 query = query.Where(despesa =>
@@ -307,7 +307,7 @@ namespace Application.Services.Despesas.Operacoes
                 itensPorPagina
             );
 
-            if(despesas.TotalItens == 0)
+            if (despesas.TotalItens == 0)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -339,7 +339,7 @@ namespace Application.Services.Despesas.Operacoes
                 .FirstOrDefault()
                 ?.Nome;
 
-            if(grupoNome.IsNullOrEmpty())
+            if (grupoNome.IsNullOrEmpty())
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.SelecioneUmGrupoDesesa);
                 return new();
@@ -385,7 +385,7 @@ namespace Application.Services.Despesas.Operacoes
 
             double ValorMoradia(Membro membro)
             {
-                if(membro.Id == _membroId.IdPeu)
+                if (membro.Id == _membroId.IdPeu)
                 {
                     return aluguelCondominioContaLuzParaPeu.RoundTo(2);
                 }
