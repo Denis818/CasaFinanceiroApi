@@ -46,10 +46,11 @@ namespace Presentation.Attributes.Cached
             }
             else
             {
-                if (ShouldCache(context.HttpContext.Request))
+                if (!ShouldCache(context.HttpContext.Request))
                 {
-                    SaveResponseToCache(await next());
+                    await next();
                 }
+                SaveResponseToCache(await next());
             }
         }
 
