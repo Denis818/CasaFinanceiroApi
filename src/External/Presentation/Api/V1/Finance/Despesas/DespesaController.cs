@@ -1,5 +1,4 @@
-﻿using System.Net.Mime;
-using Application.Interfaces.Services.Despesas;
+﻿using Application.Interfaces.Services.Despesas;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +6,7 @@ using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
 using Presentation.Attributes.Util;
 using Presentation.Version;
+using System.Net.Mime;
 
 namespace Presentation.Api.V1.Finance.Despesas
 {
@@ -18,6 +18,8 @@ namespace Presentation.Api.V1.Finance.Despesas
     public class DespesaController(IServiceProvider service, IDespesaAppService _despesaAppService)
         : MainController(service)
     {
+        #region Download PDF
+
         [HttpGet("pdf-despesas-casa")]
         public async Task<FileContentResult> DownloadCalculoCasa()
         {
@@ -49,6 +51,8 @@ namespace Presentation.Api.V1.Finance.Despesas
 
             return File(pdfBytes, "application/pdf");
         }
+
+        #endregion
 
         [HttpGet("calcular-fatura")]
         public async Task<object> ConferirFaturaDoCartao(double faturaCartao)

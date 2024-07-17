@@ -21,10 +21,10 @@ namespace Application.Services.Despesas.Operacoes
 
         public async Task<Despesa> InsertAsync(DespesaDto despesaDto)
         {
-            if(Validator(despesaDto))
+            if (Validator(despesaDto))
                 return null;
 
-            if(!await ValidarDespesaAsync(despesaDto))
+            if (!await ValidarDespesaAsync(despesaDto))
                 return null;
 
             var despesa = _mapper.Map<Despesa>(despesaDto);
@@ -34,7 +34,7 @@ namespace Application.Services.Despesas.Operacoes
 
             await _repository.InsertAsync(despesa);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -53,14 +53,14 @@ namespace Application.Services.Despesas.Operacoes
             int totalRecebido = 0;
             var despesasParaInserir = new List<Despesa>();
 
-            await foreach(var despesaDto in listDespesasDto)
+            await foreach (var despesaDto in listDespesasDto)
             {
                 totalRecebido++;
 
-                if(Validator(despesaDto))
+                if (Validator(despesaDto))
                     continue;
 
-                if(await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
+                if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
                 {
                     Notificar(
                         EnumTipoNotificacao.NotFount,
@@ -80,7 +80,7 @@ namespace Application.Services.Despesas.Operacoes
                 despesasParaInserir.Add(despesa);
             }
 
-            if(despesasParaInserir.Count == 0)
+            if (despesasParaInserir.Count == 0)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -90,7 +90,7 @@ namespace Application.Services.Despesas.Operacoes
             }
 
             await _repository.InsertRangeAsync(despesasParaInserir);
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -99,7 +99,7 @@ namespace Application.Services.Despesas.Operacoes
                 return null;
             }
 
-            if(totalRecebido > despesasParaInserir.Count)
+            if (totalRecebido > despesasParaInserir.Count)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -120,11 +120,11 @@ namespace Application.Services.Despesas.Operacoes
 
         public async Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto)
         {
-            if(Validator(despesaDto))
+            if (Validator(despesaDto))
                 return null;
 
             var despesa = await _repository.GetByIdAsync(id);
-            if(despesa == null)
+            if (despesa == null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -133,7 +133,7 @@ namespace Application.Services.Despesas.Operacoes
                 return null;
             }
 
-            if(!await ValidarDespesaAsync(despesaDto, id))
+            if (!await ValidarDespesaAsync(despesaDto, id))
                 return null;
 
             _mapper.Map(despesaDto, despesa);
@@ -143,7 +143,7 @@ namespace Application.Services.Despesas.Operacoes
 
             _repository.Update(despesa);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -159,7 +159,7 @@ namespace Application.Services.Despesas.Operacoes
         {
             var despesa = await _repository.GetByIdAsync(id);
 
-            if(despesa == null)
+            if (despesa == null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -170,7 +170,7 @@ namespace Application.Services.Despesas.Operacoes
 
             _repository.Delete(despesa);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -192,7 +192,7 @@ namespace Application.Services.Despesas.Operacoes
             int idDespesaInEdicao = 0
         )
         {
-            if(await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
+            if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -201,7 +201,7 @@ namespace Application.Services.Despesas.Operacoes
                 return false;
             }
 
-            if(
+            if (
                 despesaDto.CategoriaId == _categoriaIds.IdAluguel
                 && !despesaDto.Item.ToLower().Contains("caixa")
                 && !despesaDto.Item.ToLower().Contains("parcela ap ponto")
@@ -211,7 +211,7 @@ namespace Application.Services.Despesas.Operacoes
                 return false;
             }
 
-            if(
+            if (
                 despesaDto.CategoriaId == _categoriaIds.IdCondominio
                 && !despesaDto.Item.Contains(
                     "condomínio ap ponto",
@@ -223,7 +223,7 @@ namespace Application.Services.Despesas.Operacoes
                 return false;
             }
 
-            if(await _GrupoFaturaRepository.ExisteAsync(despesaDto.GrupoFaturaId) is null)
+            if (await _GrupoFaturaRepository.ExisteAsync(despesaDto.GrupoFaturaId) is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -236,7 +236,7 @@ namespace Application.Services.Despesas.Operacoes
                 return false;
             }
 
-            if(!await IsDespesaMensalExistenteAsync(despesaDto, idDespesaInEdicao))
+            if (!await IsDespesaMensalExistenteAsync(despesaDto, idDespesaInEdicao))
             {
                 return false;
             }
@@ -249,12 +249,12 @@ namespace Application.Services.Despesas.Operacoes
             int idDespesaInEdicao
         )
         {
-            if(!EhDespesaMensal(despesaDto.CategoriaId))
+            if (!EhDespesaMensal(despesaDto.CategoriaId))
             {
                 return true;
             }
 
-            if(despesaDto.Quantidade != 1)
+            if (despesaDto.Quantidade != 1)
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.DespesaMensalQuantidadeDeveSerUm);
                 return false;
@@ -265,7 +265,7 @@ namespace Application.Services.Despesas.Operacoes
                 && d.CategoriaId == despesaDto.CategoriaId
             );
 
-            if(idDespesaInEdicao != 0)
+            if (idDespesaInEdicao != 0)
             {
                 despesasExistentes = despesasExistentes.Where(despesa =>
                     despesa.Id != idDespesaInEdicao
@@ -273,9 +273,9 @@ namespace Application.Services.Despesas.Operacoes
             }
 
             var listExistentes = await despesasExistentes.ToListAsync();
-            foreach(var despesa in listExistentes)
+            foreach (var despesa in listExistentes)
             {
-                if(
+                if (
                     despesa.CategoriaId == _categoriaIds.IdAluguel
                     && despesa.Item.Equals(despesaDto.Item, StringComparison.OrdinalIgnoreCase)
                 )
@@ -289,7 +289,7 @@ namespace Application.Services.Despesas.Operacoes
                     );
                     return false;
                 }
-                else if(despesa.CategoriaId != _categoriaIds.IdAluguel)
+                else if (despesa.CategoriaId != _categoriaIds.IdAluguel)
                 {
                     Notificar(
                         EnumTipoNotificacao.Informacao,

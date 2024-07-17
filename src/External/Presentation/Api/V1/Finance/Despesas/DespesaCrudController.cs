@@ -6,10 +6,12 @@ using Domain.Models.Despesas;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
+using Presentation.Attributes.Cached;
 using Presentation.Version;
 
 namespace Presentation.Api.V1.Finance.Despesas
 {
+    [ClearCache]
     [ApiController]
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]

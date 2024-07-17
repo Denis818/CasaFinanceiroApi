@@ -7,11 +7,13 @@ using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
+using Presentation.Attributes.Cached;
 using Presentation.Attributes.Util;
 using Presentation.Version;
 
 namespace Presentation.Api.V1.Finance.Despesas
 {
+    [Cached]
     [ApiController]
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
@@ -22,7 +24,24 @@ namespace Presentation.Api.V1.Finance.Despesas
         IDespesaConsultas _despesaConsultas
     ) : MainController(service)
     {
-        #region Listagem das Despesas
+        #region Dashboard
+
+        [HttpGet("total-por-grupo")]
+        public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync() =>
+            await _despesaConsultas.GetDespesaGrupoParaGraficoAsync();
+
+        [HttpGet("total-por-categoria")]
+        public async Task<IEnumerable<DespesasTotalPorCategoriaDto>> GetTotalPorCategoriaAsync() =>
+            await _despesaConsultas.GetTotalPorCategoriaAsync();
+
+        [HttpGet("analise-despesa-por-grupo")]
+        public async Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync() =>
+            await _despesaConsultas.GetAnaliseDesesasPorGrupoAsync();
+
+        #endregion
+
+        #region Painel De controle
+
         [HttpGet("por-grupo")]
         public async Task<PagedResult<Despesa>> GetListDespesasPorGrupo(
             string filter,
@@ -39,47 +58,24 @@ namespace Presentation.Api.V1.Finance.Despesas
             );
         }
 
-        [HttpGet("todos-grupos")]
-        public async Task<PagedResult<Despesa>> GetListDespesasAllGrupos(
-            string filter,
-            int paginaAtual = 1,
-            int itensPorPagina = 10,
-            EnumFiltroDespesa tipoFiltro = EnumFiltroDespesa.Item
-        )
-        {
-            return await _despesaConsultas.GetListDespesasAllGroups(
-                filter,
-                paginaAtual,
-                itensPorPagina,
-                tipoFiltro
-            );
-        }
         #endregion
 
-        #region Análise das Despesas
-        [HttpGet("analise-despesa-por-grupo")]
-        public async Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync() =>
-            await _despesaConsultas.GetAnaliseDesesasPorGrupoAsync();
+        #region Conferência de compras
 
-        [HttpGet("total-por-categoria")]
-        public async Task<IEnumerable<DespesasTotalPorCategoriaDto>> GetTotalPorCategoriaAsync() =>
-            await _despesaConsultas.GetTotalPorCategoriaAsync();
-
-        [HttpGet("total-por-grupo")]
-        public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync() =>
-            await _despesaConsultas.GetDespesaGrupoParaGraficoAsync();
+        [HttpGet("todos-grupos")]
+        public async Task<PagedResult<Despesa>> GetListDespesasAllGrupos(string filter, int paginaAtual = 1,
+            int itensPorPagina = 10, EnumFiltroDespesa tipoFiltro = EnumFiltroDespesa.Item) =>
+            await _despesaConsultas.GetListDespesasAllGroups(filter, paginaAtual, itensPorPagina, tipoFiltro);
 
         [HttpGet("sugestoes-fornecedor")]
         public async Task<IEnumerable<SugestaoDeFornecedorDto>> SugestaoDeFornecedorMaisBarato(
             int paginaAtual = 1,
-            int itensPorPagina = 10
-        ) => await _despesaConsultas.SugestaoDeFornecedorMaisBarato(paginaAtual, itensPorPagina);
+            int itensPorPagina = 10) => await _despesaConsultas.SugestaoDeFornecedorMaisBarato(paginaAtual, itensPorPagina);
 
         [HttpGet("sugestoes-economia")]
-        public async Task<
-            IEnumerable<SugestaoEconomiaInfoDto>
-        > GetSugestoesEconomiaPorGrupoAsync() =>
+        public async Task<IEnumerable<SugestaoEconomiaInfoDto>> GetSugestoesEconomiaPorGrupoAsync() =>
             await _despesaConsultas.GetSugestoesEconomiaPorGrupoAsync();
+
         #endregion
     }
 }
