@@ -7,6 +7,7 @@ using Domain.Models.Despesas;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
+using Presentation.Attributes.Cached;
 using Presentation.Attributes.Util;
 using Presentation.Version;
 
@@ -32,16 +33,19 @@ namespace Presentation.Api.V1.Finance.GrupoFaturas
             await _grupoFaturaServices.GetNameFatura(id);
 
         [HttpPost]
+        [ClearCache]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<GrupoFatura> PostAsync(GrupoFaturaDto grupoFaturaDto) =>
             await _grupoFaturaServices.InsertAsync(grupoFaturaDto);
 
         [HttpPut]
+        [ClearCache]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<GrupoFatura> PutAsync(int id, GrupoFaturaDto grupoFaturaDto) =>
             await _grupoFaturaServices.UpdateAsync(id, grupoFaturaDto);
 
         [HttpDelete]
+        [ClearCache]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
         public async Task<bool> DeleteAsync(int id) => await _grupoFaturaServices.DeleteAsync(id);
         #endregion

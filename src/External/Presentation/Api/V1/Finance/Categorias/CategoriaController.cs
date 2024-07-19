@@ -6,6 +6,7 @@ using Domain.Models.Categorias;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
+using Presentation.Attributes.Cached;
 using Presentation.Version;
 
 namespace Presentation.Api.V1.Finance.Categorias
@@ -25,16 +26,19 @@ namespace Presentation.Api.V1.Finance.Categorias
             await _categoriaServices.GetAllAsync();
 
         [HttpPost]
+        [ClearCache]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Categoria> PostAsync(CategoriaDto categoriaDto) =>
             await _categoriaServices.InsertAsync(categoriaDto);
 
         [HttpPut]
+        [ClearCache]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<Categoria> PutAsync(int id, CategoriaDto categoriaDto) =>
             await _categoriaServices.UpdateAsync(id, categoriaDto);
 
         [HttpDelete]
+        [ClearCache]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
         public async Task<bool> DeleteAsync(int id) => await _categoriaServices.DeleteAsync(id);
         #endregion
