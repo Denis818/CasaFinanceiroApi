@@ -7,13 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
+using Presentation.Attributes.Util;
 using Presentation.Version;
 
 namespace Presentation.Api.V1.User
 {
     [ApiController]
     [ApiVersion(ApiVersioning.V1)]
-    [Route("api/v1/user")]
+    [ApiVersionRoute("user")]
     public class UsersController(IAuthAppService _authService, IServiceProvider service)
         : MainController(service)
     {

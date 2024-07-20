@@ -10,7 +10,11 @@ namespace Presentation.Attributes.Cached
             ActionExecutionDelegate next
         )
         {
-            CleanCache();
+            if (context.HttpContext.Request.Method != "GET")
+            {
+                CleanCache();
+            }
+
             await next();
         }
 

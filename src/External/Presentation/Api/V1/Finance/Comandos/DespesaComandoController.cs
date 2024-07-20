@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
 using Presentation.Attributes.Cached;
+using Presentation.Attributes.Util;
 using Presentation.Version;
 
-namespace Presentation.Api.V1.Finance.Despesas
+namespace Presentation.Api.V1.Finance.Comandos
 {
     [ClearCache]
     [ApiController]
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
-    [Route("api/v1/despesa")]
-    public class DespesaCrudController(
+    [ApiVersionRoute("despesa")]
+    public class DespesaComandoController(
         IServiceProvider service,
         IDespesaCrudAppService _despesaCrudServices
     ) : MainController(service)
