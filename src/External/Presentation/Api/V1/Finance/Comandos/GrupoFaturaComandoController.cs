@@ -1,5 +1,4 @@
-﻿using Application.Interfaces.Services.Despesas;
-using Application.Services;
+﻿using Application.Interfaces.Services.Finance.Comandos;
 using Asp.Versioning;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
@@ -20,23 +19,21 @@ namespace Presentation.Api.V1.Finance.Comandos
     [ApiVersionRoute("grupo-fatura")]
     public class GrupoFaturaComandoController(
         IServiceProvider service,
-        IGrupoFaturaAppService _grupoFaturaServices,
-        IStatusFaturaAppService _statusFaturaServices
-    ) : MainController(service)
+        IGrupoFaturaComandoService _grupoFaturaComandoService) : MainController(service)
     {
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<GrupoFatura> PostAsync(GrupoFaturaDto grupoFaturaDto) =>
-            await _grupoFaturaServices.InsertAsync(grupoFaturaDto);
+            await _grupoFaturaComandoService.InsertAsync(grupoFaturaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<GrupoFatura> PutAsync(int id, GrupoFaturaDto grupoFaturaDto) =>
-            await _grupoFaturaServices.UpdateAsync(id, grupoFaturaDto);
+            await _grupoFaturaComandoService.UpdateAsync(id, grupoFaturaDto);
 
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
-        public async Task<bool> DeleteAsync(int id) => await _grupoFaturaServices.DeleteAsync(id);
+        public async Task<bool> DeleteAsync(int id) => await _grupoFaturaComandoService.DeleteAsync(id);
 
         [HttpPut("status-fatura")]
         [GetIdGroupInHeaderFilter]
@@ -44,6 +41,6 @@ namespace Presentation.Api.V1.Finance.Comandos
         public async Task<StatusFatura> PutStatusFaturaAsync(
             EnumFaturaTipo faturaNome,
             EnumStatusFatura status
-        ) => await _statusFaturaServices.UpdateAsync(faturaNome, status);
+        ) => await _grupoFaturaComandoService.UpdateStatusFaturaAsync(faturaNome, status);
     }
 }

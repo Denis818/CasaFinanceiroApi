@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.Utilities;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories.Base;
+using Domain.Models.Despesas;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
@@ -8,30 +9,37 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Services.Base
 {
-    public abstract class BaseAppService<TEntity, TIRepository>(IServiceProvider service)
+    public abstract class BaseAppService<TEntity, TIRepository>
         where TEntity : class, new()
         where TIRepository : class, IRepositoryBase<TEntity>
     {
-        protected readonly IMapper _mapper = service.GetRequiredService<IMapper>();
+        private readonly IServiceProvider _service;
+        private readonly INotifier _notificador;
 
-        private readonly INotifier _notificador = service.GetRequiredService<INotifier>();
+        protected readonly TIRepository _repository;
 
-        protected readonly TIRepository _repository = service.GetRequiredService<TIRepository>();
+        protected readonly HttpContext _httpContext;
 
-        protected readonly HttpContext _httpContext = service
-            .GetRequiredService<IHttpContextAccessor>()
-            .HttpContext;
+        public BaseAppService(IServiceProvider service)
+        {
+            _service = service;
+
+            _notificador = service.GetRequiredService<INotifier>();
+            _repository = service.GetRequiredService<TIRepository>();
+
+            _httpContext = service.GetRequiredService<IHttpContextAccessor>().HttpContext;
+        }
 
         public void Notificar(EnumTipoNotificacao tipo, string message) =>
             _notificador.Notify(tipo, message);
 
         protected bool Validator<TEntityDto>(TEntityDto entityDto)
         {
-            var validator = service.GetService<IValidator<TEntityDto>>();
+            var validator = _service.GetService<IValidator<TEntityDto>>();
 
             ValidationResult results = validator.Validate(entityDto);
 
-            if(!results.IsValid)
+            if (!results.IsValid)
             {
                 var groupedFailures = results
                     .Errors.GroupBy(failure => failure.PropertyName)
@@ -41,7 +49,7 @@ namespace Application.Services.Base
                         Errors = string.Join(" ", group.Select(err => err.ErrorMessage))
                     });
 
-                foreach(var failure in groupedFailures)
+                foreach (var failure in groupedFailures)
                 {
                     Notificar(EnumTipoNotificacao.Informacao, $"{failure.Errors}");
                 }

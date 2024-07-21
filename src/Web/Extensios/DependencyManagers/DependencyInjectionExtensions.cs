@@ -1,14 +1,9 @@
-﻿using Application.Interfaces.Services.Categorias;
-using Application.Interfaces.Services.Despesas;
-using Application.Interfaces.Services.Membros;
+﻿using Application.Interfaces.Services.Finance.Comandos;
+using Application.Interfaces.Services.Finance.Consultas;
 using Application.Interfaces.Services.User;
 using Application.Interfaces.Utilities;
-using Application.Services;
-using Application.Services.Categorias;
-using Application.Services.Despesas.Operacoes;
-using Application.Services.Despesas.ProcessamentoDespesas;
-using Application.Services.GrupoFaturas;
-using Application.Services.Membros;
+using Application.Services.Finance.Comandos;
+using Application.Services.Finance.Consultas;
 using Application.Services.User;
 using Application.Utilities;
 using Data.Repository.Categorias;
@@ -30,7 +25,6 @@ namespace Web.Extensios.DependencyManagers
         public static void AddDependecyUtilities(this IServiceCollection services)
         {
             services.AddHttpContextAccessor();
-            services.AddSingleton<IMapper, Mapper>();
             services.AddScoped<INotifier, Notifier>();
             services.AddScoped<IModelStateValidator, ModelStateValidator>();
         }
@@ -50,19 +44,25 @@ namespace Web.Extensios.DependencyManagers
             services.AddScoped<IDespesaDomainServices, DespesaDomainServices>();
         }
 
-        public static void AddDependecyAppServices(this IServiceCollection services)
+        public static void AddDependecyComandoServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthAppService, AuthAppService>();
-            services.AddScoped<IMembroAppServices, MembroAppServices>();
-            services.AddScoped<ICategoriaAppServices, CategoriaAppServices>();
-            services.AddScoped<IDespesaAppService, DespesaAppService>();
-            services.AddScoped<IDespesaConsultas, DespesaConsultas>();
 
-            services.AddScoped<IDespesaCrudAppService, DespesaCrudAppService>();
-            services.AddScoped<IDespesaCasaAppService, DespesaCasaAppService>();
-            services.AddScoped<IDespesaMoradiaAppService, DespesaMoradiaAppService>();
-            services.AddScoped<IGrupoFaturaAppService, GrupoFaturaAppService>();
-            services.AddScoped<IStatusFaturaAppService, StatusFaturaAppService>();
+            services.AddScoped<ICategoriaComandoServices, CategoriaComandoServices>();
+            services.AddScoped<IDespesaComandoService, DespesaComandoService>();
+            services.AddScoped<IGrupoFaturaComandoService, GrupoFaturaComandoService>();
+            services.AddScoped<IMembroComandoServices, MembroComandoServices>();
+        }
+
+        public static void AddDependecyConsultaServices(this IServiceCollection services)
+        {
+            services.AddScoped<ICategoriaConsultaServices, CategoriaConsultaServices>();
+            services.AddScoped<IGrupoFaturaConsultaService, GrupoFaturaConsultaService>();
+            services.AddScoped<IMembroConsultaServices, MembroConsultaServices>();
+
+            services.AddScoped<IDashboardConsultaServices, DashboardConsultaServices>();
+            services.AddScoped<IPainelControleConsultaServices, PainelControleConsultaServices>();
+            services.AddScoped<IConferenciaVendasConsultaServices, ConferenciaVendasConsultaServices>();
         }
 
         public static void AddCompanyConnectionStrings(

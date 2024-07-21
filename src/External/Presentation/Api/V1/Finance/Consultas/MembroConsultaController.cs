@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Services.Membros;
+﻿using Application.Interfaces.Services.Finance.Consultas;
 using Asp.Versioning;
 using Domain.Models.Membros;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +13,12 @@ namespace Presentation.Api.V1.Finance.Consultas
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
     [ApiVersionRoute("membro")]
-    public class MembroCrudController(IServiceProvider service, IMembroAppServices _membroServices)
+    public class MembroConsultaController(IServiceProvider service, IMembroConsultaServices _membroConsultaServices)
         : MainController(service)
     {
         [HttpGet]
         public async Task<IEnumerable<Membro>> GetAllDespesaAsync() =>
-            await _membroServices.GetAllAsync();
+            await _membroConsultaServices.GetAllAsync();
 
         [HttpGet("enviar-mensagem")]
         [GetIdGroupInHeaderFilter]
@@ -29,7 +29,7 @@ namespace Presentation.Api.V1.Finance.Consultas
             string titleMessage
         )
         {
-            var messagemWhastApp = await _membroServices.EnviarValoresDividosPeloWhatsAppAsync(
+            var messagemWhastApp = await _membroConsultaServices.EnviarValoresDividosPeloWhatsAppAsync(
                 nome,
                 titleMessage,
                 isMoradia,

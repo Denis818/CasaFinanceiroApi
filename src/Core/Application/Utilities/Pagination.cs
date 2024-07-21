@@ -15,7 +15,7 @@ namespace Application.Utilities
             int totalItens = await consulta.CountAsync();
             int quantidadePular = 0;
 
-            if(totalItens > tamanhoPagina)
+            if (totalItens > tamanhoPagina)
             {
                 quantidadePular = (numeroPagina - 1) * tamanhoPagina;
             }
@@ -40,7 +40,7 @@ namespace Application.Utilities
             int totalItens = list.Count;
             int quantidadePular = 0;
 
-            if(totalItens > tamanhoPagina)
+            if (totalItens > tamanhoPagina)
             {
                 quantidadePular = (numeroPagina - 1) * tamanhoPagina;
             }

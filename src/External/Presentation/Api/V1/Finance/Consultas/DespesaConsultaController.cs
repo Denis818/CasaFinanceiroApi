@@ -1,6 +1,8 @@
-﻿using Application.Interfaces.Services.Despesas;
+﻿using System.Net.Mime;
+using Application.Interfaces.Services.Finance.Consultas;
 using Asp.Versioning;
 using Domain.Dtos.Despesas.Consultas;
+using Domain.Dtos.Despesas.Filtro;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
 using Domain.Utilities;
@@ -11,7 +13,6 @@ using Presentation.Attributes.Auth;
 using Presentation.Attributes.Cached;
 using Presentation.Attributes.Util;
 using Presentation.Version;
-using System.Net.Mime;
 
 namespace Presentation.Api.V1.Finance.Consultas
 {
@@ -22,29 +23,30 @@ namespace Presentation.Api.V1.Finance.Consultas
     [ApiVersionRoute("despesa")]
     [GetIdGroupInHeaderFilter]
     public class DespesaConsultaController(
-        IServiceProvider service,
-        IDespesaConsultas _despesaConsultas,
-        IDespesaAppService _despesaAppService
+        IDashboardConsultaServices dashboardConsultaServices,
+        IPainelControleConsultaServices painelControleConsultaServices,
+        IConferenciaVendasConsultaServices conferenciaVendasConsultaServices,
+        IServiceProvider service
     ) : MainController(service)
     {
         #region Dashboard
 
         [HttpGet("total-por-grupo")]
         public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync() =>
-            await _despesaConsultas.GetDespesaGrupoParaGraficoAsync();
+            await dashboardConsultaServices.GetDespesaGrupoParaGraficoAsync();
 
         [HttpGet("total-por-categoria")]
         public async Task<IEnumerable<DespesasTotalPorCategoriaDto>> GetTotalPorCategoriaAsync() =>
-            await _despesaConsultas.GetTotalPorCategoriaAsync();
+            await dashboardConsultaServices.GetTotalPorCategoriaAsync();
 
         [HttpGet("analise-despesa-por-grupo")]
         public async Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync() =>
-            await _despesaConsultas.GetAnaliseDesesasPorGrupoAsync();
+            await dashboardConsultaServices.GetAnaliseDesesasPorGrupoAsync();
 
         [HttpGet("pdf-despesas-casa")]
         public async Task<FileContentResult> DownloadCalculoCasa()
         {
-            byte[] pdfBytes = await _despesaAppService.DownloadPdfRelatorioDeDespesaCasa();
+            byte[] pdfBytes = await dashboardConsultaServices.DownloadPdfRelatorioDeDespesaCasa();
 
             var contentDisposition = new ContentDisposition
             {
@@ -60,7 +62,8 @@ namespace Presentation.Api.V1.Finance.Consultas
         [HttpGet("pdf-despesas-moradia")]
         public async Task<FileContentResult> DownloadCalculoMoradia()
         {
-            byte[] pdfBytes = await _despesaAppService.DownloadPdfRelatorioDeDespesaMoradia();
+            byte[] pdfBytes =
+                await dashboardConsultaServices.DownloadPdfRelatorioDeDespesaMoradia();
 
             var contentDisposition = new ContentDisposition
             {
@@ -78,58 +81,52 @@ namespace Presentation.Api.V1.Finance.Consultas
 
         [HttpGet("por-grupo")]
         public async Task<PagedResult<Despesa>> GetListDespesasPorGrupo(
-            string filter,
-            int paginaAtual = 1,
-            int itensPorPagina = 10,
-            EnumFiltroDespesa tipoFiltro = EnumFiltroDespesa.Item
+           [FromQuery] DespesaFiltroDto despesaFiltroDto
         )
         {
-            return await _despesaConsultas.GetListDespesasPorGrupo(
-                filter,
-                paginaAtual,
-                itensPorPagina,
-                tipoFiltro
-            );
+            return await painelControleConsultaServices.GetListDespesasPorGrupo(despesaFiltroDto);
         }
-
 
         [HttpGet("calcular-fatura")]
         public async Task<object> ConferirFaturaDoCartao(double faturaCartao)
         {
             (double totalDespesas, double valorSubtraido) =
-                await _despesaAppService.CompararFaturaComTotalDeDespesas(faturaCartao);
+                await painelControleConsultaServices.CompararFaturaComTotalDeDespesas(faturaCartao);
 
             return new { TotalDespesa = totalDespesas, ValorSubtraido = valorSubtraido };
         }
+
         #endregion
 
         #region Conferência de compras
 
         [HttpGet("todos-grupos")]
         public async Task<PagedResult<Despesa>> GetListDespesasAllGrupos(
-            string filter,
-            int paginaAtual = 1,
-            int itensPorPagina = 10,
-            EnumFiltroDespesa tipoFiltro = EnumFiltroDespesa.Item
-        ) =>
-            await _despesaConsultas.GetListDespesasAllGroups(
-                filter,
-                paginaAtual,
-                itensPorPagina,
-                tipoFiltro
+         [FromQuery] DespesaFiltroDto despesaFiltroDto
+        )
+        {
+            return await conferenciaVendasConsultaServices.GetListDespesasAllGroups(
+                despesaFiltroDto
             );
+        }
 
         [HttpGet("sugestoes-fornecedor")]
         public async Task<IEnumerable<SugestaoDeFornecedorDto>> SugestaoDeFornecedorMaisBarato(
             int paginaAtual = 1,
             int itensPorPagina = 10
-        ) => await _despesaConsultas.SugestaoDeFornecedorMaisBarato(paginaAtual, itensPorPagina);
+        )
+        {
+            return await conferenciaVendasConsultaServices.SugestaoDeFornecedorMaisBarato(
+                paginaAtual,
+                itensPorPagina
+            );
+        }
 
         [HttpGet("sugestoes-economia")]
         public async Task<
             IEnumerable<SugestaoEconomiaInfoDto>
         > GetSugestoesEconomiaPorGrupoAsync() =>
-            await _despesaConsultas.GetSugestoesEconomiaPorGrupoAsync();
+            await conferenciaVendasConsultaServices.GetSugestoesEconomiaPorGrupoAsync();
 
         #endregion
     }

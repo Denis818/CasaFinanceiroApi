@@ -1,4 +1,4 @@
-﻿using Application.Services.Base;
+﻿/*using Application.Services.Base;
 using Domain.Dtos.Categorias.Consultas;
 using Domain.Dtos.Membros;
 using Domain.Interfaces.Repositories;
@@ -17,7 +17,6 @@ namespace Application.Services.Despesas.Base
 
         protected readonly CategoriaIdsDto _categoriaIds;
         protected readonly MembroIdDto _membroId;
-        protected GrupoFatura _grupoFatura = null;
 
         protected IQueryable<Despesa> _queryDespesasPorGrupo;
 
@@ -50,3 +49,4 @@ namespace Application.Services.Despesas.Base
         }
     }
 }
+*/

@@ -1,9 +1,9 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Presentation.Api.Base;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Presentation.Version
 {

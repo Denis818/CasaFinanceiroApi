@@ -55,7 +55,7 @@ namespace Application.Helpers
 
         private void AddColumnsToTable(Table table, Dictionary<string, string> columns)
         {
-            foreach(var value in columns)
+            foreach (var value in columns)
             {
                 var keyColumn = new Cell()
                     .Add(
@@ -84,45 +84,34 @@ namespace Application.Helpers
         }
     }
 
-    public class PdfTableStyle
+    public class PdfTableStyle(
+        PdfFont fontTitle = null,
+        PdfFont fontColumns = null,
+        PdfFont fontTitleDocument = null,
+        sbyte? fontSizeTitle = null,
+        sbyte? fontSizeHeaderTable = null,
+        sbyte? fontSizeColumns = null,
+        Color backgroundColor = null,
+        float? borderWidth = null,
+        sbyte? widthPercentage = null,
+        sbyte? numColumns = null
+    )
     {
-        public PdfFont FontTitle { get; set; }
-        public PdfFont FontColumns { get; set; }
-        public PdfFont FontTitleDocument { get; set; }
+        public PdfFont FontTitle { get; set; } =
+            fontTitle ?? PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+        public PdfFont FontColumns { get; set; } =
+            fontColumns ?? PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+        public PdfFont FontTitleDocument { get; set; } =
+            fontTitleDocument ?? PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
 
-        public sbyte FontSizeTitle { get; set; }
-        public sbyte FontSizeHeaderTable { get; set; }
-        public sbyte FontSizeColumns { get; set; }
+        public sbyte FontSizeTitle { get; set; } = fontSizeTitle ?? 16;
+        public sbyte FontSizeHeaderTable { get; set; } = fontSizeHeaderTable ?? 12;
+        public sbyte FontSizeColumns { get; set; } = fontSizeColumns ?? 11;
 
-        public Color BackgroundColor { get; set; }
-        public float BorderWidth { get; set; }
-        public sbyte WidthPercentage { get; set; }
-        public sbyte NumColumns { get; set; }
-
-        public PdfTableStyle(
-            PdfFont fontTitle = null,
-            PdfFont fontColumns = null,
-            PdfFont fontTitleDocument = null,
-            sbyte? fontSizeTitle = null,
-            sbyte? fontSizeHeaderTable = null,
-            sbyte? fontSizeColumns = null,
-            Color backgroundColor = null,
-            float? borderWidth = null,
-            sbyte? widthPercentage = null,
-            sbyte? numColumns = null
-        )
-        {
-            FontTitle = fontTitle ?? PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
-            FontColumns = fontColumns ?? PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
-            FontTitleDocument =
-                fontTitleDocument ?? PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
-            FontSizeTitle = fontSizeTitle ?? 16;
-            FontSizeHeaderTable = fontSizeHeaderTable ?? 12;
-            FontSizeColumns = fontSizeColumns ?? 11;
-            BackgroundColor = backgroundColor ?? new DeviceRgb(249, 249, 249);
-            BorderWidth = borderWidth ?? 1.5f;
-            WidthPercentage = widthPercentage ?? 80;
-            NumColumns = numColumns ?? 2;
-        }
+        public Color BackgroundColor { get; set; } =
+            backgroundColor ?? new DeviceRgb(249, 249, 249);
+        public float BorderWidth { get; set; } = borderWidth ?? 1.5f;
+        public sbyte WidthPercentage { get; set; } = widthPercentage ?? 80;
+        public sbyte NumColumns { get; set; } = numColumns ?? 2;
     }
 }

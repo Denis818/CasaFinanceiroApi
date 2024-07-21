@@ -30,12 +30,12 @@ namespace Web.Middleware
 
             string hostName = null;
 
-            if(string.IsNullOrEmpty(origin))
+            if (string.IsNullOrEmpty(origin))
             {
                 origin = $"https://{context.Request.Host}";
             }
 
-            if(!string.IsNullOrEmpty(origin))
+            if (!string.IsNullOrEmpty(origin))
             {
                 var originUri = new Uri(origin);
                 hostName = originUri.Host;
@@ -45,7 +45,7 @@ namespace Web.Middleware
                 empresa.NomeDominio == hostName
             );
 
-            if(empresaLocalizada == null)
+            if (empresaLocalizada == null)
             {
                 var response = new ResponseDTO<string>
                 {

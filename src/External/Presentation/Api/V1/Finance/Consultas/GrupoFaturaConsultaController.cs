@@ -1,5 +1,4 @@
-﻿using Application.Interfaces.Services.Despesas;
-using Application.Services;
+﻿using Application.Interfaces.Services.Finance.Consultas;
 using Asp.Versioning;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Models.Despesas;
@@ -15,23 +14,21 @@ namespace Presentation.Api.V1.Finance.Consultas
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
     [ApiVersionRoute("grupo-fatura")]
-    public class GrupoFaturaCrudController(
+    public class GrupoFaturaConsultaController(
         IServiceProvider service,
-        IGrupoFaturaAppService _grupoFaturaServices,
-        IStatusFaturaAppService _statusFaturaServices
-    ) : MainController(service)
+        IGrupoFaturaConsultaService _grupoFaturaConsultaService) : MainController(service)
     {
         [HttpGet]
-        public async Task<IEnumerable<GrupoFatura>> GetAllAsync() =>
-            await _grupoFaturaServices.GetAllAsync();
+        public async Task<IEnumerable<GrupoFatura>> GetAllAsync(string ano) =>
+            await _grupoFaturaConsultaService.GetAllAsync(ano);
 
         [HttpGet("{id}")]
         public async Task<string> GetNameFatura(int id) =>
-            await _grupoFaturaServices.GetNameFatura(id);
+            await _grupoFaturaConsultaService.GetNameFatura(id);
 
         [HttpGet("status-fatura")]
         [GetIdGroupInHeaderFilter]
         public async Task<StatusFaturaDto> GetStatusFaturaDtoByNameAsync(string status) =>
-            await _statusFaturaServices.GetStatusFaturaDtoByNameAsync(status);
+            await _grupoFaturaConsultaService.GetStatusFaturaDtoByNameAsync(status);
     }
 }

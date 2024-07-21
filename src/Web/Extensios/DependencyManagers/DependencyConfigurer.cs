@@ -18,7 +18,8 @@ namespace Web.Extensios.DependencyManagers
             services.AddDependecyUtilities();
             services.AddDependecyRepositories();
             services.AddDependecyDomainServices();
-            services.AddDependecyAppServices();
+            services.AddDependecyComandoServices();
+            services.AddDependecyConsultaServices();
 
             services.AddAuthenticationJwt(config);
             services.AddAssemblyConfigurations();

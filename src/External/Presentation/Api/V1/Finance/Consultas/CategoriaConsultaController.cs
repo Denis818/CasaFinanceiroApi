@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Services.Categorias;
+﻿using Application.Interfaces.Services.Finance.Consultas;
 using Asp.Versioning;
 using Domain.Models.Categorias;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +13,13 @@ namespace Presentation.Api.V1.Finance.Consultas
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
     [ApiVersionRoute("categoria")]
-    public class CategoriaCrudController(
+    public class CategoriaConsultaController(
         IServiceProvider service,
-        ICategoriaAppServices _categoriaServices
+        ICategoriaConsultaServices _categoriaConsultaServices
     ) : MainController(service)
     {
         [HttpGet]
         public async Task<IEnumerable<Categoria>> GetAllAsync() =>
-            await _categoriaServices.GetAllAsync();
+            await _categoriaConsultaServices.GetAllAsync();
     }
 }

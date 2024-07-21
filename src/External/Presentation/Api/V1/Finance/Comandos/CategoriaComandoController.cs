@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Services.Categorias;
+﻿using Application.Interfaces.Services.Finance.Comandos;
 using Asp.Versioning;
 using Domain.Dtos.Categorias;
 using Domain.Enumeradores;
@@ -19,22 +19,22 @@ namespace Presentation.Api.V1.Finance.Comandos
     [ApiVersionRoute("categoria")]
     public class CategoriaComandoController(
         IServiceProvider service,
-        ICategoriaAppServices _categoriaServices) : MainController(service)
+        ICategoriaComandoServices _categoriaComandoServices) : MainController(service)
     {
         #region CRUD
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Categoria> PostAsync(CategoriaDto categoriaDto) =>
-            await _categoriaServices.InsertAsync(categoriaDto);
+            await _categoriaComandoServices.InsertAsync(categoriaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<Categoria> PutAsync(int id, CategoriaDto categoriaDto) =>
-            await _categoriaServices.UpdateAsync(id, categoriaDto);
+            await _categoriaComandoServices.UpdateAsync(id, categoriaDto);
 
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
-        public async Task<bool> DeleteAsync(int id) => await _categoriaServices.DeleteAsync(id);
+        public async Task<bool> DeleteAsync(int id) => await _categoriaComandoServices.DeleteAsync(id);
         #endregion
     }
 }

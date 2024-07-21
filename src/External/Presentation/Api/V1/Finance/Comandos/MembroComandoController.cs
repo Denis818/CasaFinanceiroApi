@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Services.Membros;
+﻿using Application.Interfaces.Services.Finance.Comandos;
 using Asp.Versioning;
 using Domain.Dtos.Membros;
 using Domain.Enumeradores;
@@ -17,22 +17,25 @@ namespace Presentation.Api.V1.Finance.Comandos
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
     [ApiVersionRoute("membro")]
-    public class MembroComandoController(IServiceProvider service, IMembroAppServices _membroServices) : MainController(service)
+    public class MembroComandoController(
+        IServiceProvider service,
+        IMembroComandoServices _membroComandoServices
+    ) : MainController(service)
     {
         #region CRUD
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Membro> Post(MembroDto vendaDto) =>
-            await _membroServices.InsertAsync(vendaDto);
+            await _membroComandoServices.InsertAsync(vendaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<Membro> Put(int id, MembroDto vendaDto) =>
-            await _membroServices.UpdateAsync(id, vendaDto);
+            await _membroComandoServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
-        public async Task<bool> Delete(int id) => await _membroServices.DeleteAsync(id);
+        public async Task<bool> Delete(int id) => await _membroComandoServices.DeleteAsync(id);
         #endregion
     }
 }
