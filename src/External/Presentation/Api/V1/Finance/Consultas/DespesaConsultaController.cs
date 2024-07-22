@@ -1,9 +1,6 @@
-﻿using System.Net.Mime;
-using Application.Interfaces.Services.Finance.Consultas;
+﻿using Application.Queries.Dtos;
+using Application.Queries.Interfaces;
 using Asp.Versioning;
-using Domain.Dtos.Despesas.Consultas;
-using Domain.Dtos.Despesas.Filtro;
-using Domain.Enumeradores;
 using Domain.Models.Despesas;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +10,7 @@ using Presentation.Attributes.Auth;
 using Presentation.Attributes.Cached;
 using Presentation.Attributes.Util;
 using Presentation.Version;
+using System.Net.Mime;
 
 namespace Presentation.Api.V1.Finance.Consultas
 {
@@ -23,24 +21,24 @@ namespace Presentation.Api.V1.Finance.Consultas
     [ApiVersionRoute("despesa")]
     [GetIdGroupInHeaderFilter]
     public class DespesaConsultaController(
-        IDashboardConsultaServices dashboardConsultaServices,
-        IPainelControleConsultaServices painelControleConsultaServices,
-        IConferenciaComprasConsultaServices conferenciaComprasConsultaServices,
+        IDashboardQueryServices dashboardConsultaServices,
+        IPainelControleQueryServices painelControleConsultaServices,
+        IConferenciaComprasQueryServices conferenciaComprasConsultaServices,
         IServiceProvider service
     ) : MainController(service)
     {
         #region Dashboard
 
         [HttpGet("total-por-grupo")]
-        public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync(string ano) =>
+        public async Task<IEnumerable<DespesasPorGrupoQueryDto>> GetDespesaGrupoParaGraficoAsync(string ano) =>
             await dashboardConsultaServices.GetDespesaGrupoParaGraficoAsync(ano);
 
         [HttpGet("total-por-categoria")]
-        public async Task<IEnumerable<DespesasTotalPorCategoriaDto>> GetTotalPorCategoriaAsync() =>
+        public async Task<IEnumerable<DespesasTotalPorCategoriaQueryDto>> GetTotalPorCategoriaAsync() =>
             await dashboardConsultaServices.GetTotalPorCategoriaAsync();
 
         [HttpGet("analise-despesa-por-grupo")]
-        public async Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync() =>
+        public async Task<DespesasDivididasMensalQueryDto> GetAnaliseDesesasPorGrupoAsync() =>
             await dashboardConsultaServices.GetAnaliseDesesasPorGrupoAsync();
 
         [HttpGet("pdf-despesas-casa")]
@@ -109,7 +107,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         }
 
         [HttpGet("sugestoes-fornecedor")]
-        public async Task<IEnumerable<SugestaoDeFornecedorDto>> SugestaoDeFornecedorMaisBarato(
+        public async Task<IEnumerable<DespesasSugestaoDeFornecedorQueryDto>> SugestaoDeFornecedorMaisBarato(
             int paginaAtual = 1,
             int itensPorPagina = 10
         )
@@ -122,7 +120,7 @@ namespace Presentation.Api.V1.Finance.Consultas
 
         [HttpGet("sugestoes-economia")]
         public async Task<
-            IEnumerable<SugestaoEconomiaInfoDto>
+            IEnumerable<DespesasSugestaoEconomiaQueryDto>
         > GetSugestoesEconomiaPorGrupoAsync() =>
             await conferenciaComprasConsultaServices.GetSugestoesEconomiaPorGrupoAsync();
 

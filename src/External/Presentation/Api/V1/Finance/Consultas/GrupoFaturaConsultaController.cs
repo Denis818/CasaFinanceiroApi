@@ -1,6 +1,6 @@
-﻿using Application.Interfaces.Services.Finance.Consultas;
+﻿using Application.Queries.Dtos;
+using Application.Queries.Interfaces;
 using Asp.Versioning;
-using Domain.Dtos.Despesas.Criacao;
 using Domain.Models.Despesas;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
@@ -16,7 +16,7 @@ namespace Presentation.Api.V1.Finance.Consultas
     [ApiVersionRoute("grupo-fatura")]
     public class GrupoFaturaConsultaController(
         IServiceProvider service,
-        IGrupoFaturaConsultaService _grupoFaturaConsultaService) : MainController(service)
+        IGrupoFaturaQueryService _grupoFaturaConsultaService) : MainController(service)
     {
         [HttpGet]
         public async Task<IEnumerable<GrupoFatura>> GetAllAsync(string ano) =>
@@ -28,7 +28,7 @@ namespace Presentation.Api.V1.Finance.Consultas
 
         [HttpGet("status-fatura")]
         [GetIdGroupInHeaderFilter]
-        public async Task<StatusFaturaDto> GetStatusFaturaDtoByNameAsync(string status) =>
+        public async Task<StatusFaturaQueryDto> GetStatusFaturaDtoByNameAsync(string status) =>
             await _grupoFaturaConsultaService.GetStatusFaturaDtoByNameAsync(status);
     }
 }

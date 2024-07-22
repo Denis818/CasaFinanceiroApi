@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Services.Finance.Consultas;
+﻿using Application.Queries.Interfaces;
 using Asp.Versioning;
 using Domain.Models.Membros;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +13,7 @@ namespace Presentation.Api.V1.Finance.Consultas
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
     [ApiVersionRoute("membro")]
-    public class MembroConsultaController(IServiceProvider service, IMembroConsultaServices _membroConsultaServices)
+    public class MembroConsultaController(IServiceProvider service, IMembroQueryServices _membroConsultaServices)
         : MainController(service)
     {
         [HttpGet]

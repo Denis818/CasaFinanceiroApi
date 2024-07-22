@@ -1,6 +1,6 @@
-﻿using Application.Interfaces.Services.Finance.Comandos;
+﻿using Application.Commands.Dtos;
+using Application.Commands.Interfaces;
 using Asp.Versioning;
-using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
 using Microsoft.AspNetCore.Mvc;
@@ -19,17 +19,17 @@ namespace Presentation.Api.V1.Finance.Comandos
     [ApiVersionRoute("despesa")]
     public class DespesaComandoController(
         IServiceProvider service,
-        IDespesaComandoService _despesaComandoService
+        IDespesaCommandService _despesaComandoService
     ) : MainController(service)
     {
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<Despesa> PostAsync(DespesaDto vendaDto) =>
+        public async Task<Despesa> PostAsync(DespesaCommandDto vendaDto) =>
             await _despesaComandoService.InsertAsync(vendaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task<Despesa> PutAsync(int id, DespesaDto vendaDto) =>
+        public async Task<Despesa> PutAsync(int id, DespesaCommandDto vendaDto) =>
             await _despesaComandoService.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
@@ -39,7 +39,7 @@ namespace Presentation.Api.V1.Finance.Comandos
         [HttpPost("inserir-lote")]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<IEnumerable<Despesa>> PostRangeAsync(
-            IAsyncEnumerable<DespesaDto> vendaDto
+            IAsyncEnumerable<DespesaCommandDto> vendaDto
         ) => await _despesaComandoService.InsertRangeAsync(vendaDto);
     }
 }

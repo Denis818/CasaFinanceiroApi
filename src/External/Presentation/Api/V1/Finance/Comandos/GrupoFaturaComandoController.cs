@@ -1,6 +1,6 @@
-﻿using Application.Interfaces.Services.Finance.Comandos;
+﻿using Application.Commands.Dtos;
+using Application.Commands.Interfaces;
 using Asp.Versioning;
-using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
 using Microsoft.AspNetCore.Mvc;
@@ -19,16 +19,16 @@ namespace Presentation.Api.V1.Finance.Comandos
     [ApiVersionRoute("grupo-fatura")]
     public class GrupoFaturaComandoController(
         IServiceProvider service,
-        IGrupoFaturaComandoService _grupoFaturaComandoService) : MainController(service)
+        IGrupoFaturaCommandService _grupoFaturaComandoService) : MainController(service)
     {
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<GrupoFatura> PostAsync(GrupoFaturaDto grupoFaturaDto) =>
+        public async Task<GrupoFatura> PostAsync(GrupoFaturaCommandDto grupoFaturaDto) =>
             await _grupoFaturaComandoService.InsertAsync(grupoFaturaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task<GrupoFatura> PutAsync(int id, GrupoFaturaDto grupoFaturaDto) =>
+        public async Task<GrupoFatura> PutAsync(int id, GrupoFaturaCommandDto grupoFaturaDto) =>
             await _grupoFaturaComandoService.UpdateAsync(id, grupoFaturaDto);
 
         [HttpDelete]

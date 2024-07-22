@@ -1,6 +1,6 @@
-﻿using Application.Interfaces.Services.Finance.Comandos;
+﻿using Application.Commands.Dtos;
+using Application.Commands.Interfaces;
 using Asp.Versioning;
-using Domain.Dtos.Categorias;
 using Domain.Enumeradores;
 using Domain.Models.Categorias;
 using Microsoft.AspNetCore.Mvc;
@@ -19,17 +19,17 @@ namespace Presentation.Api.V1.Finance.Comandos
     [ApiVersionRoute("categoria")]
     public class CategoriaComandoController(
         IServiceProvider service,
-        ICategoriaComandoServices _categoriaComandoServices) : MainController(service)
+        ICategoriaCommandServices _categoriaComandoServices) : MainController(service)
     {
         #region CRUD
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<Categoria> PostAsync(CategoriaDto categoriaDto) =>
+        public async Task<Categoria> PostAsync(CategoriaCommandDto categoriaDto) =>
             await _categoriaComandoServices.InsertAsync(categoriaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task<Categoria> PutAsync(int id, CategoriaDto categoriaDto) =>
+        public async Task<Categoria> PutAsync(int id, CategoriaCommandDto categoriaDto) =>
             await _categoriaComandoServices.UpdateAsync(id, categoriaDto);
 
         [HttpDelete]

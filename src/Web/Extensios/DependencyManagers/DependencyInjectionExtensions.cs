@@ -1,16 +1,14 @@
-﻿using Application.Interfaces.Services.Finance.Comandos;
-using Application.Interfaces.Services.Finance.Consultas;
-using Application.Interfaces.Services.User;
-using Application.Interfaces.Utilities;
-using Application.Services.Finance.Comandos;
-using Application.Services.Finance.Consultas;
-using Application.Services.User;
+﻿using Application.Commands.Interfaces;
+using Application.Commands.Services;
+using Application.Queries.Interfaces;
+using Application.Queries.Services;
 using Application.Utilities;
 using Data.Repository.Categorias;
 using Data.Repository.Despesas;
 using Data.Repository.User;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services.Despesa;
+using Domain.Interfaces.Utilities;
 using Domain.Services;
 using Infraestructure.Data.Configurations;
 using Infraestructure.Data.Repository.Membros;
@@ -44,25 +42,25 @@ namespace Web.Extensios.DependencyManagers
             services.AddScoped<IDespesaDomainServices, DespesaDomainServices>();
         }
 
-        public static void AddDependecyComandoServices(this IServiceCollection services)
+        public static void AddDependecyCommandsServices(this IServiceCollection services)
         {
-            services.AddScoped<IAuthAppService, AuthAppService>();
+            services.AddScoped<IAuthCommandService, AuthCommandService>();
 
-            services.AddScoped<ICategoriaComandoServices, CategoriaComandoServices>();
-            services.AddScoped<IDespesaComandoService, DespesaComandoService>();
-            services.AddScoped<IGrupoFaturaComandoService, GrupoFaturaComandoService>();
-            services.AddScoped<IMembroComandoServices, MembroComandoServices>();
+            services.AddScoped<ICategoriaCommandServices, CategoriaCommandServices>();
+            services.AddScoped<IDespesaCommandService, DespesaCommandService>();
+            services.AddScoped<IGrupoFaturaCommandService, GrupoFaturaCommandService>();
+            services.AddScoped<IMembroComandoServices, MembroCommandServices>();
         }
 
-        public static void AddDependecyConsultaServices(this IServiceCollection services)
+        public static void AddDependecyQueriesServices(this IServiceCollection services)
         {
-            services.AddScoped<ICategoriaConsultaServices, CategoriaConsultaServices>();
-            services.AddScoped<IGrupoFaturaConsultaService, GrupoFaturaConsultaService>();
-            services.AddScoped<IMembroConsultaServices, MembroConsultaServices>();
+            services.AddScoped<ICategoriaQueryServices, CategoriaQueryServices>();
+            services.AddScoped<IGrupoFaturaQueryService, GrupoFaturaQueryService>();
+            services.AddScoped<IMembroQueryServices, MembroQueryServices>();
 
-            services.AddScoped<IDashboardConsultaServices, DashboardConsultaServices>();
-            services.AddScoped<IPainelControleConsultaServices, PainelControleConsultaServices>();
-            services.AddScoped<IConferenciaComprasConsultaServices, ConferenciaComprasConsultaServices>();
+            services.AddScoped<IDashboardQueryServices, DashboardQueryServices>();
+            services.AddScoped<IPainelControleQueryServices, PainelControleQueryServices>();
+            services.AddScoped<IConferenciaComprasQueryServices, ConferenciaComprasQueryServices>();
         }
 
         public static void AddCompanyConnectionStrings(

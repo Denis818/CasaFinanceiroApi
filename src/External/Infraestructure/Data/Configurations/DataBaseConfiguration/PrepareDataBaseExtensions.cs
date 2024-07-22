@@ -1,7 +1,7 @@
-﻿using Application.Helpers;
-using Application.Interfaces.Services.User;
+﻿using Application.Commands.Dtos;
+using Application.Commands.Interfaces;
+using Application.Helpers;
 using Domain.Converters.DatesTimes;
-using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Categorias;
@@ -25,7 +25,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
         private static void PrepareUserMaster(IServiceProvider service, string nomeDominio)
         {
             var usuarioRepository = service.GetRequiredService<IUsuarioRepository>();
-            var authService = service.GetRequiredService<IAuthAppService>();
+            var authService = service.GetRequiredService<IAuthCommandService>();
 
             string email = "master@gmail.com";
             string senha = "Master@123456";
@@ -59,13 +59,13 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             usuarioRepository.InsertAsync(usuario).Wait();
             usuarioRepository.SaveChangesAsync().Wait();
 
-            authService.AddPermissaoAsync(new AddUserPermissionDto(usuario.Id, permissoes)).Wait();
+            authService.AddPermissaoAsync(new UserPermissionCommandDto(usuario.Id, permissoes)).Wait();
         }
 
         private static void PrepararVisitante(IServiceProvider service)
         {
             var usuarioRepository = service.GetRequiredService<IUsuarioRepository>();
-            var authService = service.GetRequiredService<IAuthAppService>();
+            var authService = service.GetRequiredService<IAuthCommandService>();
 
             string email = "visitante";
             string senha = "123456";

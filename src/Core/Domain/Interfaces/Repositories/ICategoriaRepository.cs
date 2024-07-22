@@ -1,4 +1,4 @@
-﻿using Domain.Dtos.Categorias.Consultas;
+﻿using Domain.Dtos;
 using Domain.Interfaces.Repositories.Base;
 using Domain.Models.Categorias;
 

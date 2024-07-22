@@ -1,4 +1,4 @@
-﻿using Domain.Dtos.Membros;
+﻿using Domain.Dtos;
 using Domain.Interfaces.Repositories.Base;
 using Domain.Models.Membros;
 

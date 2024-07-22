@@ -1,4 +1,4 @@
-﻿using Application.Validators.Despesas;
+﻿using Application.Commands.Validators.Finance;
 using FluentValidation;
 using Infraestructure.Data.Configurations.DataBaseConfiguration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,8 +18,8 @@ namespace Web.Extensios.DependencyManagers
             services.AddDependecyUtilities();
             services.AddDependecyRepositories();
             services.AddDependecyDomainServices();
-            services.AddDependecyComandoServices();
-            services.AddDependecyConsultaServices();
+            services.AddDependecyCommandsServices();
+            services.AddDependecyQueriesServices();
 
             services.AddAuthenticationJwt(config);
             services.AddAssemblyConfigurations();

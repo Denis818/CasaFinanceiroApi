@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Services.User;
+﻿using Application.Commands.Dtos;
+using Application.Commands.Interfaces;
 using Asp.Versioning;
 using Domain.Dtos.User;
 using Domain.Dtos.User.Auth;
@@ -15,11 +16,11 @@ namespace Presentation.Api.V1.User
     [ApiController]
     [ApiVersion(ApiVersioning.V1)]
     [ApiVersionRoute("user")]
-    public class UsersController(IAuthAppService _authService, IServiceProvider service)
+    public class UsersController(IAuthCommandService _authService, IServiceProvider service)
         : MainController(service)
     {
         [HttpPost("login")]
-        public async Task<UserTokenDto> Login(UserDto userDto)
+        public async Task<UserTokenDto> Login(UserCommandDto userDto)
         {
             if (userDto.Email.IsNullOrEmpty() || userDto.Password.IsNullOrEmpty())
             {

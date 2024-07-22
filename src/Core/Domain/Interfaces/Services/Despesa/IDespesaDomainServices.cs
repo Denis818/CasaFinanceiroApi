@@ -1,15 +1,16 @@
-﻿using Domain.Dtos.Despesas.Relatorios;
+﻿using Domain.Dtos.Despesas;
+using Domain.Dtos.Despesas.Consultas;
 
 namespace Domain.Interfaces.Services.Despesa
 {
     public interface IDespesaDomainServices
     {
-        DistribuicaoCustosMoradiaDto CalcularDistribuicaoCustosMoradia(
-            CustosDespesasMoradiaDto custosDespesasMoradia
+        DespesasDistribuicaoCustosMoradiaDto CalcularDistribuicaoCustosMoradia(
+            DespesasCustosMoradiaQueryDto custosDespesasMoradia
         );
 
-        DistribuicaoCustosCasaDto CalcularDistribuicaoCustosCasa(
-            CustosDespesasCasaDto custosDespesasCasa
+        DespesasDistribuicaoCustosCasaQueryDto CalcularDistribuicaoCustosCasa(
+            DespesasCustosDespesasCasaQueryDto custosDespesasCasa
         );
     }
 }

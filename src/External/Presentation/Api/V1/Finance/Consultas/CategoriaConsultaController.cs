@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Services.Finance.Consultas;
+﻿using Application.Queries.Interfaces;
 using Asp.Versioning;
 using Domain.Models.Categorias;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +15,7 @@ namespace Presentation.Api.V1.Finance.Consultas
     [ApiVersionRoute("categoria")]
     public class CategoriaConsultaController(
         IServiceProvider service,
-        ICategoriaConsultaServices _categoriaConsultaServices
+        ICategoriaQueryServices _categoriaConsultaServices
     ) : MainController(service)
     {
         [HttpGet]

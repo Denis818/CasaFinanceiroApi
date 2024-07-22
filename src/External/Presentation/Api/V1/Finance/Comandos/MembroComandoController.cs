@@ -1,6 +1,6 @@
-﻿using Application.Interfaces.Services.Finance.Comandos;
+﻿using Application.Commands.Dtos;
+using Application.Commands.Interfaces;
 using Asp.Versioning;
-using Domain.Dtos.Membros;
 using Domain.Enumeradores;
 using Domain.Models.Membros;
 using Microsoft.AspNetCore.Mvc;
@@ -25,12 +25,12 @@ namespace Presentation.Api.V1.Finance.Comandos
         #region CRUD
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<Membro> Post(MembroDto vendaDto) =>
+        public async Task<Membro> Post(MembroCommandDto vendaDto) =>
             await _membroComandoServices.InsertAsync(vendaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task<Membro> Put(int id, MembroDto vendaDto) =>
+        public async Task<Membro> Put(int id, MembroCommandDto vendaDto) =>
             await _membroComandoServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]

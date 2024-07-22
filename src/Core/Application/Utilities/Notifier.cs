@@ -1,5 +1,5 @@
-﻿using Application.Interfaces.Utilities;
-using Domain.Enumeradores;
+﻿using Domain.Enumeradores;
+using Domain.Interfaces.Utilities;
 using Domain.Utilities;
 
 namespace Application.Utilities

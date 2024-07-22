@@ -1,4 +1,5 @@
-﻿using Domain.Dtos.Despesas.Relatorios;
+﻿using Domain.Dtos.Despesas;
+using Domain.Dtos.Despesas.Consultas;
 using Domain.Extensions.Help;
 using Domain.Interfaces.Services.Despesa;
 
@@ -6,8 +7,8 @@ namespace Domain.Services
 {
     public class DespesaDomainServices : IDespesaDomainServices
     {
-        public DistribuicaoCustosMoradiaDto CalcularDistribuicaoCustosMoradia(
-            CustosDespesasMoradiaDto custosDespesasMoradia
+        public DespesasDistribuicaoCustosMoradiaDto CalcularDistribuicaoCustosMoradia(
+            DespesasCustosMoradiaQueryDto custosDespesasMoradia
         )
         {
             double totalAptoMaisCaixa =
@@ -34,7 +35,7 @@ namespace Domain.Services
 
             double valorParaDoPeu = 300 + valorLuzMaisCondominioParaCadaMembro;
 
-            return new DistribuicaoCustosMoradiaDto()
+            return new DespesasDistribuicaoCustosMoradiaDto()
             {
                 ValorParaDoPeu = valorParaDoPeu,
                 TotalAptoMaisCaixa = totalAptoMaisCaixa,
@@ -53,8 +54,8 @@ namespace Domain.Services
             };
         }
 
-        public DistribuicaoCustosCasaDto CalcularDistribuicaoCustosCasa(
-            CustosDespesasCasaDto custosDespesasCasa
+        public DespesasDistribuicaoCustosCasaQueryDto CalcularDistribuicaoCustosCasa(
+            DespesasCustosDespesasCasaQueryDto custosDespesasCasa
         )
         {
             //  Almoço divido com Jhon
@@ -78,7 +79,7 @@ namespace Domain.Services
             double despesaGeraisMaisAlmocoDividioPorMembro =
                 TotalDespesasGeraisMaisAlmocoDividido / custosDespesasCasa.MembrosForaJhonCount;
 
-            return new DistribuicaoCustosCasaDto()
+            return new DespesasDistribuicaoCustosCasaQueryDto()
             {
                 Membros = custosDespesasCasa.TodosMembros,
                 TotalSomenteAlmoco = custosDespesasCasa.ValorTotalAlmoco,
