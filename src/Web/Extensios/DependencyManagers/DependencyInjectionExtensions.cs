@@ -62,7 +62,7 @@ namespace Web.Extensios.DependencyManagers
 
             services.AddScoped<IDashboardConsultaServices, DashboardConsultaServices>();
             services.AddScoped<IPainelControleConsultaServices, PainelControleConsultaServices>();
-            services.AddScoped<IConferenciaVendasConsultaServices, ConferenciaVendasConsultaServices>();
+            services.AddScoped<IConferenciaComprasConsultaServices, ConferenciaComprasConsultaServices>();
         }
 
         public static void AddCompanyConnectionStrings(

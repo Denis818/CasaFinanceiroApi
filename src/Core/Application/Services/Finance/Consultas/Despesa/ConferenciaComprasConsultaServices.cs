@@ -13,15 +13,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Finance.Consultas
 {
-    public class ConferenciaVendasConsultaServices
+    public class ConferenciaComprasConsultaServices
         : BaseAppService<Despesa, IDespesaRepository>,
-            IConferenciaVendasConsultaServices
+            IConferenciaComprasConsultaServices
     {
         private readonly CategoriaIdsDto _categoriaIds;
         private readonly IQueryable<Despesa> _queryDespesasPorGrupo;
         private readonly ICategoriaRepository _categoriaRepository;
 
-        public ConferenciaVendasConsultaServices(
+        public ConferenciaComprasConsultaServices(
             IServiceProvider service,
             ICategoriaRepository categoriaRepository
         )
@@ -39,13 +39,14 @@ namespace Application.Services.Finance.Consultas
                 .Include(c => c.GrupoFatura);
         }
 
-        #region Conferência de vendas
+        #region Conferência de Compras
         public async Task<PagedResult<Despesa>> GetListDespesasAllGroups(
-            DespesaFiltroDto despesaFiltroDto
+            DespesaFiltroDto despesaFiltroDto,
+            string ano
         )
         {
             var queryDespesasAllGrupo = _repository
-                .Get()
+                .Get(despesa => despesa.GrupoFatura.Nome.Contains(ano))
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoFatura);
 
@@ -182,6 +183,12 @@ namespace Application.Services.Finance.Consultas
                 case EnumFiltroDespesa.Fornecedor:
                     query = query.Where(despesa =>
                         despesa.Fornecedor.ToLower().Contains(filter.ToLower())
+                    );
+                    break;
+
+                case EnumFiltroDespesa.GrupoFatura:
+                    query = query.Where(despesa =>
+                        despesa.GrupoFatura.Nome.ToLower().Contains(filter.ToLower())
                     );
                     break;
             }

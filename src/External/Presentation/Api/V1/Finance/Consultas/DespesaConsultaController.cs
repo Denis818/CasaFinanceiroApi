@@ -16,7 +16,7 @@ using Presentation.Version;
 
 namespace Presentation.Api.V1.Finance.Consultas
 {
-    [Cached]
+   // [Cached]
     [ApiController]
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
@@ -25,7 +25,7 @@ namespace Presentation.Api.V1.Finance.Consultas
     public class DespesaConsultaController(
         IDashboardConsultaServices dashboardConsultaServices,
         IPainelControleConsultaServices painelControleConsultaServices,
-        IConferenciaVendasConsultaServices conferenciaVendasConsultaServices,
+        IConferenciaComprasConsultaServices conferenciaComprasConsultaServices,
         IServiceProvider service
     ) : MainController(service)
     {
@@ -98,15 +98,13 @@ namespace Presentation.Api.V1.Finance.Consultas
 
         #endregion
 
-        #region Conferência de compras
+        #region Conferência de Compras
 
         [HttpGet("todos-grupos")]
-        public async Task<PagedResult<Despesa>> GetListDespesasAllGrupos(
-         [FromQuery] DespesaFiltroDto despesaFiltroDto
-        )
+        public async Task<PagedResult<Despesa>> GetListDespesasAllGrupos([FromQuery] DespesaFiltroDto despesaFiltroDto, string ano)
         {
-            return await conferenciaVendasConsultaServices.GetListDespesasAllGroups(
-                despesaFiltroDto
+            return await conferenciaComprasConsultaServices.GetListDespesasAllGroups(
+                despesaFiltroDto, ano
             );
         }
 
@@ -116,7 +114,7 @@ namespace Presentation.Api.V1.Finance.Consultas
             int itensPorPagina = 10
         )
         {
-            return await conferenciaVendasConsultaServices.SugestaoDeFornecedorMaisBarato(
+            return await conferenciaComprasConsultaServices.SugestaoDeFornecedorMaisBarato(
                 paginaAtual,
                 itensPorPagina
             );
@@ -126,7 +124,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         public async Task<
             IEnumerable<SugestaoEconomiaInfoDto>
         > GetSugestoesEconomiaPorGrupoAsync() =>
-            await conferenciaVendasConsultaServices.GetSugestoesEconomiaPorGrupoAsync();
+            await conferenciaComprasConsultaServices.GetSugestoesEconomiaPorGrupoAsync();
 
         #endregion
     }

@@ -6,9 +6,9 @@ using Domain.Utilities;
 
 namespace Application.Interfaces.Services.Finance.Consultas
 {
-    public interface IConferenciaVendasConsultaServices
+    public interface IConferenciaComprasConsultaServices
     {
-        Task<PagedResult<Despesa>> GetListDespesasAllGroups(DespesaFiltroDto despesaFiltroDto);
+        Task<PagedResult<Despesa>> GetListDespesasAllGroups(DespesaFiltroDto despesaFiltroDto, string ano);
         Task<List<SugestaoEconomiaInfoDto>> GetSugestoesEconomiaPorGrupoAsync();
         Task<IEnumerable<SugestaoDeFornecedorDto>> SugestaoDeFornecedorMaisBarato(int paginaAtual, int itensPorPagina);
     }

@@ -4,6 +4,7 @@
     {
         Item,
         Categoria,
-        Fornecedor
+        Fornecedor,
+        GrupoFatura
     }
 }
