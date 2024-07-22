@@ -165,6 +165,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 {
                     Nome = $"Fatura de {mesAtualName} {DateTime.Now.Year}",
                     DataCriacao = dataCriacao,
+                    Ano = DateTime.Now.Year.ToString(),
                     StatusFaturas =
                     [
                         new()

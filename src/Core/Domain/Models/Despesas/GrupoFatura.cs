@@ -8,6 +8,8 @@ namespace Domain.Models.Despesas
         public int Id { get; set; }
         public string Nome { get; set; }
 
+        public string Ano { get; set; }
+
         [JsonConverter(typeof(LongDateFormatConverter))]
         public DateTime DataCriacao { get; set; }
 
