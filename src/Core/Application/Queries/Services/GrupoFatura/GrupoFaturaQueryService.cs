@@ -60,7 +60,7 @@ namespace Application.Queries.Services
         private async Task<IList<GrupoFatura>> GetAllByYearAsync(string ano)
         {
             var listGruposFaturas = await _repository
-                .Get(fatura => fatura.Nome.Contains(ano))
+                .Get(fatura => fatura.Ano.ToLower() == ano.ToLower())
                 .Include(s => s.StatusFaturas)
                 .OrderBy(c => c.Nome)
                 .ToListAsync();

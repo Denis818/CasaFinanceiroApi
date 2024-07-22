@@ -21,7 +21,7 @@ namespace Application.Queries.Services
         )
         {
             var queryDespesasAllGrupo = _repository
-                .Get(despesa => despesa.GrupoFatura.Nome.Contains(ano))
+                .Get(despesa => despesa.GrupoFatura.Ano.ToLower() == ano.ToLower())
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoFatura);
 

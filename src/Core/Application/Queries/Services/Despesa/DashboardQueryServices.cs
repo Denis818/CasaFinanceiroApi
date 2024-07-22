@@ -87,7 +87,7 @@ namespace Application.Queries.Services
             };
 
             var despesasPorGrupo = _repository
-                .Get(despesa => despesa.GrupoFatura.Nome.Contains(ano))
+                .Get(despesa => despesa.GrupoFatura.Ano.ToLower() == ano.ToLower())
                 .GroupBy(d => d.GrupoFatura.Nome)
                 .Select(group => new DespesasPorGrupoQueryDto
                 {
