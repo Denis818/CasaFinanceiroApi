@@ -16,7 +16,7 @@ using Presentation.Version;
 
 namespace Presentation.Api.V1.Finance.Consultas
 {
-   // [Cached]
+    [Cached]
     [ApiController]
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
