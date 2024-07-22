@@ -79,6 +79,7 @@ namespace Application.Queries.Services
             var grupoFatura = new GrupoFatura
             {
                 Nome = $"Fatura de {mesAtualName} {ano}",
+                Ano = ano,
                 DataCriacao = dataCriacao,
                 StatusFaturas =
                 [
