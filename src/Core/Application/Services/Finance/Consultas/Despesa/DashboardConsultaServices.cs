@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using iText.Layout;
 using Application.Interfaces.Services.Finance.Consultas;
+using Org.BouncyCastle.Crypto.Digests;
 
 namespace Application.Services.Finance.Consultas
 {
@@ -81,7 +82,7 @@ namespace Application.Services.Finance.Consultas
             ));
         }
 
-        public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync()
+        public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync(string ano)
         {
             var monthOrder = new Dictionary<string, int>
             {
@@ -100,7 +101,7 @@ namespace Application.Services.Finance.Consultas
             };
 
             var despesasPorGrupo = _repository
-                .Get()
+                .Get(despesa => despesa.GrupoFatura.Nome.Contains(ano))
                 .GroupBy(d => d.GrupoFatura.Nome)
                 .Select(group => new DespesasPorGrupoDto
                 {

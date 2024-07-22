@@ -32,8 +32,8 @@ namespace Presentation.Api.V1.Finance.Consultas
         #region Dashboard
 
         [HttpGet("total-por-grupo")]
-        public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync() =>
-            await dashboardConsultaServices.GetDespesaGrupoParaGraficoAsync();
+        public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync(string ano) =>
+            await dashboardConsultaServices.GetDespesaGrupoParaGraficoAsync(ano);
 
         [HttpGet("total-por-categoria")]
         public async Task<IEnumerable<DespesasTotalPorCategoriaDto>> GetTotalPorCategoriaAsync() =>

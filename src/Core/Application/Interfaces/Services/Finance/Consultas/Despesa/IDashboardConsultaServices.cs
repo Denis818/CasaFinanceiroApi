@@ -7,7 +7,7 @@ namespace Application.Interfaces.Services.Finance.Consultas
         Task<byte[]> DownloadPdfRelatorioDeDespesaCasa();
         Task<byte[]> DownloadPdfRelatorioDeDespesaMoradia();
         Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync();
-        Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync();
+        Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync(string ano);
         Task<IEnumerable<DespesasTotalPorCategoriaDto>> GetTotalPorCategoriaAsync();
     }
 }
