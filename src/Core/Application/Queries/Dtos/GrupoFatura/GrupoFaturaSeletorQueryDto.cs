@@ -1,4 +1,4 @@
-﻿namespace Application.Queries.Dtos.GrupoFatura
+﻿namespace Application.Queries.Dtos
 {
     public class GrupoFaturaSeletorQueryDto
     {
