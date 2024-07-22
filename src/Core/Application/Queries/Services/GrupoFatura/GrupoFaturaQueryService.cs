@@ -1,4 +1,5 @@
 ﻿using Application.Queries.Dtos;
+using Application.Queries.Dtos.GrupoFatura;
 using Application.Queries.Interfaces;
 using Application.Queries.Services.Base;
 using Domain.Converters.DatesTimes;
@@ -18,12 +19,23 @@ namespace Application.Queries.Services
     {
         public async Task<IEnumerable<GrupoFatura>> GetAllAsync(string ano)
         {
-            var listGruposFaturas = await GetAllByYearAsync(ano);
+            var listGruposFaturas = await _repository
+                .Get(fatura => fatura.Ano.ToLower() == ano.ToLower())
+                .Include(s => s.StatusFaturas)
+                .OrderBy(c => c.Nome)
+                .ToListAsync();
+
+            return listGruposFaturas;
+        }
+
+        public async Task<IEnumerable<GrupoFaturaSeletorQueryDto>> GetListGrupoFaturaParaSeletorAsync(string ano)
+        {
+            var listGruposFaturas = await BuscarGrupoFaturaParaSeletorAsync(ano);
 
             if (listGruposFaturas.Count == 0)
             {
-                await CreateDefaultGroupFature(ano);
-                listGruposFaturas = await GetAllByYearAsync(ano);
+                await CreateDefaultGroupFatureAsync(ano);
+                listGruposFaturas = await BuscarGrupoFaturaParaSeletorAsync(ano);
             }
 
             return listGruposFaturas;
@@ -57,18 +69,26 @@ namespace Application.Queries.Services
         }
 
         #region Metodos de Suporte
-        private async Task<IList<GrupoFatura>> GetAllByYearAsync(string ano)
+
+
+        private async Task<IList<GrupoFaturaSeletorQueryDto>> BuscarGrupoFaturaParaSeletorAsync(
+            string ano
+        )
         {
             var listGruposFaturas = await _repository
                 .Get(fatura => fatura.Ano.ToLower() == ano.ToLower())
-                .Include(s => s.StatusFaturas)
+                .Select(fatura => new GrupoFaturaSeletorQueryDto
+                {
+                    Nome = fatura.Nome,
+                    Id = fatura.Id
+                })
                 .OrderBy(c => c.Nome)
                 .ToListAsync();
 
             return listGruposFaturas;
         }
 
-        private async Task CreateDefaultGroupFature(string ano)
+        private async Task CreateDefaultGroupFatureAsync(string ano)
         {
             var dataCriacao = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
 

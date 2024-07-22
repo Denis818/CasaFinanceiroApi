@@ -1,4 +1,5 @@
 ﻿using Application.Queries.Dtos;
+using Application.Queries.Dtos.GrupoFatura;
 using Application.Queries.Interfaces;
 using Asp.Versioning;
 using Domain.Models.Despesas;
@@ -30,5 +31,10 @@ namespace Presentation.Api.V1.Finance.Consultas
         [GetIdGroupInHeaderFilter]
         public async Task<StatusFaturaQueryDto> GetStatusFaturaDtoByNameAsync(string status) =>
             await _grupoFaturaConsultaService.GetStatusFaturaDtoByNameAsync(status);
+
+        [HttpGet("seletor-grupo-fatura")]
+        [GetIdGroupInHeaderFilter]
+        public async Task<IEnumerable<GrupoFaturaSeletorQueryDto>> GetListGrupoFaturaParaSeletorAsync(string ano) =>
+           await _grupoFaturaConsultaService.GetListGrupoFaturaParaSeletorAsync(ano);
     }
 }
