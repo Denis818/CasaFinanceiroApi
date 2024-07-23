@@ -87,7 +87,7 @@ namespace Application.Queries.Services
     };
 
     var despesasPorGrupo = await _repository
-        .Where(despesa => despesa.GrupoFatura.Ano.ToLower() == ano.ToLower())
+       .Get(despesa => despesa.GrupoFatura.Ano == ano)
         .GroupBy(d => d.GrupoFatura.Nome)
         .Select(group => new DespesasPorGrupoQueryDto
         {
