@@ -10,7 +10,7 @@ namespace Application.Queries.Services
         : BaseQueryService<Categoria, ICategoriaRepository>(service), ICategoriaQueryServices
     {
         public async Task<IEnumerable<Categoria>> GetAllAsync() =>
-            await _repository.Get().OrderBy(c => c.Descricao).ToListAsync();
+            await _repository.Get().AsNoTracking().OrderBy(c => c.Descricao).ToListAsync();
 
         public async Task<Categoria> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
     }

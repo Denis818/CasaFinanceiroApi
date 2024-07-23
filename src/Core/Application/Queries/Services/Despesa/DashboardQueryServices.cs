@@ -19,7 +19,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Queries.Services
 {
-    public class DashboardQueryServices : BaseQueryService<Despesa, IDespesaRepository>, IDashboardQueryServices
+    public class DashboardQueryServices
+        : BaseQueryService<Despesa, IDespesaRepository>,
+            IDashboardQueryServices
     {
         private readonly PdfTableHelper _pdfTableCasa = new();
         private readonly PdfTableHelper _pdfTableMoradia = new();
@@ -35,7 +37,9 @@ namespace Application.Queries.Services
             IServiceProvider service,
             IGrupoFaturaRepository grupoFaturaRepository,
             IMembroRepository membroRepository,
-            IDespesaDomainServices despesaDomainServices) : base(service)
+            IDespesaDomainServices despesaDomainServices
+        )
+            : base(service)
         {
             _grupoFaturaRepository = grupoFaturaRepository;
             _membroRepository = membroRepository;
@@ -49,7 +53,7 @@ namespace Application.Queries.Services
 
         public async Task<IEnumerable<DespesasTotalPorCategoriaQueryDto>> GetTotalPorCategoriaAsync()
         {
-             var listAgrupada = await _queryDespesasPorGrupo
+            var listAgrupada = await _queryDespesasPorGrupo
                 .GroupBy(despesa => despesa.Categoria.Descricao)
                 .Select(group => new DespesasTotalPorCategoriaQueryDto(
                     group.Key,
@@ -69,42 +73,43 @@ namespace Application.Queries.Services
             return listAgrupada;
         }
 
-        public async Task<IEnumerable<DespesasPorGrupoQueryDto>> GetDespesaGrupoParaGraficoAsync(string ano)
+        public async Task<IEnumerable<DespesasPorGrupoQueryDto>> GetDespesaGrupoParaGraficoAsync(
+            string ano
+        )
         {
             var monthOrder = new Dictionary<string, int>
-    {
-        { "Janeiro", 1 },
-        { "Fevereiro", 2 },
-        { "Março", 3 },
-        { "Abril", 4 },
-        { "Maio", 5 },
-        { "Junho", 6 },
-        { "Julho", 7 },
-        { "Agosto", 8 },
-        { "Setembro", 9 },
-        { "Outubro", 10 },
-        { "Novembro", 11 },
-        { "Dezembro", 12 }
-    };
+            {
+                { "Janeiro", 1 },
+                { "Fevereiro", 2 },
+                { "Março", 3 },
+                { "Abril", 4 },
+                { "Maio", 5 },
+                { "Junho", 6 },
+                { "Julho", 7 },
+                { "Agosto", 8 },
+                { "Setembro", 9 },
+                { "Outubro", 10 },
+                { "Novembro", 11 },
+                { "Dezembro", 12 }
+            };
 
-    var despesasPorGrupo = await _repository
-       .Get(despesa => despesa.GrupoFatura.Ano == ano)
-        .GroupBy(d => d.GrupoFatura.Nome)
-        .Select(group => new DespesasPorGrupoQueryDto
-        {
-            GrupoNome = group.Key,
-            Total = group.Sum(d => d.Total)
-        })
-        .ToListAsync();
+            var despesasPorGrupo = await _repository
+                .Get(despesa => despesa.GrupoFatura.Ano == ano).AsNoTracking()
+                .GroupBy(d => d.GrupoFatura.Nome)
+                .Select(group => new DespesasPorGrupoQueryDto
+                {
+                    GrupoNome = group.Key,
+                    Total = group.Sum(d => d.Total)
+                })
+                .ToListAsync();
 
-    return despesasPorGrupo
-        .OrderBy(dto =>
-        {
-            var monthName = dto.GrupoNome.Split(' ')[2];
-            return monthOrder[monthName];
-        })
-        .ToList();
-
+            return despesasPorGrupo
+                .OrderBy(dto =>
+                {
+                    var monthName = dto.GrupoNome.Split(' ')[2];
+                    return monthOrder[monthName];
+                })
+                .ToList();
         }
 
         public async Task<DespesasDivididasMensalQueryDto> GetAnaliseDesesasPorGrupoAsync()
@@ -153,7 +158,7 @@ namespace Application.Queries.Services
         private async Task<DespesasDistribuicaoCustosCasaQueryDto> CalcularDistribuicaoCustosCasaAsync()
         {
             List<Membro> todosMembros = await _membroRepository
-                .Get(m => m.DataInicio.Date.Month <= _grupoFatura.DataCriacao.Date.Month)
+                .Get(m => m.DataInicio.Date.Month <= _grupoFatura.DataCriacao.Date.Month).AsNoTracking()
                 .ToListAsync();
 
             int membrosForaJhonCount = todosMembros.Where(m => m.Id != _membroId.IdJhon).Count();
@@ -272,7 +277,7 @@ namespace Application.Queries.Services
         private async Task<GrupoListMembrosDespesaDto> GetGrupoListMembrosDespesa()
         {
             List<Membro> todosMembros = await _membroRepository
-                .Get(m => m.DataInicio <= _grupoFatura.DataCriacao)
+                .Get(m => m.DataInicio <= _grupoFatura.DataCriacao).AsNoTracking()
                 .ToListAsync();
 
             List<Membro> listMembroForaJhonLaila = todosMembros
@@ -299,7 +304,9 @@ namespace Application.Queries.Services
 
         #region Gerar Relatório PDF Casa
 
-        private byte[] GerarRelatorioDespesaCasaPdf(DespesasDistribuicaoCustosCasaQueryDto custosCasaDto)
+        private byte[] GerarRelatorioDespesaCasaPdf(
+            DespesasDistribuicaoCustosCasaQueryDto custosCasaDto
+        )
         {
             using var memoryStream = new MemoryStream();
             using var writer = new PdfWriter(memoryStream);
@@ -552,7 +559,7 @@ namespace Application.Queries.Services
         private async Task<DespesasRelatorioGastosDoGrupoQueryDto> GetRelatorioDeGastosDoMesAsync()
         {
             string grupoNome = _grupoFaturaRepository
-                .Get(g => g.Id == _grupoFatura.Id)
+                .Get(g => g.Id == _grupoFatura.Id).AsNoTracking()
                 .FirstOrDefault()
                 ?.Nome;
 
@@ -589,7 +596,9 @@ namespace Application.Queries.Services
             };
         }
 
-        private async Task<IEnumerable<DespesaPorMembroQueryDto>> DistribuirDespesasEntreMembrosAsync(
+        private async Task<
+            IEnumerable<DespesaPorMembroQueryDto>
+        > DistribuirDespesasEntreMembrosAsync(
             double despesaGeraisMaisAlmocoDividioPorMembro,
             double almocoParteDoJhon,
             double aluguelCondominioContaLuzPorMembroForaPeu,
@@ -597,7 +606,7 @@ namespace Application.Queries.Services
         )
         {
             var todosMembros = await _membroRepository
-                .Get(m => m.DataInicio.Date.Month <= _grupoFatura.DataCriacao.Date.Month)
+                .Get(m => m.DataInicio.Date.Month <= _grupoFatura.DataCriacao.Date.Month).AsNoTracking()
                 .ToListAsync();
 
             double ValorMoradia(Membro membro)

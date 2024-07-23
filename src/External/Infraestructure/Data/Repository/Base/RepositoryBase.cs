@@ -19,7 +19,7 @@ namespace Data.Repository.Base
 
         public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> expression = null)
         {
-            if(expression != null)
+            if (expression != null)
                 return DbSet.Where(expression);
 
             return DbSet.AsNoTracking();

@@ -141,7 +141,7 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            var IsUnicGroup = await _repository.Get().ToListAsync();
+            var IsUnicGroup = await _repository.Get().AsNoTracking().ToListAsync();
             if (IsUnicGroup.Count == 1)
             {
                 Notificar(

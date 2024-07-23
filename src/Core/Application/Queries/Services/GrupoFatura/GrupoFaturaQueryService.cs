@@ -37,9 +37,7 @@ namespace Application.Queries.Services
             return listGruposFaturas;
         }
 
-        public async Task<
-            IEnumerable<GrupoFaturaSeletorQueryDto>
-        > GetListGrupoFaturaParaSeletorAsync(string ano)
+        public async Task<IEnumerable<GrupoFaturaSeletorQueryDto>> GetListGrupoFaturaParaSeletorAsync(string ano)
         {
             var listGruposFaturas = await BuscarGrupoFaturaParaSeletorAsync(ano);
 
@@ -64,7 +62,7 @@ namespace Application.Queries.Services
             var grupoFaturaId = (int)(_httpContext.Items["GrupoFaturaId"] ?? 0);
 
             var statusFatura = await _statusFaturaRepository
-                .Get(s => s.GrupoFaturaId == grupoFaturaId)
+                .Get(s => s.GrupoFaturaId == grupoFaturaId).AsNoTracking()
                 .FirstOrDefaultAsync(s => s.Estado == status);
 
             if (statusFatura == null)
@@ -88,6 +86,7 @@ namespace Application.Queries.Services
         {
             var listGruposFaturas = await _repository
                 .Get(fatura => fatura.Ano == ano)
+                .AsNoTracking()
                 .Select(fatura => new GrupoFaturaSeletorQueryDto
                 {
                     Nome = fatura.Nome,

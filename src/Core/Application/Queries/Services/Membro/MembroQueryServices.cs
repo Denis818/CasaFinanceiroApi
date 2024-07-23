@@ -22,7 +22,7 @@ namespace Application.Queries.Services
             + "\r\nSenha: *123456*";
 
         public async Task<IEnumerable<Membro>> GetAllAsync() =>
-            await _repository.Get().OrderBy(c => c.Nome).ToListAsync();
+            await _repository.Get().AsNoTracking().OrderBy(c => c.Nome).ToListAsync();
 
         public async Task<Membro> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 
@@ -33,7 +33,7 @@ namespace Application.Queries.Services
             string pix
         )
         {
-            var membro = await _repository.Get(membro => membro.Nome == nome).FirstOrDefaultAsync();
+            var membro = await _repository.Get(membro => membro.Nome == nome).AsNoTracking().FirstOrDefaultAsync();
 
             if (membro is null)
             {
