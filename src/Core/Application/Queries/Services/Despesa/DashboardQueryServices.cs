@@ -71,37 +71,39 @@ namespace Application.Queries.Services
         public async Task<IEnumerable<DespesasPorGrupoQueryDto>> GetDespesaGrupoParaGraficoAsync(string ano)
         {
             var monthOrder = new Dictionary<string, int>
-            {
-                { "Janeiro", 1 },
-                { "Fevereiro", 2 },
-                { "Março", 3 },
-                { "Abril", 4 },
-                { "Maio", 5 },
-                { "Junho", 6 },
-                { "Julho", 7 },
-                { "Agosto", 8 },
-                { "Setembro", 9 },
-                { "Outubro", 10 },
-                { "Novembro", 11 },
-                { "Dezembro", 12 }
-            };
+    {
+        { "Janeiro", 1 },
+        { "Fevereiro", 2 },
+        { "Março", 3 },
+        { "Abril", 4 },
+        { "Maio", 5 },
+        { "Junho", 6 },
+        { "Julho", 7 },
+        { "Agosto", 8 },
+        { "Setembro", 9 },
+        { "Outubro", 10 },
+        { "Novembro", 11 },
+        { "Dezembro", 12 }
+    };
 
-            var despesasPorGrupo = _repository
-                .Get(despesa => despesa.GrupoFatura.Ano.ToLower() == ano.ToLower())
-                .GroupBy(d => d.GrupoFatura.Nome)
-                .Select(group => new DespesasPorGrupoQueryDto
-                {
-                    GrupoNome = group.Key,
-                    Total = group.Sum(d => d.Total)
-                })
-                .AsEnumerable()
-                .OrderBy(dto =>
-                {
-                    var monthName = dto.GrupoNome.Split(' ')[2];
-                    return monthOrder[monthName];
-                });
+    var despesasPorGrupo = await _repository
+        .Where(despesa => despesa.GrupoFatura.Ano.ToLower() == ano.ToLower())
+        .GroupBy(d => d.GrupoFatura.Nome)
+        .Select(group => new DespesasPorGrupoQueryDto
+        {
+            GrupoNome = group.Key,
+            Total = group.Sum(d => d.Total)
+        })
+        .ToListAsync();
 
-            return await Task.FromResult(despesasPorGrupo.ToList());
+    return despesasPorGrupo
+        .OrderBy(dto =>
+        {
+            var monthName = dto.GrupoNome.Split(' ')[2];
+            return monthOrder[monthName];
+        })
+        .ToList();
+
         }
 
         public async Task<DespesasDivididasMensalQueryDto> GetAnaliseDesesasPorGrupoAsync()
