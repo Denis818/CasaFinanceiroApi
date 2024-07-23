@@ -19,7 +19,7 @@ namespace Application.Queries.Services
         public async Task<IEnumerable<GrupoFaturaQueryDto>> GetAllAsync(string ano)
         {
             var listGruposFaturas = await _repository
-                .Get(fatura => fatura.Ano.ToLower() == ano.ToLower())
+                .Get(fatura => fatura.Ano == ano)
                 .Include(s => s.StatusFaturas)
                 .Include(fatura => fatura.Despesas)
                 .Select(fatura => new GrupoFaturaQueryDto
@@ -56,7 +56,7 @@ namespace Application.Queries.Services
         {
             var fatura = await _repository.Get(fatura => fatura.Id == id).FirstOrDefaultAsync();
 
-            return fatura == null ? "Denis" : fatura.Nome;
+            return fatura == null ? "Não encontrado" : fatura.Nome;
         }
 
         public async Task<StatusFaturaQueryDto> GetStatusFaturaDtoByNameAsync(string status)
@@ -87,7 +87,7 @@ namespace Application.Queries.Services
         )
         {
             var listGruposFaturas = await _repository
-                .Get(fatura => fatura.Ano.ToLower() == ano.ToLower())
+                .Get(fatura => fatura.Ano == ano)
                 .Select(fatura => new GrupoFaturaSeletorQueryDto
                 {
                     Nome = fatura.Nome,
