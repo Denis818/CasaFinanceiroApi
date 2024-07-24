@@ -1,4 +1,5 @@
 ﻿using Application.Queries.Dtos;
+using Domain.Dtos.QueryResults.Despesas;
 
 namespace Application.Queries.Interfaces
 {
@@ -6,8 +7,8 @@ namespace Application.Queries.Interfaces
     {
         Task<byte[]> DownloadPdfRelatorioDeDespesaCasa();
         Task<byte[]> DownloadPdfRelatorioDeDespesaMoradia();
-        Task<DespesasDivididasMensalQueryDto> GetAnaliseDesesasPorGrupoAsync();
-        Task<IEnumerable<DespesasPorGrupoQueryDto>> GetDespesaGrupoParaGraficoAsync(string ano);
+        Task<DespesasDivididasMensalQueryDto> GetDespesasDivididasMensalAsync();
+        Task<IEnumerable<DespesasPorGrupoResult>> GetDespesaGrupoParaGraficoAsync(string ano);
         Task<IEnumerable<DespesasTotalPorCategoriaQueryDto>> GetTotalPorCategoriaAsync();
     }
 }

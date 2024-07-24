@@ -1,6 +1,7 @@
 ﻿using Application.Queries.Dtos;
 using Application.Queries.Interfaces;
 using Asp.Versioning;
+using Domain.Dtos.QueryResults.Despesas;
 using Domain.Models.Despesas;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Http;
@@ -30,7 +31,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         #region Dashboard
 
         [HttpGet("total-por-grupo")]
-        public async Task<IEnumerable<DespesasPorGrupoQueryDto>> GetDespesaGrupoParaGraficoAsync(string ano) =>
+        public async Task<IEnumerable<DespesasPorGrupoResult>> GetDespesaGrupoParaGraficoAsync(string ano) =>
             await dashboardConsultaServices.GetDespesaGrupoParaGraficoAsync(ano);
 
         [HttpGet("total-por-categoria")]
@@ -38,8 +39,8 @@ namespace Presentation.Api.V1.Finance.Consultas
             await dashboardConsultaServices.GetTotalPorCategoriaAsync();
 
         [HttpGet("analise-despesa-por-grupo")]
-        public async Task<DespesasDivididasMensalQueryDto> GetAnaliseDesesasPorGrupoAsync() =>
-            await dashboardConsultaServices.GetAnaliseDesesasPorGrupoAsync();
+        public async Task<DespesasDivididasMensalQueryDto> GetDespesasDivididasMensalAsync() =>
+            await dashboardConsultaServices.GetDespesasDivididasMensalAsync();
 
         [HttpGet("pdf-despesas-casa")]
         public async Task<FileContentResult> DownloadCalculoCasa()

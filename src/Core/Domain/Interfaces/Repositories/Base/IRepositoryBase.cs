@@ -12,5 +12,6 @@ namespace Domain.Interfaces.Repositories.Base
         Task InsertRangeAsync(List<TEntity> entity);
         Task<bool> SaveChangesAsync();
         void Update(TEntity entity);
+        Task<List<T>> ExecuteSqlRawAsync<T>(string sql, params object[] parameters) where T : class, new();
     }
 }

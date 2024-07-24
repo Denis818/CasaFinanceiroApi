@@ -49,9 +49,7 @@ namespace Application.Queries.Services
             return listaPaginada;
         }
 
-        public async Task<
-            List<DespesasSugestaoEconomiaQueryDto>
-        > GetSugestoesEconomiaPorGrupoAsync()
+        public async Task<List<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaPorGrupoAsync()
         {
             var sugestoes = await _queryDespesasPorGrupo
                 .Where(d =>
@@ -74,11 +72,15 @@ namespace Application.Queries.Services
             return sugestoes;
         }
 
-        public async Task<
-            IEnumerable<DespesasSugestaoDeFornecedorQueryDto>
-        > SugestaoDeFornecedorMaisBarato(int paginaAtual, int itensPorPagina)
+        public async Task<IEnumerable<DespesasSugestaoDeFornecedorQueryDto>> SugestaoDeFornecedorMaisBarato(int paginaAtual, int itensPorPagina)
         {
+            var queryDespesasPorGrupo = _repository
+               .Get(d => d.GrupoFaturaId == _grupoId)
+               .Include(c => c.Categoria)
+               .Include(c => c.GrupoFatura);
+
             var categorias = await _categoriaRepository.Get().ToListAsync();
+
             List<DespesasSugestaoDeFornecedorQueryDto> sugestoes = new();
 
             foreach (var categoria in categorias)

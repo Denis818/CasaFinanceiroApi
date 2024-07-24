@@ -39,5 +39,11 @@ namespace Data.Repository.Base
         public void DeleteRange(TEntity[] entityArray) => DbSet.RemoveRange(entityArray);
 
         public async Task<bool> SaveChangesAsync() => await _context.SaveChangesAsync() > 0;
+
+        public async Task<List<T>> ExecuteSqlRawAsync<T>(string sql, params object[] parameters) where T : class, new()
+        {
+            return await _context.Set<T>().FromSqlRaw(sql, parameters).ToListAsync();
+        }
+
     }
 }

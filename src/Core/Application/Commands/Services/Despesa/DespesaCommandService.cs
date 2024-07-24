@@ -112,9 +112,10 @@ namespace Application.Commands.Services
 
             var ids = despesasParaInserir.Select(d => d.Id).ToList();
             var despesasInseridas = await _repository
-                .Get(d => ids.Contains(d.Id)).AsNoTracking()
+                .Get(d => ids.Contains(d.Id))
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoFatura)
+                .AsNoTracking()
                 .ToListAsync();
 
             return despesasInseridas;

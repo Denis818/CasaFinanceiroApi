@@ -2,6 +2,7 @@
 using Application.Queries.Interfaces;
 using Application.Queries.Services.Base;
 using Domain.Converters.DatesTimes;
+using Domain.Dtos.QueryResults;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
@@ -16,25 +17,9 @@ namespace Application.Queries.Services
         IGrupoFaturaRepository _grupoFaturaRepository
     ) : BaseQueryService<GrupoFatura, IGrupoFaturaRepository>(service), IGrupoFaturaQueryService
     {
-        public async Task<IEnumerable<GrupoFaturaQueryDto>> GetAllAsync(string ano)
+        public async Task<IEnumerable<GrupoFaturaQueryResult>> GetAllAsync(string ano)
         {
-            var listGruposFaturas = await _repository
-                .Get(fatura => fatura.Ano == ano)
-                .Include(s => s.StatusFaturas)
-                .Include(fatura => fatura.Despesas)
-                .Select(fatura => new GrupoFaturaQueryDto
-                {
-                    Id = fatura.Id,
-                    Nome = fatura.Nome,
-                    Ano = fatura.Ano,
-                    StatusFaturas = fatura.StatusFaturas,
-                    QuantidadeDespesas = fatura.Despesas.Count,
-                    TotalDespesas = fatura.Despesas.Sum(despesa => despesa.Total),
-                })
-                .OrderBy(c => c.Nome)
-                .ToListAsync();
-
-            return listGruposFaturas;
+            return await _repository.GetAllAsync(ano);
         }
 
         public async Task<IEnumerable<GrupoFaturaSeletorQueryDto>> GetListGrupoFaturaParaSeletorAsync(string ano)
@@ -62,7 +47,8 @@ namespace Application.Queries.Services
             var grupoFaturaId = (int)(_httpContext.Items["GrupoFaturaId"] ?? 0);
 
             var statusFatura = await _statusFaturaRepository
-                .Get(s => s.GrupoFaturaId == grupoFaturaId).AsNoTracking()
+                .Get(s => s.GrupoFaturaId == grupoFaturaId)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.Estado == status);
 
             if (statusFatura == null)
@@ -79,20 +65,19 @@ namespace Application.Queries.Services
 
         #region Metodos de Suporte
 
-
         private async Task<IList<GrupoFaturaSeletorQueryDto>> BuscarGrupoFaturaParaSeletorAsync(
             string ano
         )
         {
             var listGruposFaturas = await _repository
                 .Get(fatura => fatura.Ano == ano)
-                .AsNoTracking()
+                .OrderBy(fatura => fatura.Nome)
                 .Select(fatura => new GrupoFaturaSeletorQueryDto
                 {
                     Nome = fatura.Nome,
                     Id = fatura.Id
                 })
-                .OrderBy(c => c.Nome)
+                .AsNoTracking()
                 .ToListAsync();
 
             return listGruposFaturas;

@@ -22,7 +22,7 @@ namespace Application.Queries.Services
             + "\r\nSenha: *123456*";
 
         public async Task<IEnumerable<Membro>> GetAllAsync() =>
-            await _repository.Get().AsNoTracking().OrderBy(c => c.Nome).ToListAsync();
+            await _repository.Get().OrderBy(c => c.Nome).AsNoTracking().ToListAsync();
 
         public async Task<Membro> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 
@@ -75,7 +75,7 @@ namespace Application.Queries.Services
             string titleMessage
         )
         {
-            var resumoMensal = await _dashboardConsultaServices.GetAnaliseDesesasPorGrupoAsync();
+            var resumoMensal = await _dashboardConsultaServices.GetDespesasDivididasMensalAsync();
             var membroIds = _repository.GetMembersIds();
 
             double valorPorMembro =
@@ -111,7 +111,7 @@ namespace Application.Queries.Services
             string titleMessage
         )
         {
-            var resumoMensal = await _dashboardConsultaServices.GetAnaliseDesesasPorGrupoAsync();
+            var resumoMensal = await _dashboardConsultaServices.GetDespesasDivididasMensalAsync();
 
             double valorPorMembro =
                 resumoMensal
