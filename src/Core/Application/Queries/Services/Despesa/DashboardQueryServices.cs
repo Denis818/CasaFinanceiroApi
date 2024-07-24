@@ -51,17 +51,11 @@ namespace Application.Queries.Services
 
         #region Dashboard
 
-        public async Task<IEnumerable<DespesasTotalPorCategoriaQueryDto>> GetTotalPorCategoriaAsync()
+        public async Task<IEnumerable<TotalPorCategoriaQueryResut>> GetTotalPorCategoriaAsync()
         {
-            var listAgrupada = await _queryDespesasPorGrupo
-                .GroupBy(despesa => despesa.Categoria.Descricao)
-                .Select(group => new DespesasTotalPorCategoriaQueryDto(
-                    group.Key,
-                    group.Sum(despesa => despesa.Total)
-                ))
-                .ToListAsync();
+            var listAgrupada = await _repository.GetTotalPorCategoriaAsync(_grupoId);
 
-            if (listAgrupada.Count == 0)
+            if (!listAgrupada.Any())
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -71,6 +65,7 @@ namespace Application.Queries.Services
             }
 
             return listAgrupada;
+
         }
 
         public async Task<IEnumerable<DespesasPorGrupoResult>> GetDespesaGrupoParaGraficoAsync(

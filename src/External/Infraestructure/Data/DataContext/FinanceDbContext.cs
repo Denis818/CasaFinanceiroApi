@@ -1,4 +1,5 @@
-﻿using Domain.Dtos.QueryResults.Despesas;
+﻿using Domain.Dtos;
+using Domain.Dtos.QueryResults.Despesas;
 using Domain.Models.Categorias;
 using Domain.Models.Despesas;
 using Domain.Models.Membros;
@@ -23,6 +24,8 @@ namespace Data.DataContext
         #region QueryResults
         public DbSet<RelatorioGastosDoGrupoResult> DespesasRelatorioGastosDoGrupo { get; set; }
         public DbSet<DespesasPorGrupoResult> DespesasPorGrupoQueryDto { get; set; }
+        public DbSet<TotalPorCategoriaQueryResut> DespesasTotalPorCategoria { get; set; }
+
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,6 +48,7 @@ namespace Data.DataContext
         {
             modelBuilder.Entity<RelatorioGastosDoGrupoResult>().HasNoKey();
             modelBuilder.Entity<DespesasPorGrupoResult>().HasNoKey();
+            modelBuilder.Entity<TotalPorCategoriaQueryResut>().HasNoKey();
         }
     }
 }

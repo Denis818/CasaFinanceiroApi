@@ -46,10 +46,7 @@ namespace Data.Repository.Despesas
                 grupoId
             };
 
-            var result = await ExecuteSqlRawAsync<RelatorioGastosDoGrupoResult>(
-                sql,
-                parameters
-            );
+            var result = await ExecuteSqlRawAsync<RelatorioGastosDoGrupoResult>(sql, parameters);
 
             return result.FirstOrDefault() ?? new RelatorioGastosDoGrupoResult();
         }
@@ -103,6 +100,35 @@ namespace Data.Repository.Despesas
                     return monthOrder[monthName];
                 })
                 .ToList();
+        }
+
+        public async Task<IEnumerable<TotalPorCategoriaQueryResut>> GetTotalPorCategoriaAsync(
+            int grupoId
+        )
+        {
+            var sql =
+                @"
+                 SELECT 
+                     c.Descricao AS Categoria,
+                     COALESCE(SUM(d.Total), 0) AS Total,
+                     COUNT(d.Id) AS QuantidadeDeItens
+                 FROM 
+                     Despesas d
+                 JOIN 
+                     Categorias c ON d.CategoriaId = c.Id
+                 WHERE 
+                     d.GrupoFaturaId = {0}
+                 GROUP BY 
+                     c.Descricao";
+
+            var parameters = new object[] { grupoId };
+
+            var listAgrupada = await ExecuteSqlRawAsync<TotalPorCategoriaQueryResut>(
+                sql,
+                parameters
+            );
+
+            return listAgrupada;
         }
     }
 }

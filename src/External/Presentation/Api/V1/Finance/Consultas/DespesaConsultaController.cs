@@ -1,6 +1,7 @@
 ﻿using Application.Queries.Dtos;
 using Application.Queries.Interfaces;
 using Asp.Versioning;
+using Domain.Dtos;
 using Domain.Dtos.QueryResults.Despesas;
 using Domain.Models.Despesas;
 using Domain.Utilities;
@@ -35,7 +36,7 @@ namespace Presentation.Api.V1.Finance.Consultas
             await dashboardConsultaServices.GetDespesaGrupoParaGraficoAsync(ano);
 
         [HttpGet("total-por-categoria")]
-        public async Task<IEnumerable<DespesasTotalPorCategoriaQueryDto>> GetTotalPorCategoriaAsync() =>
+        public async Task<IEnumerable<TotalPorCategoriaQueryResut>> GetTotalPorCategoriaAsync() =>
             await dashboardConsultaServices.GetTotalPorCategoriaAsync();
 
         [HttpGet("analise-despesa-por-grupo")]
