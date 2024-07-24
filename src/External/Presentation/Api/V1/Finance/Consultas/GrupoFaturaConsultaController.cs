@@ -32,7 +32,6 @@ namespace Presentation.Api.V1.Finance.Consultas
             await _grupoFaturaConsultaService.GetStatusFaturaDtoByNameAsync(status);
 
         [HttpGet("seletor-grupo-fatura")]
-        [GetIdGroupInHeaderFilter]
         public async Task<IEnumerable<GrupoFaturaSeletorQueryDto>> GetListGrupoFaturaParaSeletorAsync(string ano) =>
            await _grupoFaturaConsultaService.GetListGrupoFaturaParaSeletorAsync(ano);
     }
