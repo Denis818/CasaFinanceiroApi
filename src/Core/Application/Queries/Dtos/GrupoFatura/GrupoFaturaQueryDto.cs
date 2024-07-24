@@ -1,9 +1,9 @@
 ﻿using Domain.Models.Despesas;
 using System.Text.Json.Serialization;
 
-namespace Domain.Dtos.QueryResults
+namespace Queries.Dtos
 {
-    public class GrupoFaturaQueryResult
+    public class GrupoFaturaQueryDto
     {
         public int Id { get; set; }
         public string Nome { get; set; }

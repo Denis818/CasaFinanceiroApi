@@ -2,11 +2,11 @@
 using Application.Queries.Interfaces;
 using Application.Queries.Services.Base;
 using Domain.Converters.DatesTimes;
-using Domain.Dtos.QueryResults;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
+using Queries.Dtos;
 using System.Globalization;
 
 namespace Application.Queries.Services
@@ -17,12 +17,30 @@ namespace Application.Queries.Services
         IGrupoFaturaRepository _grupoFaturaRepository
     ) : BaseQueryService<GrupoFatura, IGrupoFaturaRepository>(service), IGrupoFaturaQueryService
     {
-        public async Task<IEnumerable<GrupoFaturaQueryResult>> GetAllAsync(string ano)
+        public async Task<IEnumerable<GrupoFaturaQueryDto>> GetAllAsync(string ano)
         {
-            return await _repository.GetAllAsync(ano);
+            var listGruposFaturas = await _repository
+                .Get(fatura => fatura.Ano == ano)
+                .Include(s => s.StatusFaturas)
+                .Include(fatura => fatura.Despesas)
+                .Select(fatura => new GrupoFaturaQueryDto
+                {
+                    Id = fatura.Id,
+                    Nome = fatura.Nome,
+                    Ano = fatura.Ano,
+                    StatusFaturas = fatura.StatusFaturas,
+                    QuantidadeDespesas = fatura.Despesas.Count,
+                    TotalDespesas = fatura.Despesas.Sum(despesa => despesa.Total),
+                })
+                .OrderBy(c => c.Nome)
+                .ToListAsync();
+
+            return listGruposFaturas;
         }
 
-        public async Task<IEnumerable<GrupoFaturaSeletorQueryDto>> GetListGrupoFaturaParaSeletorAsync(string ano)
+        public async Task<
+            IEnumerable<GrupoFaturaSeletorQueryDto>
+        > GetListGrupoFaturaParaSeletorAsync(string ano)
         {
             var listGruposFaturas = await BuscarGrupoFaturaParaSeletorAsync(ano);
 

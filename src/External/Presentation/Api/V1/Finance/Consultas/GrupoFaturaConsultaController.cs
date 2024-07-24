@@ -1,12 +1,12 @@
 ﻿using Application.Queries.Dtos;
 using Application.Queries.Interfaces;
 using Asp.Versioning;
-using Domain.Dtos.QueryResults;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
 using Presentation.Attributes.Util;
 using Presentation.Version;
+using Queries.Dtos;
 
 namespace Presentation.Api.V1.Finance.Consultas
 {
@@ -19,7 +19,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         IGrupoFaturaQueryService _grupoFaturaConsultaService) : MainController(service)
     {
         [HttpGet]
-        public async Task<IEnumerable<GrupoFaturaQueryResult>> GetAllAsync(string ano) =>
+        public async Task<IEnumerable<GrupoFaturaQueryDto>> GetAllAsync(string ano) =>
             await _grupoFaturaConsultaService.GetAllAsync(ano);
 
         [HttpGet("{id}")]

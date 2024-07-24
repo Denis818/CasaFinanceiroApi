@@ -1,6 +1,5 @@
 ﻿using Data.DataContext;
 using Data.Repository.Base;
-using Domain.Dtos.QueryResults;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
@@ -24,34 +23,6 @@ namespace Infraestructure.Data.Repository
             }
 
             return GrupoFatura;
-        }
-
-        public async Task<IEnumerable<GrupoFaturaQueryResult>> GetAllAsync(string ano)
-        {
-            var sql =
-                @"
-                 SELECT 
-                     gf.Id,
-                     gf.Nome,
-                     gf.Ano,
-                     COUNT(d.Id) AS QuantidadeDespesas,
-                     COALESCE(SUM(d.Total), 0) AS TotalDespesas
-                 FROM 
-                     Grupo_Fatura gf
-                 LEFT JOIN 
-                     Despesas d ON gf.Id = d.GrupoFaturaId
-                 LEFT JOIN 
-                     Status_Faturas sf ON gf.Id = sf.GrupoFaturaId
-                 WHERE 
-                     gf.Ano = {0}
-                 GROUP BY 
-                     gf.Id, gf.Nome, gf.Ano";
-
-            var parameters = new object[] { ano };
-
-            var listGruposFaturas = await ExecuteSqlRawAsync<GrupoFaturaQueryResult>(sql, parameters);
-
-            return listGruposFaturas;
         }
     }
 }

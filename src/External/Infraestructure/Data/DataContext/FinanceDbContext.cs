@@ -1,5 +1,4 @@
-﻿using Domain.Dtos.QueryResults;
-using Domain.Dtos.QueryResults.Despesas;
+﻿using Domain.Dtos.QueryResults.Despesas;
 using Domain.Models.Categorias;
 using Domain.Models.Despesas;
 using Domain.Models.Membros;
@@ -46,8 +45,6 @@ namespace Data.DataContext
         {
             modelBuilder.Entity<RelatorioGastosDoGrupoResult>().HasNoKey();
             modelBuilder.Entity<DespesasPorGrupoResult>().HasNoKey();
-            modelBuilder.Entity<GrupoFaturaQueryResult>().HasNoKey();
-
         }
     }
 }
