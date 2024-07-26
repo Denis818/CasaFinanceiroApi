@@ -14,7 +14,7 @@ namespace Domain.Converters.DatesTimes
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
         {
             // Use o formato longo de data com cultura pt-BR ao escrever a data de volta ao JSON.
-            writer.WriteStringValue(value.ToString("M", new CultureInfo("pt-BR")));
+            writer.WriteStringValue(value.ToString("Y", new CultureInfo("pt-BR")));
         }
     }
 }
