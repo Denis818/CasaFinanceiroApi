@@ -103,12 +103,14 @@ namespace Application.Queries.Services
 
                 foreach (var grupoItem in itensAgrupados)
                 {
-                    if (grupoItem.Count() <= 1)
+                    if (grupoItem.Count() <= 1 || grupoItem.Select(d => d.Fornecedor).Distinct().Count() <= 1)
                     {
                         continue;
                     }
 
                     var fornecedorMaisBarato = grupoItem.OrderBy(d => d.Preco).First();
+
+
 
                     sugestoes.Add(
                         new DespesasSugestaoDeFornecedorQueryDto
