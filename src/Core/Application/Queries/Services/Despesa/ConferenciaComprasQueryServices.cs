@@ -59,6 +59,7 @@ namespace Application.Queries.Services
                     && d.CategoriaId != _categoriaIds.IdInternet
                 )
                 .GroupBy(d => d.Item)
+                .Where(g => g.Select(d => d.Fornecedor).Distinct().Count() > 1)
                 .Select(group => new DespesasSugestaoEconomiaQueryDto
                 {
                     Item = group.Key,
