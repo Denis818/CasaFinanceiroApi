@@ -1,6 +1,6 @@
 ﻿namespace Domain.Dtos
 {
-    public class TotalPorCategoriaQueryResut
+    public class TotalPorCategoriaQueryResult
     {
         public string Categoria { get; set; }
         public double Total { get; set; }

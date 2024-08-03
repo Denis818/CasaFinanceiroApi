@@ -7,12 +7,12 @@ namespace Domain.Interfaces.Repositories
 {
     public interface IDespesaRepository : IRepositoryBase<Despesa>
     {
-        Task<RelatorioGastosDoGrupoResult> GetRelatorioDeGastosDoGrupoAsync(
+        Task<RelatorioGastosDoGrupoQueryResult> GetRelatorioDeGastosDoGrupoAsync(
             int grupoId,
             CategoriaIdsDto categoriaIds
         );
 
-        Task<IEnumerable<DespesasPorGrupoResult>> GetDespesaGrupoParaGraficoAsync(string ano);
-        Task<IEnumerable<TotalPorCategoriaQueryResut>> GetTotalPorCategoriaAsync(int grupoId);
+        Task<IEnumerable<DespesasPorGrupoQueryResult>> GetDespesaGrupoParaGraficoAsync(string ano);
+        Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync(int grupoId);
     }
 }

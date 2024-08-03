@@ -51,7 +51,7 @@ namespace Application.Queries.Services
 
         #region Dashboard
 
-        public async Task<IEnumerable<TotalPorCategoriaQueryResut>> GetTotalPorCategoriaAsync()
+        public async Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync()
         {
             var listAgrupada = await _repository.GetTotalPorCategoriaAsync(_grupoId);
 
@@ -65,10 +65,9 @@ namespace Application.Queries.Services
             }
 
             return listAgrupada;
-
         }
 
-        public async Task<IEnumerable<DespesasPorGrupoResult>> GetDespesaGrupoParaGraficoAsync(
+        public async Task<IEnumerable<DespesasPorGrupoQueryResult>> GetDespesaGrupoParaGraficoAsync(
             string ano
         )
         {
@@ -90,15 +89,14 @@ namespace Application.Queries.Services
                 distribuicaoCustosMoradia.DistribuicaoCustos.ValorParaDoPeu
             );
 
-            var relatorioGastosDoGrupo = await _repository.GetRelatorioDeGastosDoGrupoAsync(_grupoId, _categoriaIds);
-
             return new DespesasDivididasMensalQueryDto
             {
-                RelatorioGastosDoGrupo = relatorioGastosDoGrupo,
-
                 DespesasPorMembro = despesasPorMembro
             };
         }
+
+        public async Task<RelatorioGastosDoGrupoQueryResult> GetRelatorioDeGastosDoGrupoAsync() =>
+            await _repository.GetRelatorioDeGastosDoGrupoAsync(_grupoId, _categoriaIds);
 
         public async Task<byte[]> DownloadPdfRelatorioDeDespesaCasa()
         {

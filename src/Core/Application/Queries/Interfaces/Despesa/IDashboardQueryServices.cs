@@ -9,7 +9,8 @@ namespace Application.Queries.Interfaces
         Task<byte[]> DownloadPdfRelatorioDeDespesaCasa();
         Task<byte[]> DownloadPdfRelatorioDeDespesaMoradia();
         Task<DespesasDivididasMensalQueryDto> GetDespesasDivididasMensalAsync();
-        Task<IEnumerable<DespesasPorGrupoResult>> GetDespesaGrupoParaGraficoAsync(string ano);
-        Task<IEnumerable<TotalPorCategoriaQueryResut>> GetTotalPorCategoriaAsync();
+        Task<IEnumerable<DespesasPorGrupoQueryResult>> GetDespesaGrupoParaGraficoAsync(string ano);
+        Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync();
+        Task<RelatorioGastosDoGrupoQueryResult> GetRelatorioDeGastosDoGrupoAsync();
     }
 }

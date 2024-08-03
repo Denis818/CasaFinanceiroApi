@@ -11,7 +11,7 @@ namespace Data.Repository.Despesas
         : RepositoryBase<Despesa, FinanceDbContext>(service),
             IDespesaRepository
     {
-        public async Task<RelatorioGastosDoGrupoResult> GetRelatorioDeGastosDoGrupoAsync(
+        public async Task<RelatorioGastosDoGrupoQueryResult> GetRelatorioDeGastosDoGrupoAsync(
             int grupoId,
             CategoriaIdsDto categoriaIds
         )
@@ -46,12 +46,12 @@ namespace Data.Repository.Despesas
                 grupoId
             };
 
-            var result = await ExecuteSqlRawAsync<RelatorioGastosDoGrupoResult>(sql, parameters);
+            var result = await ExecuteSqlRawAsync<RelatorioGastosDoGrupoQueryResult>(sql, parameters);
 
-            return result.FirstOrDefault() ?? new RelatorioGastosDoGrupoResult();
+            return result.FirstOrDefault() ?? new RelatorioGastosDoGrupoQueryResult();
         }
 
-        public async Task<IEnumerable<DespesasPorGrupoResult>> GetDespesaGrupoParaGraficoAsync(
+        public async Task<IEnumerable<DespesasPorGrupoQueryResult>> GetDespesaGrupoParaGraficoAsync(
             string ano
         )
         {
@@ -71,7 +71,7 @@ namespace Data.Repository.Despesas
 
             var parameters = new object[] { ano };
 
-            var despesasPorGrupo = await ExecuteSqlRawAsync<DespesasPorGrupoResult>(
+            var despesasPorGrupo = await ExecuteSqlRawAsync<DespesasPorGrupoQueryResult>(
                 sql,
                 parameters
             );
@@ -102,7 +102,7 @@ namespace Data.Repository.Despesas
                 .ToList();
         }
 
-        public async Task<IEnumerable<TotalPorCategoriaQueryResut>> GetTotalPorCategoriaAsync(
+        public async Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync(
             int grupoId
         )
         {
@@ -123,7 +123,7 @@ namespace Data.Repository.Despesas
 
             var parameters = new object[] { grupoId };
 
-            var listAgrupada = await ExecuteSqlRawAsync<TotalPorCategoriaQueryResut>(
+            var listAgrupada = await ExecuteSqlRawAsync<TotalPorCategoriaQueryResult>(
                 sql,
                 parameters
             );

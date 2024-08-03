@@ -22,9 +22,9 @@ namespace Data.DataContext
         #endregion
 
         #region QueryResults
-        public DbSet<RelatorioGastosDoGrupoResult> DespesasRelatorioGastosDoGrupo { get; set; }
-        public DbSet<DespesasPorGrupoResult> DespesasPorGrupoQueryDto { get; set; }
-        public DbSet<TotalPorCategoriaQueryResut> DespesasTotalPorCategoria { get; set; }
+        public DbSet<RelatorioGastosDoGrupoQueryResult> DespesasRelatorioGastosDoGrupo { get; set; }
+        public DbSet<DespesasPorGrupoQueryResult> DespesasPorGrupoQueryDto { get; set; }
+        public DbSet<TotalPorCategoriaQueryResult> DespesasTotalPorCategoria { get; set; }
 
         #endregion
 
@@ -46,9 +46,9 @@ namespace Data.DataContext
 
         private void ConfigureQueryResults(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<RelatorioGastosDoGrupoResult>().HasNoKey();
-            modelBuilder.Entity<DespesasPorGrupoResult>().HasNoKey();
-            modelBuilder.Entity<TotalPorCategoriaQueryResut>().HasNoKey();
+            modelBuilder.Entity<RelatorioGastosDoGrupoQueryResult>().HasNoKey();
+            modelBuilder.Entity<DespesasPorGrupoQueryResult>().HasNoKey();
+            modelBuilder.Entity<TotalPorCategoriaQueryResult>().HasNoKey();
         }
     }
 }

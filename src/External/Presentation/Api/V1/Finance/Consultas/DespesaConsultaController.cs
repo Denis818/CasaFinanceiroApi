@@ -32,16 +32,21 @@ namespace Presentation.Api.V1.Finance.Consultas
         #region Dashboard
 
         [HttpGet("total-por-grupo")]
-        public async Task<IEnumerable<DespesasPorGrupoResult>> GetDespesaGrupoParaGraficoAsync(string ano) =>
-            await dashboardConsultaServices.GetDespesaGrupoParaGraficoAsync(ano);
+        public async Task<IEnumerable<DespesasPorGrupoQueryResult>> GetDespesaGrupoParaGraficoAsync(
+            string ano
+        ) => await dashboardConsultaServices.GetDespesaGrupoParaGraficoAsync(ano);
 
         [HttpGet("total-por-categoria")]
-        public async Task<IEnumerable<TotalPorCategoriaQueryResut>> GetTotalPorCategoriaAsync() =>
+        public async Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync() =>
             await dashboardConsultaServices.GetTotalPorCategoriaAsync();
 
-        [HttpGet("analise-despesa-por-grupo")]
+        [HttpGet("despesas-dividas-por-membro")]
         public async Task<DespesasDivididasMensalQueryDto> GetDespesasDivididasMensalAsync() =>
             await dashboardConsultaServices.GetDespesasDivididasMensalAsync();
+
+        [HttpGet("relatorio-gastos-grupo")]
+        public async Task<RelatorioGastosDoGrupoQueryResult> GetRelatorioDeGastosDoGrupoAsync() =>
+            await dashboardConsultaServices.GetRelatorioDeGastosDoGrupoAsync();
 
         [HttpGet("pdf-despesas-casa")]
         public async Task<FileContentResult> DownloadCalculoCasa()
@@ -81,7 +86,7 @@ namespace Presentation.Api.V1.Finance.Consultas
 
         [HttpGet("por-grupo")]
         public async Task<PagedResult<Despesa>> GetListDespesasPorGrupo(
-           [FromQuery] DespesaFiltroDto despesaFiltroDto
+            [FromQuery] DespesaFiltroDto despesaFiltroDto
         )
         {
             return await painelControleConsultaServices.GetListDespesasPorGrupo(despesaFiltroDto);
@@ -101,18 +106,21 @@ namespace Presentation.Api.V1.Finance.Consultas
         #region Conferência de Compras
 
         [HttpGet("todos-grupos")]
-        public async Task<PagedResult<Despesa>> GetListDespesasAllGrupos([FromQuery] DespesaFiltroDto despesaFiltroDto, string ano)
+        public async Task<PagedResult<Despesa>> GetListDespesasAllGrupos(
+            [FromQuery] DespesaFiltroDto despesaFiltroDto,
+            string ano
+        )
         {
             return await conferenciaComprasConsultaServices.GetListDespesasAllGroups(
-                despesaFiltroDto, ano
+                despesaFiltroDto,
+                ano
             );
         }
 
         [HttpGet("sugestoes-fornecedor")]
-        public async Task<IEnumerable<DespesasSugestaoDeFornecedorQueryDto>> SugestaoDeFornecedorMaisBarato(
-            int paginaAtual = 1,
-            int itensPorPagina = 10
-        )
+        public async Task<
+            IEnumerable<DespesasSugestaoDeFornecedorQueryDto>
+        > SugestaoDeFornecedorMaisBarato(int paginaAtual = 1, int itensPorPagina = 10)
         {
             return await conferenciaComprasConsultaServices.SugestaoDeFornecedorMaisBarato(
                 paginaAtual,

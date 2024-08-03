@@ -1,6 +1,6 @@
 ﻿namespace Domain.Dtos.QueryResults.Despesas
 {
-    public class DespesasPorGrupoResult
+    public class DespesasPorGrupoQueryResult
     {
         public string GrupoNome { get; set; }
         public double Total { get; set; }

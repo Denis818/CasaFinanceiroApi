@@ -1,6 +1,6 @@
 ﻿namespace Domain.Dtos.QueryResults.Despesas
 {
-    public record RelatorioGastosDoGrupoResult
+    public class RelatorioGastosDoGrupoQueryResult
     {
         public string GrupoFaturaNome { get; set; }
         public double TotalGastosMoradia { get; set; }
