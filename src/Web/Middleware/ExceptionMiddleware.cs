@@ -12,7 +12,7 @@ namespace Web.Middleware
             {
                 await next(context);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var message =
                     $"Erro interno no servidor. {(_environmentHost.IsDevelopment() ? ex.Message : "")}";

@@ -16,6 +16,7 @@ using Domain.Models.Membros;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Queries.Services
 {
@@ -71,7 +72,19 @@ namespace Application.Queries.Services
             string ano
         )
         {
-            return await _repository.GetDespesaGrupoParaGraficoAsync(ano);
+            var list = await _repository.GetDespesaGrupoParaGraficoAsync(ano);
+
+            if (list.IsNullOrEmpty())
+            {
+                Notificar(
+                    EnumTipoNotificacao.Informacao,
+                    "Não há despesa em nenhum grupo de fatura"
+                );
+
+                return [];
+            }
+
+            return list;
         }
 
         public async Task<DespesasDivididasMensalQueryDto> GetDespesasDivididasMensalAsync()
@@ -89,10 +102,7 @@ namespace Application.Queries.Services
                 distribuicaoCustosMoradia.DistribuicaoCustos.ValorParaDoPeu
             );
 
-            return new DespesasDivididasMensalQueryDto
-            {
-                DespesasPorMembro = despesasPorMembro
-            };
+            return new DespesasDivididasMensalQueryDto { DespesasPorMembro = despesasPorMembro };
         }
 
         public async Task<RelatorioGastosDoGrupoQueryResult> GetRelatorioDeGastosDoGrupoAsync() =>

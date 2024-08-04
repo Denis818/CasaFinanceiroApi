@@ -8,11 +8,13 @@ using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Queries.Services
 {
     public class ConferenciaComprasQueryServices(IServiceProvider service)
-        : BaseQueryService<Despesa, IDespesaRepository>(service), IConferenciaComprasQueryServices
+        : BaseQueryService<Despesa, IDespesaRepository>(service),
+            IConferenciaComprasQueryServices
     {
         #region Conferência de Compras
         public async Task<PagedResult<Despesa>> GetListDespesasAllGroups(
@@ -46,10 +48,24 @@ namespace Application.Queries.Services
                 despesaFiltroDto.ItensPorPagina
             );
 
+            if (listaPaginada.Itens.IsNullOrEmpty())
+            {
+                Notificar(
+                    EnumTipoNotificacao.Informacao,
+                    "Não há despesa em nenhum grupo de fatura"
+                );
+
+                listaPaginada.Itens = [];
+
+                return listaPaginada;
+            }
+
             return listaPaginada;
         }
 
-        public async Task<List<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaPorGrupoAsync()
+        public async Task<
+            List<DespesasSugestaoEconomiaQueryDto>
+        > GetSugestoesEconomiaPorGrupoAsync()
         {
             var sugestoes = await _queryDespesasPorGrupo
                 .Where(d =>
@@ -70,15 +86,24 @@ namespace Application.Queries.Services
                 .Where(s => s.PotencialEconomia > 0)
                 .ToListAsync();
 
+            if (sugestoes.IsNullOrEmpty())
+            {
+                Notificar(EnumTipoNotificacao.Informacao, "Não há sugestões.");
+
+                return [];
+            }
+
             return sugestoes;
         }
 
-        public async Task<IEnumerable<DespesasSugestaoDeFornecedorQueryDto>> SugestaoDeFornecedorMaisBarato(int paginaAtual, int itensPorPagina)
+        public async Task<
+            IEnumerable<DespesasSugestaoDeFornecedorQueryDto>
+        > SugestaoDeFornecedorMaisBarato(int paginaAtual, int itensPorPagina)
         {
             var queryDespesasPorGrupo = _repository
-               .Get(d => d.GrupoFaturaId == _grupoId)
-               .Include(c => c.Categoria)
-               .Include(c => c.GrupoFatura);
+                .Get(d => d.GrupoFaturaId == _grupoId)
+                .Include(c => c.Categoria)
+                .Include(c => c.GrupoFatura);
 
             var categorias = await _categoriaRepository.Get().ToListAsync();
 
@@ -104,14 +129,15 @@ namespace Application.Queries.Services
 
                 foreach (var grupoItem in itensAgrupados)
                 {
-                    if (grupoItem.Count() <= 1 || grupoItem.Select(d => d.Fornecedor).Distinct().Count() <= 1)
+                    if (
+                        grupoItem.Count() <= 1
+                        || grupoItem.Select(d => d.Fornecedor).Distinct().Count() <= 1
+                    )
                     {
                         continue;
                     }
 
                     var fornecedorMaisBarato = grupoItem.OrderBy(d => d.Preco).First();
-
-
 
                     sugestoes.Add(
                         new DespesasSugestaoDeFornecedorQueryDto

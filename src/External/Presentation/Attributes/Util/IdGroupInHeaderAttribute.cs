@@ -14,11 +14,16 @@ namespace Presentation.Attributes.Util
             var httpContext = context.HttpContext;
             string grupoId = httpContext.Request.Headers["grupo-fatura-id"];
 
-            if(int.TryParse(grupoId, out int GrupoFaturasId))
+            if (httpContext.Request.Path.ToString().Contains("total-por-grupo"))
+            {
+                return;
+            }
+
+            if (int.TryParse(grupoId, out int GrupoFaturasId))
             {
                 httpContext.Items["GrupoFaturaId"] = GrupoFaturasId;
             }
-            else if(httpContext.Request.Method == "GET")
+            else if (httpContext.Request.Method == "GET")
             {
                 context.Result = new BadRequestObjectResult(
                     new ResponseDTO<string>()

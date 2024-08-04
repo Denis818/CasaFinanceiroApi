@@ -7,11 +7,12 @@ namespace Application.Configurations.MappingsApp
     {
         public static GrupoFatura MapToEntity(this GrupoFaturaCommandDto grupoFaturaDto)
         {
-            return new GrupoFatura { Nome = grupoFaturaDto.Nome };
+            return new GrupoFatura { Nome = grupoFaturaDto.Nome, Ano = grupoFaturaDto.Ano };
         }
         public static void MapUpdateEntity(this GrupoFatura grupoFatura, GrupoFaturaCommandDto grupoFaturaDto)
         {
             grupoFatura.Nome = grupoFaturaDto.Nome;
+            grupoFatura.Ano = grupoFaturaDto.Ano;
         }
 
     }
