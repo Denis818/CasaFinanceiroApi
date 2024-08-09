@@ -63,20 +63,28 @@ namespace Web.Extensios.DependencyManagers
             services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(DespesaValidator)));
         }
 
-        public static void UseCorsPolicy(this IApplicationBuilder app)
+        public static void UseCorsPolicy(
+            this IApplicationBuilder app,
+            IWebHostEnvironment _environmentHost
+        )
         {
-            app.UseCors(builder =>
-                builder
-                    .WithOrigins(
-                        "https://casa-financeiro-dev.netlify.app",
-                        "https://casa-financeiro-app.netlify.app",
-                        "http://192.168.18.52:4200",
-                        "http://localhost:4200"
-                    )
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials() //suportar cookies nas requisições CORS
-            );
+            if (!_environmentHost.IsDevelopment())
+            {
+                app.UseCors(builder =>
+                    builder
+                        .WithOrigins(
+                            "https://casa-financeiro-dev.netlify.app",
+                            "https://casa-financeiro-app.netlify.app"
+                        )
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                );
+            }
+            else
+            {
+                app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            }
         }
     }
 }
