@@ -19,7 +19,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
         {
             PrepareUserMaster(service, nomeDominio);
             PrepararVisitante(service);
-            PrepareCategoryAndMember(service).Wait();
+            PrepararTabelas(service).Wait();
         }
 
         private static void PrepareUserMaster(IServiceProvider service, string nomeDominio)
@@ -87,11 +87,12 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             usuarioRepository.SaveChangesAsync().Wait();
         }
 
-        private static async Task PrepareCategoryAndMember(IServiceProvider service)
+        private static async Task PrepararTabelas(IServiceProvider service)
         {
             var categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
             var memberRepository = service.GetRequiredService<IMembroRepository>();
             var grupoFaturaRepository = service.GetRequiredService<IGrupoFaturaRepository>();
+            var parametroDeAlertaDeGastosRepository = service.GetRequiredService<IParametroDeAlertaDeGastosRepository>();
 
             if (categoriaRepository.Get().ToList().Count < 1)
             {
@@ -183,6 +184,34 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
 
                 await grupoFaturaRepository.InsertAsync(grupoFatura);
                 await grupoFaturaRepository.SaveChangesAsync();
+            }
+
+            if (parametroDeAlertaDeGastosRepository.Get().ToList().Count < 1)
+            {
+                var listMetricasPersonalizadas = new List<ParametroDeAlertaDeGastos>
+                {
+                    new()
+                    {
+                        TipoMetrica = EnumTipoMetrica.Casa.ToString(),
+                        LimiteVermelho = 3600,
+                        LimiteAmarelo = 3240
+                    },
+                    new()
+                    {
+                        TipoMetrica = EnumTipoMetrica.Moradia.ToString(),
+                        LimiteVermelho = 2900,
+                        LimiteAmarelo = 2610
+                    },
+                    new()
+                    {
+                        TipoMetrica = EnumTipoMetrica.Geral.ToString(),
+                        LimiteVermelho = 5700,
+                        LimiteAmarelo = 5130
+                    },
+                };
+
+                await parametroDeAlertaDeGastosRepository.InsertRangeAsync(listMetricasPersonalizadas);
+                await parametroDeAlertaDeGastosRepository.SaveChangesAsync();
             }
         }
     }

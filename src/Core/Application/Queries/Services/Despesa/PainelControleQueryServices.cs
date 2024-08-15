@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries.Services
 {
-    public class PainelControleQueryServices(IServiceProvider service)
+    public class PainelControleQueryServices(IServiceProvider service, IParametroDeAlertaDeGastosRepository _parametroDeAlertaDeGastosRepository)
         : BaseQueryService<Despesa, IDespesaRepository>(service), IPainelControleQueryServices
     {
         #region Painel de Controle
@@ -57,6 +57,11 @@ namespace Application.Queries.Services
             double valorSubtraido = totalDespesas - faturaCartao;
 
             return (totalDespesas, valorSubtraido);
+        }
+
+        public async Task<IList<ParametroDeAlertaDeGastos>> GetParametroDeAlertaDeGastos()
+        {
+            return await _parametroDeAlertaDeGastosRepository.Get().ToListAsync();
         }
 
         #endregion

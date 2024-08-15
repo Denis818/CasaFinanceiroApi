@@ -36,6 +36,7 @@ namespace Web.Extensios.DependencyManagers
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
             services.AddScoped<IGrupoFaturaRepository, GrupoFaturaRepository>();
             services.AddScoped<IStatusFaturaRepository, StatusFaturaRepository>();
+            services.AddScoped<IParametroDeAlertaDeGastosRepository, ParametroDeAlertaDeGastosRepository>();
         }
 
         public static void AddDependecyDomainServices(this IServiceCollection services)
@@ -51,6 +52,7 @@ namespace Web.Extensios.DependencyManagers
             services.AddScoped<IDespesaCommandService, DespesaCommandService>();
             services.AddScoped<IGrupoFaturaCommandService, GrupoFaturaCommandService>();
             services.AddScoped<IMembroComandoServices, MembroCommandServices>();
+            services.AddScoped<IParametroDeAlertaDeGastosCommandService, ParametroDeAlertaDeGastosCommandService>();
         }
 
         public static void AddDependecyQueriesServices(this IServiceCollection services)

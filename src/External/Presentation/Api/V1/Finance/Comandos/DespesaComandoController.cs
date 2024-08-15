@@ -19,7 +19,8 @@ namespace Presentation.Api.V1.Finance.Comandos
     [ApiVersionRoute("despesa")]
     public class DespesaComandoController(
         IServiceProvider service,
-        IDespesaCommandService _despesaComandoService
+        IDespesaCommandService _despesaComandoService,
+        IParametroDeAlertaDeGastosCommandService _parametroDeAlertaDeGastosCommand
     ) : MainController(service)
     {
         [HttpPost]
@@ -41,5 +42,11 @@ namespace Presentation.Api.V1.Finance.Comandos
         public async Task<IEnumerable<Despesa>> PostRangeAsync(
             IAsyncEnumerable<DespesaCommandDto> vendaDto
         ) => await _despesaComandoService.InsertRangeAsync(vendaDto);
+
+        [HttpPut("parametro-alerta-gastos")]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        public async Task<bool> PutParametroDeAlertaDeGastosAsync(
+            List<ParametroDeAlertaDeGastosCommandDto> parametroDeAlertaDeGastosDto
+        ) => await _parametroDeAlertaDeGastosCommand.Update(parametroDeAlertaDeGastosDto);
     }
 }

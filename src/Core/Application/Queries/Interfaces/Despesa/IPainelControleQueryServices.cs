@@ -8,5 +8,6 @@ namespace Application.Queries.Interfaces
     {
         Task<(double, double)> CompararFaturaComTotalDeDespesas(double faturaCartao);
         Task<PagedResult<Despesa>> GetListDespesasPorGrupo(DespesaFiltroDto despesaFiltroDto);
+        Task<IList<ParametroDeAlertaDeGastos>> GetParametroDeAlertaDeGastos();
     }
 }

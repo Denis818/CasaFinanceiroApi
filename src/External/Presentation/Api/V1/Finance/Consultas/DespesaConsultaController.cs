@@ -101,6 +101,10 @@ namespace Presentation.Api.V1.Finance.Consultas
             return new { TotalDespesa = totalDespesas, ValorSubtraido = valorSubtraido };
         }
 
+        [HttpGet("parametro-alerta-gastos")]
+        public async Task<object> GetParametroDeAlertaDeGastos() =>
+            await painelControleConsultaServices.GetParametroDeAlertaDeGastos();
+
         #endregion
 
         #region Conferência de Compras
@@ -118,9 +122,9 @@ namespace Presentation.Api.V1.Finance.Consultas
         }
 
         [HttpGet("sugestoes-fornecedor")]
-        public async Task<
-            IEnumerable<DespesasSugestaoDeFornecedorQueryDto>
-        > SugestaoDeFornecedorMaisBarato(int paginaAtual = 1, int itensPorPagina = 10)
+        public async Task<IEnumerable<DespesasSugestaoDeFornecedorQueryDto>> SugestaoDeFornecedorMaisBarato(
+            int paginaAtual = 1,
+            int itensPorPagina = 10)
         {
             return await conferenciaComprasConsultaServices.SugestaoDeFornecedorMaisBarato(
                 paginaAtual,
@@ -129,9 +133,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         }
 
         [HttpGet("sugestoes-economia")]
-        public async Task<
-            IEnumerable<DespesasSugestaoEconomiaQueryDto>
-        > GetSugestoesEconomiaPorGrupoAsync() =>
+        public async Task<IEnumerable<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaPorGrupoAsync() =>
             await conferenciaComprasConsultaServices.GetSugestoesEconomiaPorGrupoAsync();
 
         #endregion
