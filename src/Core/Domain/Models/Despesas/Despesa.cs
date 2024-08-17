@@ -16,5 +16,7 @@ namespace Domain.Models.Despesas
         public Categoria Categoria { get; set; }
         public int CategoriaId { get; set; }
         public int GrupoFaturaId { get; set; }
+        public Guid GrupoFaturaCode { get; set; }
+        public Guid CategoriaCode { get; set; }
     }
 }

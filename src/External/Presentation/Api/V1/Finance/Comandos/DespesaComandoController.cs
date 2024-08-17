@@ -24,12 +24,12 @@ namespace Presentation.Api.V1.Finance.Comandos
     {
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task PostAsync(DespesaCommandDto vendaDto) =>
+        public async Task<bool> PostAsync(DespesaCommandDto vendaDto) =>
             await _despesaComandoService.InsertAsync(vendaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task PutAsync(Guid code, DespesaCommandDto vendaDto) =>
+        public async Task<bool> PutAsync(Guid code, DespesaCommandDto vendaDto) =>
             await _despesaComandoService.UpdateAsync(code, vendaDto);
 
         [HttpDelete]
@@ -38,7 +38,7 @@ namespace Presentation.Api.V1.Finance.Comandos
 
         [HttpPost("inserir-lote")]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task PostRangeAsync(
+        public async Task<bool> PostRangeAsync(
             IAsyncEnumerable<DespesaCommandDto> vendaDto
         ) => await _despesaComandoService.InsertRangeAsync(vendaDto);
 

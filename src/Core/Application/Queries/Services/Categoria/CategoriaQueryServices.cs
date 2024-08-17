@@ -18,8 +18,8 @@ namespace Application.Queries.Services
             await _repository
                 .Get()
                 .OrderBy(c => c.Descricao)
-                .Select(c => c.MapToDTO())
                 .AsNoTracking()
+                .Select(c => c.MapToDTO())
                 .ToListAsync();
 
         public async Task<Categoria> GetByCodigoAsync(int id) => await GetByCodigoAsync(id);

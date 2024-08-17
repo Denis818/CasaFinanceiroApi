@@ -56,17 +56,9 @@ namespace Application.Queries.Services
 
         public async Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync()
         {
-            var listAgrupada = await _queryDespesasPorGrupo
-                .GroupBy(despesa => despesa.Categoria.Descricao)
-                .Select(group => new TotalPorCategoriaQueryResult
-                {
-                    Categoria = group.Key,
-                    Total = group.Sum(despesa => despesa.Total),
-                    QuantidadeDeItens = group.Count()
-                })
-                .ToListAsync();
+            var listAgrupada = await _repository.GetTotalPorCategoriaAsync(_grupoCode);
 
-            if (listAgrupada.Count == 0)
+            if (!listAgrupada.Any())
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -140,8 +132,8 @@ namespace Application.Queries.Services
         {
             var todosMembros = await _membroRepository
                 .Get(m => m.DataInicio.Date.Month <= _grupoFatura.DataCriacao.Date.Month)
-                .Select(m => m.MapToDTO())
                 .AsNoTracking()
+                .Select(m => m.MapToDTO())
                 .ToListAsync();
 
             int membrosForaJhonCount = todosMembros.Where(m => m.Code != _membroId.CodJhon).Count();
@@ -261,8 +253,8 @@ namespace Application.Queries.Services
         {
             List<MembroQueryDto> todosMembros = await _membroRepository
                 .Get(m => m.DataInicio <= _grupoFatura.DataCriacao)
-                .Select(m => m.MapToDTO())
                 .AsNoTracking()
+                .Select(m => m.MapToDTO())
                 .ToListAsync();
 
             List<MembroQueryDto> listMembroForaJhonLaila = todosMembros
@@ -274,7 +266,7 @@ namespace Application.Queries.Services
                 .ToList();
 
             List<DespesaQueryDto> listAluguel = await _queryDespesasPorGrupo
-                .Where(d => d.Categoria.Code == _categoriaIds.CodAluguel)
+                .Where(d => d.Categoria.Code == _categoriaIds.CodAluguel).Select(m => m.MapToDTO())
                 .ToListAsync();
 
             return new GrupoListMembrosDespesaDto()
@@ -552,8 +544,8 @@ namespace Application.Queries.Services
         {
             var todosMembros = await _membroRepository
                 .Get(m => m.DataInicio.Date.Month <= _grupoFatura.DataCriacao.Date.Month)
-                .Select(m => m.MapToDTO())
                 .AsNoTracking()
+                .Select(m => m.MapToDTO())
                 .ToListAsync();
 
             double ValorMoradia(MembroQueryDto membro)

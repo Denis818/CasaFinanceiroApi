@@ -23,12 +23,12 @@ namespace Presentation.Api.V1.Finance.Comandos
         #region CRUD
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task PostAsync(CategoriaCommandDto categoriaDto) =>
+        public async Task<bool> PostAsync(CategoriaCommandDto categoriaDto) =>
             await _categoriaComandoServices.InsertAsync(categoriaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task PutAsync(Guid code, CategoriaCommandDto categoriaDto) =>
+        public async Task<bool> PutAsync(Guid code, CategoriaCommandDto categoriaDto) =>
             await _categoriaComandoServices.UpdateAsync(code, categoriaDto);
 
         [HttpDelete]

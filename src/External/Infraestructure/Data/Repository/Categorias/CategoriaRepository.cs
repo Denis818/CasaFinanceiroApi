@@ -27,14 +27,14 @@ namespace Data.Repository.Categorias
         {
             var categoriaIds = GetCategoriaCodes();
 
-            var ehAlteravel =
+            var naoEhAlteravel =
                    codeCategoria == categoriaIds.CodAluguel
                 || codeCategoria == categoriaIds.CodCondominio
                 || codeCategoria == categoriaIds.CodContaDeLuz
                 || codeCategoria == categoriaIds.CodAlmoco
                 || codeCategoria == categoriaIds.CodInternet;
 
-            return ehAlteravel;
+            return naoEhAlteravel;
         }
 
         public CategoriaCodsDto GetCategoriaCodes()

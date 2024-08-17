@@ -12,7 +12,8 @@ namespace Application.Configurations.MappingsApp
             {
                 Nome = grupoFatura.Nome,
                 Ano = grupoFatura.Ano,
-                Code = grupoFatura.Code
+                Code = grupoFatura.Code,
+                StatusFaturas = grupoFatura.StatusFaturas.Select(s => s.MapToDTO()).ToList()
             };
         }
 

@@ -16,7 +16,9 @@ namespace Application.Queries.Services
         IServiceProvider service,
         IStatusFaturaRepository _statusFaturaRepository,
         IGrupoFaturaRepository _grupoFaturaRepository
-    ) : BaseQueryService<GrupoFatura, GrupoFaturaQueryDto, IGrupoFaturaRepository>(service), IGrupoFaturaQueryService
+    )
+        : BaseQueryService<GrupoFatura, GrupoFaturaQueryDto, IGrupoFaturaRepository>(service),
+            IGrupoFaturaQueryService
     {
         protected override GrupoFaturaQueryDto MapToDTO(GrupoFatura entity) => entity.MapToDTO();
 
@@ -33,12 +35,14 @@ namespace Application.Queries.Services
                     Ano = fatura.Ano,
                     QuantidadeDespesas = fatura.Despesas.Count,
                     TotalDespesas = fatura.Despesas.Sum(despesa => despesa.Total),
-                    StatusFaturas = fatura.StatusFaturas.Select(s => new StatusFaturaQueryDto
-                    {
-                        Code = s.Code,
-                        FaturaNome = s.FaturaNome,
-                        Estado = s.Estado
-                    }).ToList(),
+                    StatusFaturas = fatura
+                        .StatusFaturas.Select(s => new StatusFaturaQueryDto
+                        {
+                            Code = s.Code,
+                            FaturaNome = s.FaturaNome,
+                            Estado = s.Estado
+                        })
+                        .ToList(),
                 })
                 .OrderBy(c => c.Nome)
                 .ToListAsync();
@@ -98,12 +102,12 @@ namespace Application.Queries.Services
             var listGruposFaturas = await _repository
                 .Get(fatura => fatura.Ano == ano)
                 .OrderBy(fatura => fatura.Nome)
+                .AsNoTracking()
                 .Select(fatura => new GrupoFaturaSeletorQueryDto
                 {
                     Nome = fatura.Nome,
                     Code = fatura.Code
                 })
-                .AsNoTracking()
                 .ToListAsync();
 
             return listGruposFaturas;

@@ -41,7 +41,7 @@ namespace Application.Queries.Services
             );
 
             var listaPaginada = await Pagination.PaginateResultAsync(
-                query,
+                query.Select(d => d.MapToDTO()),
                 despesaFiltroDto.PaginaAtual,
                 despesaFiltroDto.ItensPorPagina
             );
@@ -73,8 +73,8 @@ namespace Application.Queries.Services
 
         #region Filter Despesas
 
-        private IOrderedQueryable<DespesaQueryDto> GetDespesasFiltradas(
-            IQueryable<DespesaQueryDto> query,
+        private IOrderedQueryable<Despesa> GetDespesasFiltradas(
+            IQueryable<Despesa> query,
             string filter,
             EnumFiltroDespesa tipoFiltro
         )
@@ -104,7 +104,7 @@ namespace Application.Queries.Services
         }
 
         private async Task<PagedResult<DespesaQueryDto>> GetAllDespesas(
-            IQueryable<DespesaQueryDto> query,
+            IQueryable<Despesa> query,
             int paginaAtual,
             int itensPorPagina
         )
@@ -112,7 +112,8 @@ namespace Application.Queries.Services
             var queryAll = query
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoFatura)
-                .OrderByDescending(d => d.DataCompra);
+                .OrderByDescending(d => d.DataCompra)
+                .Select(d => d.MapToDTO());
 
             var despesas = await Pagination.PaginateResultAsync(
                 queryAll,

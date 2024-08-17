@@ -10,7 +10,7 @@ namespace Data.Mappings.User
         {
             builder.ToTable("Usuarios");
             builder.Property(u => u.Id).IsRequired().HasColumnType("int").ValueGeneratedOnAdd();
-            builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").ValueGeneratedOnAdd();
+            builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").IsRequired().ValueGeneratedOnAdd();
 
             builder.Property(u => u.Email).HasColumnType("varchar(30)").IsRequired();
             builder.Property(u => u.Password).HasColumnType("varchar(100)").IsRequired();

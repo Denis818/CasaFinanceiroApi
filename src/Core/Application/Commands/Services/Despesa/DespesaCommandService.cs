@@ -25,13 +25,13 @@ namespace Application.Commands.Services
 
         protected override Despesa MapToEntity(DespesaCommandDto entity) => entity.MapToEntity();
 
-        public async Task InsertAsync(DespesaCommandDto despesaDto)
+        public async Task<bool> InsertAsync(DespesaCommandDto despesaDto)
         {
             if (Validator(despesaDto))
-                return;
+                return false;
 
             if (!await ValidarDespesaAsync(despesaDto))
-                return;
+                return false;
 
             var despesa = despesaDto.MapToEntity();
 
@@ -46,11 +46,13 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
                 );
-                return;
+                return false;
             }
+
+            return true;
         }
 
-        public async Task InsertRangeAsync(
+        public async Task<bool> InsertRangeAsync(
             IAsyncEnumerable<DespesaCommandDto> listDespesasDto
         )
         {
@@ -64,14 +66,14 @@ namespace Application.Commands.Services
                 if (Validator(despesaDto))
                     continue;
 
-                if (await _categoriaRepository.ExisteAsync(despesaDto.Categoria.Code) is null)
+                if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaCode) is null)
                 {
                     Notificar(
                         EnumTipoNotificacao.NotFount,
                         string.Format(
                             Message.IdNaoEncontrado,
                             "A categoria",
-                            despesaDto.Categoria.Code
+                            despesaDto.CategoriaCode
                         )
                     );
                     continue;
@@ -90,7 +92,7 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ClientError,
                     "Nunhuma das despesa é valida para inserir."
                 );
-                return;
+                return false;
             }
 
             await _repository.InsertRangeAsync(despesasParaInserir);
@@ -100,7 +102,7 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
                 );
-                return;
+                return false;
             }
 
             if (totalRecebido > despesasParaInserir.Count)
@@ -111,12 +113,14 @@ namespace Application.Commands.Services
                         + $"total de {totalRecebido - despesasParaInserir.Count} invalidas."
                 );
             }
+
+            return true;
         }
 
-        public async Task UpdateAsync(Guid code, DespesaCommandDto despesaDto)
+        public async Task<bool> UpdateAsync(Guid code, DespesaCommandDto despesaDto)
         {
             if (Validator(despesaDto))
-                return;
+                return false;
 
             var despesa = await GetDespesaByCodigoAsync(code);
             if (despesa == null)
@@ -125,11 +129,11 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.NotFount,
                     string.Format(Message.IdNaoEncontrado, "A despesa", code)
                 );
-                return;
+                return false;
             }
 
             if (!await ValidarDespesaAsync(despesaDto, code))
-                return;
+                return false;
 
             despesa.MapUpdateEntity(despesaDto);
 
@@ -144,8 +148,10 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Atualizar")
                 );
-                return;
+                return false;
             }
+
+            return true;
         }
 
         public async Task<bool> DeleteAsync(Guid code)
@@ -182,17 +188,17 @@ namespace Application.Commands.Services
             Guid? codeDespesaInEdicao = null
         )
         {
-            if (await _categoriaRepository.ExisteAsync(despesaDto.Categoria.Code) is null)
+            if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaCode) is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "A categoria", despesaDto.Categoria.Code)
+                    string.Format(Message.IdNaoEncontrado, "A categoria", despesaDto.CategoriaCode)
                 );
                 return false;
             }
 
             if (
-                despesaDto.Categoria.Code == _categoriaIds.CodAluguel
+                despesaDto.CategoriaCode == _categoriaIds.CodAluguel
                 && !despesaDto.Item.ToLower().Contains("caixa")
                 && !despesaDto.Item.ToLower().Contains("parcela ap ponto")
             )
@@ -202,7 +208,7 @@ namespace Application.Commands.Services
             }
 
             if (
-                despesaDto.Categoria.Code == _categoriaIds.CodCondominio
+                despesaDto.CategoriaCode == _categoriaIds.CodCondominio
                 && !despesaDto.Item.Contains(
                     "condomínio ap ponto",
                     StringComparison.CurrentCultureIgnoreCase
@@ -213,14 +219,14 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            if (await _GrupoFaturaRepository.ExisteAsync(despesaDto.GrupoFatura.Code) is null)
+            if (await _GrupoFaturaRepository.ExisteAsync(despesaDto.GrupoFaturaCode) is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
                     string.Format(
                         Message.IdNaoEncontrado,
                         "O Grupo de Despesa",
-                        despesaDto.GrupoFatura.Code
+                        despesaDto.GrupoFaturaCode
                     )
                 );
                 return false;
@@ -239,7 +245,7 @@ namespace Application.Commands.Services
             Guid? codeDespesaInEdicao
         )
         {
-            if (!EhDespesaMensal(despesaDto.Categoria.Code))
+            if (!EhDespesaMensal(despesaDto.CategoriaCode))
             {
                 return true;
             }
@@ -251,8 +257,8 @@ namespace Application.Commands.Services
             }
 
             var despesasExistentes = _repository.Get(d =>
-                d.GrupoFatura.Code == despesaDto.GrupoFatura.Code
-                && d.Categoria.Code == despesaDto.Categoria.Code
+                d.GrupoFatura.Code == despesaDto.GrupoFaturaCode
+                && d.Categoria.Code == despesaDto.CategoriaCode
             );
 
             if (codeDespesaInEdicao != null)

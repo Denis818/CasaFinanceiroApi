@@ -16,10 +16,10 @@ namespace Application.Commands.Services
         protected override Categoria MapToEntity(CategoriaCommandDto entity) =>
             entity.MapToEntity();
 
-        public async Task InsertAsync(CategoriaCommandDto categoriaDto)
+        public async Task<bool> InsertAsync(CategoriaCommandDto categoriaDto)
         {
             if (Validator(categoriaDto))
-                return;
+                return false;
 
             if (await _repository.ExisteAsync(nome: categoriaDto.Descricao) != null)
             {
@@ -27,7 +27,7 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.Informacao,
                     string.Format(Message.RegistroExistente, "A categoria", categoriaDto.Descricao)
                 );
-                return;
+                return false;
             }
 
             var categoria = categoriaDto.MapToEntity();
@@ -39,14 +39,16 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
                 );
-                return;
+                return false;
             }
+
+            return true;
         }
 
-        public async Task UpdateAsync(Guid code, CategoriaCommandDto categoriaDto)
+        public async Task<bool> UpdateAsync(Guid code, CategoriaCommandDto categoriaDto)
         {
             if (Validator(categoriaDto))
-                return;
+                return false;
 
             var categoria = await _repository.GetByCodigoAsync(code);
 
@@ -56,16 +58,16 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.NotFount,
                     string.Format(Message.IdNaoEncontrado, "Categoria", code)
                 );
-                return;
+                return false;
             }
 
             if (categoria.Descricao == categoriaDto.Descricao)
-                return;
+                return false;
 
             if (_repository.IdentificarCategoriaParaAcao(categoria.Code))
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.AvisoCategoriaImutavel);
-                return;
+                return false;
             }
 
             if (
@@ -83,7 +85,7 @@ namespace Application.Commands.Services
                             categoriaDto.Descricao
                         )
                     );
-                    return;
+                    return false;
                 }
             }
 
@@ -97,8 +99,11 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Atualizar")
                 );
-                return;
+
+                return false;
             }
+
+            return true;
         }
 
         public async Task<bool> DeleteAsync(Guid code)

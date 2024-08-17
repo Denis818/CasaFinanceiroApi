@@ -19,7 +19,7 @@ namespace Presentation.Attributes.Util
                 return;
             }
 
-            if (int.TryParse(grupoId, out int GrupoFaturasId))
+            if (Guid.TryParse(grupoId, out Guid GrupoFaturasId))
             {
                 httpContext.Items["grupo-fatura-code"] = GrupoFaturasId;
             }

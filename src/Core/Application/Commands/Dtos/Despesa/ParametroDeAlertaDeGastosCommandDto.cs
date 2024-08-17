@@ -1,8 +1,6 @@
-﻿using Application.Commands.Services.Base;
-
-namespace Application.Commands.Dtos
+﻿namespace Application.Commands.Dtos
 {
-    public class ParametroDeAlertaDeGastosCommandDto : CommandBaseDTO
+    public class ParametroDeAlertaDeGastosCommandDto
     {
         public string TipoMetrica { get; set; }
         public decimal LimiteVermelho { get; set; }

@@ -29,9 +29,9 @@ namespace Application.Queries.Services
         public async Task<IEnumerable<MembroQueryDto>> GetAllAsync() =>
             await _repository
                 .Get()
-                .Select(m => m.MapToDTO())
                 .OrderBy(c => c.Nome)
                 .AsNoTracking()
+                .Select(m => m.MapToDTO())
                 .ToListAsync();
 
         public async Task<MembroQueryDto> GetByCodigoAsync(int id) => await GetByCodigoAsync(id);
@@ -45,8 +45,8 @@ namespace Application.Queries.Services
         {
             var membro = await _repository
                 .Get(membro => membro.Nome == nome)
-                .Select(m => m.MapToDTO())
                 .AsNoTracking()
+                .Select(m => m.MapToDTO())
                 .FirstOrDefaultAsync();
 
             if (membro is null)

@@ -22,12 +22,12 @@ namespace Presentation.Api.V1.Finance.Comandos
     {
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task PostAsync(GrupoFaturaCommandDto grupoFaturaDto) =>
+        public async Task<bool> PostAsync(GrupoFaturaCommandDto grupoFaturaDto) =>
             await _grupoFaturaComandoService.InsertAsync(grupoFaturaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task PutAsync(Guid code, GrupoFaturaCommandDto grupoFaturaDto) =>
+        public async Task<bool> PutAsync(Guid code, GrupoFaturaCommandDto grupoFaturaDto) =>
             await _grupoFaturaComandoService.UpdateAsync(code, grupoFaturaDto);
 
         [HttpDelete]
@@ -37,7 +37,7 @@ namespace Presentation.Api.V1.Finance.Comandos
         [HttpPut("status-fatura")]
         [GetIdGroupInHeaderFilter]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task PutStatusFaturaAsync(
+        public async Task<bool> PutStatusFaturaAsync(
             EnumFaturaTipo faturaNome,
             EnumStatusFatura status
         ) => await _grupoFaturaComandoService.UpdateStatusFaturaAsync(faturaNome, status);

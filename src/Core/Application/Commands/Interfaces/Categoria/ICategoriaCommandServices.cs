@@ -5,7 +5,7 @@ namespace Application.Commands.Interfaces
     public interface ICategoriaCommandServices
     {
         Task<bool> DeleteAsync(Guid code);
-        Task InsertAsync(CategoriaCommandDto categoriaDto);
-        Task UpdateAsync(Guid code, CategoriaCommandDto categoriaDto);
+        Task<bool> InsertAsync(CategoriaCommandDto categoriaDto);
+        Task<bool> UpdateAsync(Guid code, CategoriaCommandDto categoriaDto);
     }
 }

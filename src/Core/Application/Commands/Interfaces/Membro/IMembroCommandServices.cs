@@ -5,7 +5,7 @@ namespace Application.Commands.Interfaces
     public interface IMembroComandoServices
     {
         Task<bool> DeleteAsync(Guid code);
-        Task InsertAsync(MembroCommandDto membroDto);
-        Task UpdateAsync(Guid code, MembroCommandDto membroDto);
+        Task<bool> InsertAsync(MembroCommandDto membroDto);
+        Task<bool> UpdateAsync(Guid code, MembroCommandDto membroDto);
     }
 }

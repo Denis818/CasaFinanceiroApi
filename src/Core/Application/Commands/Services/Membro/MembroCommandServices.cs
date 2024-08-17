@@ -16,10 +16,10 @@ namespace Application.Commands.Services
     {
         protected override Membro MapToEntity(MembroCommandDto entity) => entity.MapToEntity();
 
-        public async Task InsertAsync(MembroCommandDto membroDto)
+        public async Task<bool> InsertAsync(MembroCommandDto membroDto)
         {
             if (Validator(membroDto))
-                return;
+                return false;
 
             membroDto.Telefone = FormatFone(membroDto.Telefone);
 
@@ -29,7 +29,7 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.Informacao,
                     string.Format(Message.RegistroExistente, "O membro", membroDto.Nome)
                 );
-                return;
+                return false;
             }
 
             var membro = membroDto.MapToEntity();
@@ -44,15 +44,17 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
                 );
-                return;
+                return false;
             }
+
+            return true;
 
         }
 
-        public async Task UpdateAsync(Guid code, MembroCommandDto membroDto)
+        public async Task<bool> UpdateAsync(Guid code, MembroCommandDto membroDto)
         {
             if (Validator(membroDto))
-                return;
+                return false;
 
             var membro = await _repository.GetByCodigoAsync(code);
 
@@ -62,13 +64,13 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.NotFount,
                     string.Format(Message.IdNaoEncontrado, "O membro", code)
                 );
-                return;
+                return false;
             }
 
             if (_repository.ValidaMembroParaAcao(membro.Code))
             {
                 Notificar(EnumTipoNotificacao.ClientError, Message.AvisoMembroImutavel);
-                return;
+                return false;
             }
             if (await _repository.ExisteAsync(membroDto.Nome) is Membro membroExiste)
             {
@@ -78,7 +80,7 @@ namespace Application.Commands.Services
                         EnumTipoNotificacao.Informacao,
                         string.Format(Message.RegistroExistente, "O membro", membroDto.Nome)
                     );
-                    return;
+                    return false;
                 }
             }
 
@@ -92,10 +94,10 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Atualizar")
                 );
-                return;
+                return false;
             }
 
-
+            return true;
         }
 
         public async Task<bool> DeleteAsync(Guid code)

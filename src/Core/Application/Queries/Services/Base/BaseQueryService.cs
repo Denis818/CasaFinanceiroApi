@@ -1,11 +1,11 @@
-﻿using Application.Configurations.MappingsApp;
-using Domain.Dtos;
+﻿using Domain.Dtos;
 using Domain.Dtos.Base;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Repositories.Base;
 using Domain.Interfaces.Utilities;
 using Domain.Models.Base;
+using Domain.Models.Despesas;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +26,7 @@ namespace Application.Queries.Services.Base
 
         protected readonly Guid _grupoCode;
         protected readonly CategoriaCodsDto _categoriaIds;
-        protected readonly IQueryable<DespesaQueryDto> _queryDespesasPorGrupo;
+        protected readonly IQueryable<Despesa> _queryDespesasPorGrupo;
 
         public BaseQueryService(IServiceProvider service)
         {
@@ -38,11 +38,13 @@ namespace Application.Queries.Services.Base
             _categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
 
             _categoriaIds = _categoriaRepository.GetCategoriaCodes();
-            _grupoCode = (Guid)(_httpContext.Items["grupo-fatura-code"] ?? new Guid("00000000-0000-0000-0000-000000000000"));
+            _grupoCode = (Guid)(
+                _httpContext.Items["grupo-fatura-code"]
+                ?? new Guid("00000000-0000-0000-0000-000000000000")
+            );
 
             _queryDespesasPorGrupo = _despesaRepository
-                .Get(d => d.Code == _grupoCode)
-                .Select(d => d.MapToDTO())
+                .Get(d => d.GrupoFaturaCode == _grupoCode)
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoFatura);
         }
@@ -52,7 +54,9 @@ namespace Application.Queries.Services.Base
 
         public virtual async Task<TQueryDTO> GetByCodigoAsync(Guid codigo)
         {
-            var result = await _repository.Get(entity => entity.Code == codigo).FirstOrDefaultAsync();
+            var result = await _repository
+                .Get(entity => entity.Code == codigo)
+                .FirstOrDefaultAsync();
             return MapToDTO(result);
         }
 

@@ -18,7 +18,7 @@ namespace Web.Extensios.Swagger.Filters
                 .OfType<GetIdGroupInHeaderFilterAttribute>()
                 .Any();
 
-            if(
+            if (
                 (controllerPrecisaIdGrupo || endPointPrecisaIdGrupo)
                 && context.ApiDescription.HttpMethod == "GET"
             )
@@ -28,10 +28,10 @@ namespace Web.Extensios.Swagger.Filters
                 operation.Parameters.Add(
                     new OpenApiParameter
                     {
-                        Name = "grupo-fatura-id",
+                        Name = "grupo-fatura-code",
                         In = ParameterLocation.Header,
                         Description =
-                            "Adicionar o Id de um grupo de despesas no cabeçalho da requisição",
+                            "Adicionar o Code de um grupo de despesas no cabeçalho da requisição",
                         Required = false,
                         Schema = new OpenApiSchema { Type = "int" }
                     }

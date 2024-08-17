@@ -1,8 +1,6 @@
-﻿using Application.Commands.Services.Base;
-
-namespace Application.Commands.Dtos
+﻿namespace Application.Commands.Dtos
 {
-    public class StatusFaturaCommandDto : CommandBaseDTO
+    public class StatusFaturaCommandDto
     {
 
         public string FaturaNome { get; set; }

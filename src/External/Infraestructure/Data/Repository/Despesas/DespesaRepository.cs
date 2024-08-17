@@ -101,5 +101,34 @@ namespace Data.Repository.Despesas
                 })
                 .ToList();
         }
+
+        public async Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync(
+            Guid grupoCode
+        )
+        {
+            var sql =
+                @"
+                 SELECT 
+                     c.Descricao AS Categoria,
+                     COALESCE(SUM(d.Total), 0) AS Total,
+                     COUNT(d.Id) AS QuantidadeDeItens
+                 FROM 
+                     Despesas d
+                 JOIN 
+                     Categorias c ON d.CategoriaId = c.Id
+                 WHERE 
+                     d.GrupoFaturaCode = {0}
+                 GROUP BY 
+                     c.Descricao";
+
+            var parameters = new object[] { grupoCode };
+
+            var listAgrupada = await ExecuteSqlRawAsync<TotalPorCategoriaQueryResult>(
+                sql,
+                parameters
+            );
+
+            return listAgrupada;
+        }
     }
 }

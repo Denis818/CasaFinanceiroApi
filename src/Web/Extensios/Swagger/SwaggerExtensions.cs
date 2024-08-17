@@ -15,7 +15,7 @@ namespace Web.Extensios.Swagger
         {
             services.AddSwaggerGen(options =>
             {
-                foreach(var version in ApiVersioning.ListVersions)
+                foreach (var version in ApiVersioning.ListVersions)
                 {
                     options.SwaggerDoc(
                         $"v{version}",
@@ -88,7 +88,7 @@ namespace Web.Extensios.Swagger
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                foreach(var version in ApiVersioning.ListVersions)
+                foreach (var version in ApiVersioning.ListVersions)
                 {
                     options.SwaggerEndpoint($"/swagger/v{version}/swagger.json", $"API v{version}");
                 }

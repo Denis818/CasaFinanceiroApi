@@ -13,5 +13,8 @@ namespace Domain.Interfaces.Repositories
         );
 
         Task<IEnumerable<DespesasPorGrupoQueryResult>> GetDespesaGrupoParaGraficoAsync(string ano);
+
+
+        Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync(Guid grupoCode);
     }
 }

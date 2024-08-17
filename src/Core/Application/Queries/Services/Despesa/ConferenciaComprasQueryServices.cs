@@ -20,7 +20,6 @@ namespace Application.Queries.Services
     {
         protected override DespesaQueryDto MapToDTO(Despesa entity) => entity.MapToDTO();
 
-
         #region Conferência de Compras
         public async Task<PagedResult<DespesaQueryDto>> GetListDespesasAllGroups(
             DespesaFiltroDto despesaFiltroDto,
@@ -74,7 +73,7 @@ namespace Application.Queries.Services
         {
             var sugestoes = await _queryDespesasPorGrupo
                 .Where(d =>
-                       d.Categoria.Code != _categoriaIds.CodAluguel
+                    d.Categoria.Code != _categoriaIds.CodAluguel
                     && d.Categoria.Code != _categoriaIds.CodCondominio
                     && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                     && d.Categoria.Code != _categoriaIds.CodInternet
@@ -118,7 +117,7 @@ namespace Application.Queries.Services
             {
                 var despesasSomenteCasa = _queryDespesasPorGrupo
                     .Where(d =>
-                           d.Categoria.Code != _categoriaIds.CodAluguel
+                        d.Categoria.Code != _categoriaIds.CodAluguel
                         && d.Categoria.Code != _categoriaIds.CodCondominio
                         && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                         && d.Categoria.Code != _categoriaIds.CodInternet
@@ -144,16 +143,18 @@ namespace Application.Queries.Services
 
                     var fornecedorMaisBarato = grupoItem.OrderBy(d => d.Preco).First();
 
+                    var listaPaginada = Pagination.PaginateResult(
+                        grupoItem.Select(d => d.MapToDTO()).ToList(),
+                        paginaAtual,
+                        itensPorPagina
+                    );
+
                     sugestoes.Add(
                         new DespesasSugestaoDeFornecedorQueryDto
                         {
                             Sugestao =
                                 $"{grupoItem.Key} em {fornecedorMaisBarato.Fornecedor} é mais barato",
-                            ListaItens = Pagination.PaginateResult(
-                                grupoItem.ToList(),
-                                paginaAtual,
-                                itensPorPagina
-                            )
+                            ListaItens = listaPaginada
                         }
                     );
                 }

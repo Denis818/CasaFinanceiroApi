@@ -15,7 +15,9 @@ namespace Application.Configurations.MappingsApp
                 Preco = despesa.Preco,
                 Quantidade = despesa.Quantidade,
                 Fornecedor = despesa.Fornecedor,
-                DataCompra = despesa.DataCompra
+                DataCompra = despesa.DataCompra,
+                GrupoFatura = despesa.GrupoFatura.MapToDTO(),
+                Categoria = despesa.Categoria.MapToDTO()
             };
         }
 
@@ -27,7 +29,7 @@ namespace Application.Configurations.MappingsApp
                 Preco = despesaDto.Preco,
                 Quantidade = despesaDto.Quantidade,
                 Fornecedor = despesaDto.Fornecedor,
-                DataCompra = despesaDto.DataCompra
+                DataCompra = despesaDto.DataCompra,
             };
         }
 

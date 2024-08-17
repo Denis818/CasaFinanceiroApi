@@ -10,7 +10,7 @@ namespace Infraestructure.Data.Mappings.Despesas
         {
             builder.ToTable("Despesas");
             builder.Property(d => d.Id).HasColumnType("int").IsRequired().ValueGeneratedOnAdd();
-            builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").ValueGeneratedOnAdd();
+            builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").IsRequired().ValueGeneratedOnAdd();
 
             builder.Property(d => d.DataCompra).HasColumnType("datetime(6)").IsRequired();
             builder.Property(d => d.Item).HasColumnType("varchar(50)").IsRequired();
@@ -20,6 +20,9 @@ namespace Infraestructure.Data.Mappings.Despesas
             builder.Property(d => d.Total).HasColumnType("double(7, 2)").IsRequired();
             builder.Property(d => d.CategoriaId).HasColumnType("int").IsRequired();
             builder.Property(d => d.GrupoFaturaId).HasColumnType("int").IsRequired();
+
+            builder.Property(d => d.CategoriaCode).HasColumnType("char(36)").IsRequired();
+            builder.Property(d => d.GrupoFaturaCode).HasColumnType("char(36)").IsRequired();
 
             builder
                 .HasOne(d => d.Categoria)
