@@ -10,7 +10,7 @@ namespace Infraestructure.Data.Repository
         : RepositoryBase<GrupoFatura, FinanceDbContext>(service),
             IGrupoFaturaRepository
     {
-        public async Task<GrupoFatura> ExisteAsync(int id, string nome)
+        public async Task<GrupoFatura> ExisteAsync(Guid? code, string nome)
         {
             GrupoFatura GrupoFatura = null;
             if (nome != null)
@@ -19,7 +19,7 @@ namespace Infraestructure.Data.Repository
             }
             else
             {
-                GrupoFatura = await Get(c => c.Id == id).FirstOrDefaultAsync();
+                GrupoFatura = await Get(c => c.Code == code).FirstOrDefaultAsync();
             }
 
             return GrupoFatura;

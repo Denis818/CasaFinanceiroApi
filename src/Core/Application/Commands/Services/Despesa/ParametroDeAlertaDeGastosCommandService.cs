@@ -11,18 +11,27 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Commands.Services
 {
     public class ParametroDeAlertaDeGastosCommandService(IServiceProvider service)
-        : BaseCommandService<ParametroDeAlertaDeGastos, IParametroDeAlertaDeGastosRepository>(
-            service
-        ),
+        : BaseCommandService<
+            ParametroDeAlertaDeGastos,
+            ParametroDeAlertaDeGastosCommandDto,
+            IParametroDeAlertaDeGastosRepository
+        >(service),
             IParametroDeAlertaDeGastosCommandService
     {
+        protected override ParametroDeAlertaDeGastos MapToEntity(
+            ParametroDeAlertaDeGastosCommandDto entity
+        ) => entity.MapToEntity();
+
         public async Task<bool> Update(
             List<ParametroDeAlertaDeGastosCommandDto> listParametroDeAlertaDeGastosDto
         )
         {
             foreach (var parametroDeAlertaDeGastosDto in listParametroDeAlertaDeGastosDto)
             {
-                if (parametroDeAlertaDeGastosDto.LimiteVermelho < parametroDeAlertaDeGastosDto.LimiteAmarelo)
+                if (
+                    parametroDeAlertaDeGastosDto.LimiteVermelho
+                    < parametroDeAlertaDeGastosDto.LimiteAmarelo
+                )
                 {
                     Notificar(
                         EnumTipoNotificacao.ClientError,
@@ -35,8 +44,10 @@ namespace Application.Commands.Services
                 var parametroDeAlertaDeGastos = await _repository
                     .Get(parametroDeAlertaDeGastos =>
                         /*parametroDeAlertaDeGastos.Id == parametroDeAlertaDeGastosDto.Id &&*/
-                        parametroDeAlertaDeGastos.TipoMetrica == parametroDeAlertaDeGastosDto.TipoMetrica
-                    ).FirstOrDefaultAsync();
+                        parametroDeAlertaDeGastos.TipoMetrica
+                        == parametroDeAlertaDeGastosDto.TipoMetrica
+                    )
+                    .FirstOrDefaultAsync();
 
                 if (parametroDeAlertaDeGastos is null)
                 {

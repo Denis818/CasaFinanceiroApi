@@ -16,17 +16,22 @@ namespace Application.Commands.Services
     public class GrupoFaturaCommandService(
         IServiceProvider service,
         IStatusFaturaRepository _statusFaturaRepository
-    ) : BaseCommandService<GrupoFatura, IGrupoFaturaRepository>(service), IGrupoFaturaCommandService
+    )
+        : BaseCommandService<GrupoFatura, GrupoFaturaCommandDto, IGrupoFaturaRepository>(service),
+            IGrupoFaturaCommandService
     {
-        public async Task<GrupoFatura> InsertAsync(GrupoFaturaCommandDto grupoDto)
+        protected override GrupoFatura MapToEntity(GrupoFaturaCommandDto entity) =>
+            entity.MapToEntity();
+
+        public async Task InsertAsync(GrupoFaturaCommandDto grupoDto)
         {
             if (Validator(grupoDto))
-                return null;
+                return;
 
             grupoDto.Nome = FormatNomeGrupo(grupoDto);
 
             if (!NomeGrupoIsCorretFormat(grupoDto.Nome))
-                return null;
+                return;
 
             var existingGrupo = await _repository
                 .Get(grupo => grupo.Nome == grupoDto.Nome)
@@ -38,7 +43,7 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.Informacao,
                     string.Format(Message.RegistroExistente, "o Grupo", grupoDto.Nome)
                 );
-                return null;
+                return;
             }
 
             var grupoFatura = grupoDto.MapToEntity();
@@ -66,39 +71,37 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
                 );
-                return null;
+                return;
             }
-
-            return grupoFatura;
         }
 
-        public async Task<GrupoFatura> UpdateAsync(int id, GrupoFaturaCommandDto grupoDto)
+        public async Task UpdateAsync(Guid code, GrupoFaturaCommandDto grupoDto)
         {
             if (Validator(grupoDto))
-                return null;
+                return;
 
             grupoDto.Nome = FormatNomeGrupo(grupoDto);
 
             if (!NomeGrupoIsCorretFormat(grupoDto.Nome))
-                return null;
+                return;
 
-            var grupoFatura = await _repository.GetByIdAsync(id);
+            var grupoFatura = await _repository.GetByCodigoAsync(code);
 
             if (grupoFatura is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "Grupo Despesa", id)
+                    string.Format(Message.IdNaoEncontrado, "Grupo Despesa", code)
                 );
-                return null;
+                return;
             }
 
             if (grupoFatura.Nome == grupoDto.Nome)
-                return grupoFatura;
+                return;
 
             if (await _repository.ExisteAsync(nome: grupoDto.Nome) is GrupoFatura GrupoFaturaExiste)
             {
-                if (grupoFatura.Id != GrupoFaturaExiste.Id)
+                if (grupoFatura.Code != GrupoFaturaExiste.Code)
                 {
                     Notificar(
                         EnumTipoNotificacao.Informacao,
@@ -108,7 +111,7 @@ namespace Application.Commands.Services
                             grupoDto.Nome
                         )
                     );
-                    return null;
+                    return;
                 }
             }
 
@@ -122,21 +125,19 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Atualizar")
                 );
-                return null;
+                return;
             }
-
-            return grupoFatura;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(Guid code)
         {
-            var GrupoFatura = await _repository.GetByIdAsync(id);
+            var GrupoFatura = await _repository.GetByCodigoAsync(code);
 
             if (GrupoFatura == null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "Grupo Despesa", id)
+                    string.Format(Message.IdNaoEncontrado, "Grupo Despesa", code)
                 );
                 return false;
             }
@@ -165,15 +166,15 @@ namespace Application.Commands.Services
             return true;
         }
 
-        public async Task<StatusFatura> UpdateStatusFaturaAsync(
+        public async Task UpdateStatusFaturaAsync(
             EnumFaturaTipo faturaNome,
             EnumStatusFatura status
         )
         {
-            var grupoFaturaId = (int)(_httpContext.Items["GrupoFaturaId"] ?? 0);
+            var grupoFaturaCode = (Guid)_httpContext.Items["grupo-fatura-code"];
 
             var statusFatura = await _statusFaturaRepository
-                .Get(s => s.GrupoFaturaId == grupoFaturaId)
+                .Get(s => s.GrupoFatura.Code == grupoFaturaCode)
                 .FirstOrDefaultAsync(s => s.FaturaNome == faturaNome.ToString());
 
             statusFatura.Estado = status.ToString();
@@ -186,16 +187,16 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Atualizar")
                 );
-                return null;
+                return;
             }
-
-            return statusFatura;
         }
 
         #region Metodos de Suporte
         private string FormatNomeGrupo(GrupoFaturaCommandDto grupoDto)
         {
-            grupoDto.Nome = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(grupoDto.Nome.ToLower());
+            grupoDto.Nome = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(
+                grupoDto.Nome.ToLower()
+            );
 
             return $"Fatura de {grupoDto.Nome} {grupoDto.Ano}";
         }

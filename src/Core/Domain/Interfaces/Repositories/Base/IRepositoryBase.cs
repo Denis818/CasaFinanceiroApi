@@ -2,12 +2,12 @@
 
 namespace Domain.Interfaces.Repositories.Base
 {
-    public interface IRepositoryBase<TEntity> where TEntity : class, new()
+    public interface IRepositoryBase<TEntity> where TEntity : class
     {
         void Delete(TEntity entity);
         void DeleteRange(TEntity[] entityArray);
         IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> expression = null);
-        Task<TEntity> GetByIdAsync(int id);
+        Task<TEntity> GetByCodigoAsync(Guid code);
         Task InsertAsync(TEntity entity);
         Task InsertRangeAsync(List<TEntity> entity);
         Task<bool> SaveChangesAsync();

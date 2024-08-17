@@ -1,17 +1,12 @@
-﻿using Domain.Models.Despesas;
+﻿using Domain.Models.Base;
+using Domain.Models.Despesas;
 using System.Text.Json.Serialization;
 
 namespace Domain.Models.Categorias
 {
-    public class Categoria
+    public class Categoria : EntityBase
     {
-        public Categoria()
-        {
-            Code = Guid.NewGuid();
-        }
-
         public int Id { get; set; }
-        public Guid Code { get; set; }
         public string Descricao { get; set; }
 
         [JsonIgnore]

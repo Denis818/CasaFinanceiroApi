@@ -12,8 +12,8 @@ namespace Data.Repository.Despesas
             IDespesaRepository
     {
         public async Task<RelatorioGastosDoGrupoQueryResult> GetRelatorioDeGastosDoGrupoAsync(
-            int grupoId,
-            CategoriaIdsDto categoriaIds
+            Guid grupoCode,
+            CategoriaCodsDto categoriaCods
         )
         {
             var sql =
@@ -34,16 +34,16 @@ namespace Data.Repository.Despesas
                  JOIN 
                      Grupo_Fatura gf ON d.GrupoFaturaId = gf.Id
                  WHERE 
-                     gf.Id = {3}
+                     gf.Code = {3}
                  GROUP BY 
                      gf.Nome";
 
             var parameters = new object[]
             {
-                categoriaIds.CodAluguel,
-                categoriaIds.CodCondominio,
-                categoriaIds.CodContaDeLuz,
-                grupoId
+                categoriaCods.CodAluguel,
+                categoriaCods.CodCondominio,
+                categoriaCods.CodContaDeLuz,
+                grupoCode
             };
 
             var result = await ExecuteSqlRawAsync<RelatorioGastosDoGrupoQueryResult>(sql, parameters);
@@ -100,35 +100,6 @@ namespace Data.Repository.Despesas
                     return monthOrder[monthName];
                 })
                 .ToList();
-        }
-
-        public async Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync(
-            int grupoId
-        )
-        {
-            var sql =
-                @"
-                 SELECT 
-                     c.Descricao AS Categoria,
-                     COALESCE(SUM(d.Total), 0) AS Total,
-                     COUNT(d.Id) AS QuantidadeDeItens
-                 FROM 
-                     Despesas d
-                 JOIN 
-                     Categorias c ON d.CategoriaId = c.Id
-                 WHERE 
-                     d.GrupoFaturaId = {0}
-                 GROUP BY 
-                     c.Descricao";
-
-            var parameters = new object[] { grupoId };
-
-            var listAgrupada = await ExecuteSqlRawAsync<TotalPorCategoriaQueryResult>(
-                sql,
-                parameters
-            );
-
-            return listAgrupada;
         }
     }
 }

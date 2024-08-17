@@ -2,7 +2,6 @@
 using Application.Commands.Interfaces;
 using Asp.Versioning;
 using Domain.Enumeradores;
-using Domain.Models.Categorias;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
@@ -24,17 +23,17 @@ namespace Presentation.Api.V1.Finance.Comandos
         #region CRUD
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<Categoria> PostAsync(CategoriaCommandDto categoriaDto) =>
+        public async Task PostAsync(CategoriaCommandDto categoriaDto) =>
             await _categoriaComandoServices.InsertAsync(categoriaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task<Categoria> PutAsync(int id, CategoriaCommandDto categoriaDto) =>
-            await _categoriaComandoServices.UpdateAsync(id, categoriaDto);
+        public async Task PutAsync(Guid code, CategoriaCommandDto categoriaDto) =>
+            await _categoriaComandoServices.UpdateAsync(code, categoriaDto);
 
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
-        public async Task<bool> DeleteAsync(int id) => await _categoriaComandoServices.DeleteAsync(id);
+        public async Task<bool> DeleteAsync(Guid code) => await _categoriaComandoServices.DeleteAsync(code);
         #endregion
     }
 }

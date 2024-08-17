@@ -17,17 +17,21 @@ namespace Application.Commands.Services
         IServiceProvider service,
         IGrupoFaturaRepository _GrupoFaturaRepository,
         ICategoriaRepository _categoriaRepository
-    ) : BaseCommandService<Despesa, IDespesaRepository>(service), IDespesaCommandService
+    )
+        : BaseCommandService<Despesa, DespesaCommandDto, IDespesaRepository>(service),
+            IDespesaCommandService
     {
-        private readonly CategoriaIdsDto _categoriaIds = _categoriaRepository.GetCategoriaIds();
+        private readonly CategoriaCodsDto _categoriaIds = _categoriaRepository.GetCategoriaCodes();
 
-        public async Task<Despesa> InsertAsync(DespesaCommandDto despesaDto)
+        protected override Despesa MapToEntity(DespesaCommandDto entity) => entity.MapToEntity();
+
+        public async Task InsertAsync(DespesaCommandDto despesaDto)
         {
             if (Validator(despesaDto))
-                return null;
+                return;
 
             if (!await ValidarDespesaAsync(despesaDto))
-                return null;
+                return;
 
             var despesa = despesaDto.MapToEntity();
 
@@ -42,13 +46,11 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
                 );
-                return null;
+                return;
             }
-
-            return await GetByIdAsync(despesa.Id);
         }
 
-        public async Task<IEnumerable<Despesa>> InsertRangeAsync(
+        public async Task InsertRangeAsync(
             IAsyncEnumerable<DespesaCommandDto> listDespesasDto
         )
         {
@@ -62,14 +64,14 @@ namespace Application.Commands.Services
                 if (Validator(despesaDto))
                     continue;
 
-                if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
+                if (await _categoriaRepository.ExisteAsync(despesaDto.Categoria.Code) is null)
                 {
                     Notificar(
                         EnumTipoNotificacao.NotFount,
                         string.Format(
                             Message.IdNaoEncontrado,
                             "A categoria",
-                            despesaDto.CategoriaId
+                            despesaDto.Categoria.Code
                         )
                     );
                     continue;
@@ -88,7 +90,7 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ClientError,
                     "Nunhuma das despesa é valida para inserir."
                 );
-                return null;
+                return;
             }
 
             await _repository.InsertRangeAsync(despesasParaInserir);
@@ -98,7 +100,7 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
                 );
-                return null;
+                return;
             }
 
             if (totalRecebido > despesasParaInserir.Count)
@@ -109,35 +111,25 @@ namespace Application.Commands.Services
                         + $"total de {totalRecebido - despesasParaInserir.Count} invalidas."
                 );
             }
-
-            var ids = despesasParaInserir.Select(d => d.Id).ToList();
-            var despesasInseridas = await _repository
-                .Get(d => ids.Contains(d.Id))
-                .Include(c => c.Categoria)
-                .Include(c => c.GrupoFatura)
-                .AsNoTracking()
-                .ToListAsync();
-
-            return despesasInseridas;
         }
 
-        public async Task<Despesa> UpdateAsync(int id, DespesaCommandDto despesaDto)
+        public async Task UpdateAsync(Guid code, DespesaCommandDto despesaDto)
         {
             if (Validator(despesaDto))
-                return null;
+                return;
 
-            var despesa = await _repository.GetByIdAsync(id);
+            var despesa = await GetDespesaByCodigoAsync(code);
             if (despesa == null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "A despesa", id)
+                    string.Format(Message.IdNaoEncontrado, "A despesa", code)
                 );
-                return null;
+                return;
             }
 
-            if (!await ValidarDespesaAsync(despesaDto, id))
-                return null;
+            if (!await ValidarDespesaAsync(despesaDto, code))
+                return;
 
             despesa.MapUpdateEntity(despesaDto);
 
@@ -152,21 +144,19 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Atualizar")
                 );
-                return null;
+                return;
             }
-
-            return await GetByIdAsync(despesa.Id);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(Guid code)
         {
-            var despesa = await _repository.GetByIdAsync(id);
+            var despesa = await _repository.GetByCodigoAsync(code);
 
             if (despesa == null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "A despesa", id)
+                    string.Format(Message.IdNaoEncontrado, "A despesa", code)
                 );
                 return false;
             }
@@ -189,20 +179,20 @@ namespace Application.Commands.Services
 
         private async Task<bool> ValidarDespesaAsync(
             DespesaCommandDto despesaDto,
-            int idDespesaInEdicao = 0
+            Guid? codeDespesaInEdicao = null
         )
         {
-            if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
+            if (await _categoriaRepository.ExisteAsync(despesaDto.Categoria.Code) is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "A categoria", despesaDto.CategoriaId)
+                    string.Format(Message.IdNaoEncontrado, "A categoria", despesaDto.Categoria.Code)
                 );
                 return false;
             }
 
             if (
-                despesaDto.CategoriaId == _categoriaIds.CodAluguel
+                despesaDto.Categoria.Code == _categoriaIds.CodAluguel
                 && !despesaDto.Item.ToLower().Contains("caixa")
                 && !despesaDto.Item.ToLower().Contains("parcela ap ponto")
             )
@@ -212,7 +202,7 @@ namespace Application.Commands.Services
             }
 
             if (
-                despesaDto.CategoriaId == _categoriaIds.CodCondominio
+                despesaDto.Categoria.Code == _categoriaIds.CodCondominio
                 && !despesaDto.Item.Contains(
                     "condomínio ap ponto",
                     StringComparison.CurrentCultureIgnoreCase
@@ -223,20 +213,20 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            if (await _GrupoFaturaRepository.ExisteAsync(despesaDto.GrupoFaturaId) is null)
+            if (await _GrupoFaturaRepository.ExisteAsync(despesaDto.GrupoFatura.Code) is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
                     string.Format(
                         Message.IdNaoEncontrado,
                         "O Grupo de Despesa",
-                        despesaDto.GrupoFaturaId
+                        despesaDto.GrupoFatura.Code
                     )
                 );
                 return false;
             }
 
-            if (!await IsDespesaMensalExistenteAsync(despesaDto, idDespesaInEdicao))
+            if (!await IsDespesaMensalExistenteAsync(despesaDto, codeDespesaInEdicao))
             {
                 return false;
             }
@@ -246,10 +236,10 @@ namespace Application.Commands.Services
 
         private async Task<bool> IsDespesaMensalExistenteAsync(
             DespesaCommandDto despesaDto,
-            int idDespesaInEdicao
+            Guid? codeDespesaInEdicao
         )
         {
-            if (!EhDespesaMensal(despesaDto.CategoriaId))
+            if (!EhDespesaMensal(despesaDto.Categoria.Code))
             {
                 return true;
             }
@@ -261,14 +251,14 @@ namespace Application.Commands.Services
             }
 
             var despesasExistentes = _repository.Get(d =>
-                d.GrupoFaturaId == despesaDto.GrupoFaturaId
-                && d.CategoriaId == despesaDto.CategoriaId
+                d.GrupoFatura.Code == despesaDto.GrupoFatura.Code
+                && d.Categoria.Code == despesaDto.Categoria.Code
             );
 
-            if (idDespesaInEdicao != 0)
+            if (codeDespesaInEdicao != null)
             {
                 despesasExistentes = despesasExistentes.Where(despesa =>
-                    despesa.Id != idDespesaInEdicao
+                    despesa.Code != codeDespesaInEdicao
                 );
             }
 
@@ -276,7 +266,7 @@ namespace Application.Commands.Services
             foreach (var despesa in listExistentes)
             {
                 if (
-                    despesa.CategoriaId == _categoriaIds.CodAluguel
+                    despesa.Categoria.Code == _categoriaIds.CodAluguel
                     && despesa.Item.Equals(despesaDto.Item, StringComparison.OrdinalIgnoreCase)
                 )
                 {
@@ -289,7 +279,7 @@ namespace Application.Commands.Services
                     );
                     return false;
                 }
-                else if (despesa.CategoriaId != _categoriaIds.CodAluguel)
+                else if (despesa.Categoria.Code != _categoriaIds.CodAluguel)
                 {
                     Notificar(
                         EnumTipoNotificacao.Informacao,
@@ -305,18 +295,18 @@ namespace Application.Commands.Services
             return true;
         }
 
-        private bool EhDespesaMensal(int idCategoria)
+        private bool EhDespesaMensal(Guid codeCategoria)
         {
-            return idCategoria == _categoriaIds.CodAluguel
-                || idCategoria == _categoriaIds.CodCondominio
-                || idCategoria == _categoriaIds.CodContaDeLuz
-                || idCategoria == _categoriaIds.CodInternet;
+            return codeCategoria == _categoriaIds.CodAluguel
+                || codeCategoria == _categoriaIds.CodCondominio
+                || codeCategoria == _categoriaIds.CodContaDeLuz
+                || codeCategoria == _categoriaIds.CodInternet;
         }
 
-        private async Task<Despesa> GetByIdAsync(int id)
+        private async Task<Despesa> GetDespesaByCodigoAsync(Guid code)
         {
             var despesa = await _repository
-                .Get(despesa => despesa.Id == id)
+                .Get(despesa => despesa.Code == code)
                 .Include(x => x.Categoria)
                 .Include(x => x.GrupoFatura)
                 .FirstOrDefaultAsync();

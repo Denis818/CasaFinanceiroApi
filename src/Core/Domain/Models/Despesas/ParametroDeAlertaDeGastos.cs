@@ -1,14 +1,10 @@
-﻿namespace Domain.Models.Despesas
-{
-    public class ParametroDeAlertaDeGastos
-    {
-        public ParametroDeAlertaDeGastos()
-        {
-            Code = Guid.NewGuid();
-        }
+﻿using Domain.Models.Base;
 
+namespace Domain.Models.Despesas
+{
+    public class ParametroDeAlertaDeGastos : EntityBase
+    {
         public int Id { get; set; }
-        public Guid Code { get; set; }
 
         public string TipoMetrica { get; set; }
         public decimal LimiteVermelho { get; set; }

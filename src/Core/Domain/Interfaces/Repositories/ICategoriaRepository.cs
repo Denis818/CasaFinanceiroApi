@@ -6,8 +6,8 @@ namespace Domain.Interfaces.Repositories
 {
     public interface ICategoriaRepository : IRepositoryBase<Categoria>
     {
-        Task<Categoria> ExisteAsync(int id = 0, string nome = null);
-        bool IdentificarCategoriaParaAcao(int idCategoria);
-        CategoriaIdsDto GetCategoriaIds();
+        Task<Categoria> ExisteAsync(Guid? code = null, string nome = null);
+        bool IdentificarCategoriaParaAcao(Guid codeCategoria);
+        CategoriaCodsDto GetCategoriaCodes();
     }
 }

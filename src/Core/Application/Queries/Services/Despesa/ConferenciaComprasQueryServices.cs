@@ -1,8 +1,10 @@
-﻿using Application.Queries.Dtos;
+﻿using Application.Configurations.MappingsApp;
+using Application.Queries.Dtos;
 using Application.Queries.Interfaces;
 using Application.Queries.Services.Base;
 using Application.Resources.Messages;
 using Application.Utilities;
+using Domain.Dtos;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
@@ -13,11 +15,14 @@ using Microsoft.IdentityModel.Tokens;
 namespace Application.Queries.Services
 {
     public class ConferenciaComprasQueryServices(IServiceProvider service)
-        : BaseQueryService<Despesa, IDespesaRepository>(service),
+        : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>(service),
             IConferenciaComprasQueryServices
     {
+        protected override DespesaQueryDto MapToDTO(Despesa entity) => entity.MapToDTO();
+
+
         #region Conferência de Compras
-        public async Task<PagedResult<Despesa>> GetListDespesasAllGroups(
+        public async Task<PagedResult<DespesaQueryDto>> GetListDespesasAllGroups(
             DespesaFiltroDto despesaFiltroDto,
             string ano
         )
@@ -36,7 +41,7 @@ namespace Application.Queries.Services
                 );
             }
 
-            IOrderedQueryable<Despesa> query = GetDespesasFiltradas(
+            IOrderedQueryable<DespesaQueryDto> query = GetDespesasFiltradas(
                 queryDespesasAllGrupo,
                 despesaFiltroDto.Filter,
                 despesaFiltroDto.TipoFiltro
@@ -69,10 +74,10 @@ namespace Application.Queries.Services
         {
             var sugestoes = await _queryDespesasPorGrupo
                 .Where(d =>
-                    d.CategoriaId != _categoriaIds.CodAluguel
-                    && d.CategoriaId != _categoriaIds.CodCondominio
-                    && d.CategoriaId != _categoriaIds.CodContaDeLuz
-                    && d.CategoriaId != _categoriaIds.CodInternet
+                       d.Categoria.Code != _categoriaIds.CodAluguel
+                    && d.Categoria.Code != _categoriaIds.CodCondominio
+                    && d.Categoria.Code != _categoriaIds.CodContaDeLuz
+                    && d.Categoria.Code != _categoriaIds.CodInternet
                 )
                 .GroupBy(d => d.Item)
                 .Where(g => g.Select(d => d.Fornecedor).Distinct().Count() > 1)
@@ -101,7 +106,7 @@ namespace Application.Queries.Services
         > SugestaoDeFornecedorMaisBarato(int paginaAtual, int itensPorPagina)
         {
             var queryDespesasPorGrupo = _repository
-                .Get(d => d.GrupoFaturaId == _grupoId)
+                .Get(d => d.GrupoFatura.Code == _grupoCode)
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoFatura);
 
@@ -112,18 +117,18 @@ namespace Application.Queries.Services
             foreach (var categoria in categorias)
             {
                 var despesasSomenteCasa = _queryDespesasPorGrupo
-                    .Where(c =>
-                        c.CategoriaId != _categoriaIds.CodAluguel
-                        && c.CategoriaId != _categoriaIds.CodCondominio
-                        && c.CategoriaId != _categoriaIds.CodContaDeLuz
-                        && c.CategoriaId != _categoriaIds.CodInternet
+                    .Where(d =>
+                           d.Categoria.Code != _categoriaIds.CodAluguel
+                        && d.Categoria.Code != _categoriaIds.CodCondominio
+                        && d.Categoria.Code != _categoriaIds.CodContaDeLuz
+                        && d.Categoria.Code != _categoriaIds.CodInternet
                     )
                     .Include(c => c.Categoria)
                     .Include(g => g.GrupoFatura)
                     .OrderByDescending(d => d.DataCompra);
 
                 var itensAgrupados = await despesasSomenteCasa
-                    .Where(d => d.CategoriaId == categoria.Id)
+                    .Where(d => d.Categoria.Code == categoria.Code)
                     .GroupBy(d => d.Item.ToLower())
                     .ToListAsync();
 
@@ -167,7 +172,7 @@ namespace Application.Queries.Services
         #endregion
 
         #region Filter Despesas
-        private IOrderedQueryable<Despesa> GetDespesasFiltradas(
+        private IOrderedQueryable<DespesaQueryDto> GetDespesasFiltradas(
             IQueryable<Despesa> query,
             string filter,
             EnumFiltroDespesa tipoFiltro
@@ -200,10 +205,11 @@ namespace Application.Queries.Services
                 break;
             }
 
-            return query.OrderByDescending(d => d.DataCompra);
+            var result = query.Select(d => d.MapToDTO()).OrderByDescending(d => d.DataCompra);
+            return result;
         }
 
-        private async Task<PagedResult<Despesa>> GetAllDespesas(
+        private async Task<PagedResult<DespesaQueryDto>> GetAllDespesas(
             IQueryable<Despesa> query,
             int paginaAtual,
             int itensPorPagina
@@ -212,6 +218,7 @@ namespace Application.Queries.Services
             var queryAll = query
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoFatura)
+                .Select(d => d.MapToDTO())
                 .OrderByDescending(d => d.DataCompra);
 
             var despesas = await Pagination.PaginateResultAsync(

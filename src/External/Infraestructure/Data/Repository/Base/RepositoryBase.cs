@@ -1,11 +1,13 @@
 ﻿using Domain.Interfaces.Repositories.Base;
+using Domain.Models.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq.Expressions;
 
 namespace Data.Repository.Base
 {
-    public abstract class RepositoryBase<TEntity, TContext> : IRepositoryBase<TEntity> where TEntity : class, new()
+    public abstract class RepositoryBase<TEntity, TContext> : IRepositoryBase<TEntity>
+        where TEntity : EntityBase
         where TContext : DbContext
     {
         private readonly TContext _context;
@@ -25,7 +27,7 @@ namespace Data.Repository.Base
             return DbSet.AsNoTracking();
         }
 
-        public async Task<TEntity> GetByIdAsync(int id) => await DbSet.FindAsync(id);
+        public async Task<TEntity> GetByCodigoAsync(Guid code) => await DbSet.FirstOrDefaultAsync(t => t.Code == code);
 
         public virtual async Task InsertAsync(TEntity entity) => await DbSet.AddAsync(entity);
 

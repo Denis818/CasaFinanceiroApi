@@ -1,8 +1,10 @@
-﻿using Application.Queries.Dtos;
+﻿using Application.Configurations.MappingsApp;
+using Application.Queries.Dtos;
 using Application.Queries.Interfaces;
 using Application.Queries.Services.Base;
 using Application.Resources.Messages;
 using Application.Utilities;
+using Domain.Dtos;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
@@ -12,11 +14,14 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Queries.Services
 {
     public class PainelControleQueryServices(IServiceProvider service, IParametroDeAlertaDeGastosRepository _parametroDeAlertaDeGastosRepository)
-        : BaseQueryService<Despesa, IDespesaRepository>(service), IPainelControleQueryServices
+        : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>(service), IPainelControleQueryServices
     {
+        protected override DespesaQueryDto MapToDTO(Despesa entity) => entity.MapToDTO();
+
+
         #region Painel de Controle
 
-        public async Task<PagedResult<Despesa>> GetListDespesasPorGrupo(
+        public async Task<PagedResult<DespesaQueryDto>> GetListDespesasPorGrupo(
             DespesaFiltroDto despesaFiltroDto
         )
         {
@@ -29,7 +34,7 @@ namespace Application.Queries.Services
                 );
             }
 
-            IOrderedQueryable<Despesa> query = GetDespesasFiltradas(
+            var query = GetDespesasFiltradas(
                 _queryDespesasPorGrupo,
                 despesaFiltroDto.Filter,
                 despesaFiltroDto.TipoFiltro
@@ -48,9 +53,9 @@ namespace Application.Queries.Services
         {
             double totalDespesas = await _queryDespesasPorGrupo
                 .Where(despesa =>
-                    despesa.CategoriaId != _categoriaIds.CodAluguel
-                    && despesa.CategoriaId != _categoriaIds.CodContaDeLuz
-                    && despesa.CategoriaId != _categoriaIds.CodCondominio
+                       despesa.Categoria.Code != _categoriaIds.CodAluguel
+                    && despesa.Categoria.Code != _categoriaIds.CodContaDeLuz
+                    && despesa.Categoria.Code != _categoriaIds.CodCondominio
                 )
                 .SumAsync(despesa => despesa.Total);
 
@@ -68,8 +73,8 @@ namespace Application.Queries.Services
 
         #region Filter Despesas
 
-        private IOrderedQueryable<Despesa> GetDespesasFiltradas(
-            IQueryable<Despesa> query,
+        private IOrderedQueryable<DespesaQueryDto> GetDespesasFiltradas(
+            IQueryable<DespesaQueryDto> query,
             string filter,
             EnumFiltroDespesa tipoFiltro
         )
@@ -98,8 +103,8 @@ namespace Application.Queries.Services
             return query.OrderByDescending(d => d.DataCompra);
         }
 
-        private async Task<PagedResult<Despesa>> GetAllDespesas(
-            IQueryable<Despesa> query,
+        private async Task<PagedResult<DespesaQueryDto>> GetAllDespesas(
+            IQueryable<DespesaQueryDto> query,
             int paginaAtual,
             int itensPorPagina
         )

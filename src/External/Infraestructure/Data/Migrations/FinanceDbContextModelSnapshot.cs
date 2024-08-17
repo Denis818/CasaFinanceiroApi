@@ -72,6 +72,10 @@ namespace Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("varchar(50)");
@@ -97,6 +101,10 @@ namespace Data.Migrations
 
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("DataCompra")
                         .HasColumnType("datetime(6)");
@@ -155,6 +163,10 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(15)");
 
+                    b.Property<Guid>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("Data_Criacao");
@@ -185,6 +197,10 @@ namespace Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
                     b.Property<decimal>("LimiteAmarelo")
                         .HasColumnType("decimal(8,2)");
 
@@ -214,6 +230,10 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Estado")
                         .IsRequired()
@@ -249,6 +269,10 @@ namespace Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("DataInicio")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("Data_Inicio");
@@ -282,6 +306,10 @@ namespace Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("varchar(30)");
@@ -301,6 +329,10 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Email")
                         .IsRequired()

@@ -1,6 +1,6 @@
 ﻿using Application.Queries.Interfaces;
 using Asp.Versioning;
-using Domain.Models.Membros;
+using Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
@@ -17,7 +17,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         : MainController(service)
     {
         [HttpGet]
-        public async Task<IEnumerable<Membro>> GetAllDespesaAsync() =>
+        public async Task<IEnumerable<MembroQueryDto>> GetAllDespesaAsync() =>
             await _membroConsultaServices.GetAllAsync();
 
         [HttpGet("enviar-mensagem")]

@@ -1,7 +1,7 @@
 ﻿using Application.Commands.Dtos;
 using FluentValidation;
 
-namespace Application.Commands.Validators.User
+namespace Application.Commands.Validators
 {
     public class UserValidator : AbstractValidator<UserCommandDto>
     {

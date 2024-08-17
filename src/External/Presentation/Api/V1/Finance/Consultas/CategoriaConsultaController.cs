@@ -1,6 +1,6 @@
 ﻿using Application.Queries.Interfaces;
 using Asp.Versioning;
-using Domain.Models.Categorias;
+using Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
@@ -19,7 +19,7 @@ namespace Presentation.Api.V1.Finance.Consultas
     ) : MainController(service)
     {
         [HttpGet]
-        public async Task<IEnumerable<Categoria>> GetAllAsync() =>
+        public async Task<IEnumerable<CategoriaQueryDto>> GetAllAsync() =>
             await _categoriaConsultaServices.GetAllAsync();
     }
 }

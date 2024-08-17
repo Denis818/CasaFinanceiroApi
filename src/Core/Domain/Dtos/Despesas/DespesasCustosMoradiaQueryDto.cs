@@ -1,7 +1,4 @@
-﻿using Domain.Models.Despesas;
-using Domain.Models.Membros;
-
-namespace Domain.Dtos.Despesas.Consultas
+﻿namespace Domain.Dtos.Despesas.Consultas
 {
     public class DespesasCustosMoradiaQueryDto
     {
@@ -16,9 +13,9 @@ namespace Domain.Dtos.Despesas.Consultas
 
     public class GrupoListMembrosDespesaDto
     {
-        public IList<Despesa> ListAluguel { get; set; } = [];
-        public IList<Membro> ListMembroForaJhon { get; set; } = [];
-        public IList<Membro> ListMembroForaJhonPeu { get; set; } = [];
+        public IList<DespesaQueryDto> ListAluguel { get; set; } = [];
+        public IList<MembroQueryDto> ListMembroForaJhon { get; set; } = [];
+        public IList<MembroQueryDto> ListMembroForaJhonPeu { get; set; } = [];
     }
 
     public class DetalhamentoDespesasMoradiaDto

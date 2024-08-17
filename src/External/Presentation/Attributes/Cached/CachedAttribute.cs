@@ -16,17 +16,18 @@ namespace Presentation.Attributes.Cached
 
         public static readonly MemoryCache _memoryCache = new(new MemoryCacheOptions());
 
-        private static int FaturaId = 0;
+        private static Guid FaturaCode;
 
         public async Task OnActionExecutionAsync(
             ActionExecutingContext context,
             ActionExecutionDelegate next
         )
         {
-            var faturaId = (int)(context.HttpContext.Items["GrupoFaturaId"] ?? 0);
-            if (FaturaId != faturaId)
+            var faturaId = (Guid)context.HttpContext.Items["grupo-fatura-code"];
+
+            if (FaturaCode != faturaId)
             {
-                FaturaId = faturaId;
+                FaturaCode = faturaId;
                 CleanCache();
             }
 

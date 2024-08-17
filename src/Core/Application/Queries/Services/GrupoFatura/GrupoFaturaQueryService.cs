@@ -1,12 +1,13 @@
-﻿using Application.Queries.Dtos;
+﻿using Application.Configurations.MappingsApp;
+using Application.Queries.Dtos;
 using Application.Queries.Interfaces;
 using Application.Queries.Services.Base;
 using Domain.Converters.DatesTimes;
+using Domain.Dtos;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
-using Queries.Dtos;
 using System.Globalization;
 
 namespace Application.Queries.Services
@@ -15,8 +16,10 @@ namespace Application.Queries.Services
         IServiceProvider service,
         IStatusFaturaRepository _statusFaturaRepository,
         IGrupoFaturaRepository _grupoFaturaRepository
-    ) : BaseQueryService<GrupoFatura, IGrupoFaturaRepository>(service), IGrupoFaturaQueryService
+    ) : BaseQueryService<GrupoFatura, GrupoFaturaQueryDto, IGrupoFaturaRepository>(service), IGrupoFaturaQueryService
     {
+        protected override GrupoFaturaQueryDto MapToDTO(GrupoFatura entity) => entity.MapToDTO();
+
         public async Task<IEnumerable<GrupoFaturaQueryDto>> GetAllAsync(string ano)
         {
             var listGruposFaturas = await _repository
@@ -25,12 +28,17 @@ namespace Application.Queries.Services
                 .Include(fatura => fatura.Despesas)
                 .Select(fatura => new GrupoFaturaQueryDto
                 {
-                    Id = fatura.Id,
+                    Code = fatura.Code,
                     Nome = fatura.Nome,
                     Ano = fatura.Ano,
-                    StatusFaturas = fatura.StatusFaturas,
                     QuantidadeDespesas = fatura.Despesas.Count,
                     TotalDespesas = fatura.Despesas.Sum(despesa => despesa.Total),
+                    StatusFaturas = fatura.StatusFaturas.Select(s => new StatusFaturaQueryDto
+                    {
+                        Code = s.Code,
+                        FaturaNome = s.FaturaNome,
+                        Estado = s.Estado
+                    }).ToList(),
                 })
                 .OrderBy(c => c.Nome)
                 .ToListAsync();
@@ -53,19 +61,19 @@ namespace Application.Queries.Services
             return listGruposFaturas;
         }
 
-        public async Task<string> GetNameFatura(int id)
+        public async Task<string> GetNameFatura(Guid code)
         {
-            var fatura = await _repository.Get(fatura => fatura.Id == id).FirstOrDefaultAsync();
+            var fatura = await _repository.Get(fatura => fatura.Code == code).FirstOrDefaultAsync();
 
             return fatura == null ? "Não encontrado" : fatura.Nome;
         }
 
         public async Task<StatusFaturaQueryDto> GetStatusFaturaDtoByNameAsync(string status)
         {
-            var grupoFaturaId = (int)(_httpContext.Items["GrupoFaturaId"] ?? 0);
+            var grupoFaturaCode = (Guid)_httpContext.Items["grupo-fatura-code"];
 
             var statusFatura = await _statusFaturaRepository
-                .Get(s => s.GrupoFaturaId == grupoFaturaId)
+                .Get(s => s.GrupoFatura.Code == grupoFaturaCode)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.Estado == status);
 
@@ -93,7 +101,7 @@ namespace Application.Queries.Services
                 .Select(fatura => new GrupoFaturaSeletorQueryDto
                 {
                     Nome = fatura.Nome,
-                    Id = fatura.Id
+                    Code = fatura.Code
                 })
                 .AsNoTracking()
                 .ToListAsync();

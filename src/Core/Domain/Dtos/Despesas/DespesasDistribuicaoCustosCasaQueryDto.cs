@@ -1,10 +1,8 @@
-﻿using Domain.Models.Membros;
-
-namespace Domain.Dtos.Despesas
+﻿namespace Domain.Dtos.Despesas
 {
     public class DespesasDistribuicaoCustosCasaQueryDto
     {
-        public List<Membro> Membros { get; set; }
+        public List<MembroQueryDto> Membros { get; set; }
         public double TotalDespesaGeraisForaAlmoco { get; set; }
         public double TotalAlmocoDividioComJhon { get; set; }
         public double TotalAlmocoParteDoJhon { get; set; }

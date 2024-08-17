@@ -8,15 +8,20 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Commands.Services.Base
 {
-    public abstract class BaseCommandService<TEntity, TIRepository>(IServiceProvider service)
-        where TEntity : class, new()
+    public abstract class BaseCommandService<TEntity, TEntityDTO, TIRepository>(
+        IServiceProvider service
+    )
         where TIRepository : class, IRepositoryBase<TEntity>
+        where TEntity : class, new()
+        where TEntityDTO : class, new()
     {
         private readonly INotifier _notificador = service.GetRequiredService<INotifier>();
 
         protected readonly TIRepository _repository = service.GetRequiredService<TIRepository>();
 
-        protected readonly HttpContext _httpContext = service.GetRequiredService<IHttpContextAccessor>().HttpContext;
+        protected readonly HttpContext _httpContext = service
+            .GetRequiredService<IHttpContextAccessor>()
+            .HttpContext;
 
         public void Notificar(EnumTipoNotificacao tipo, string message) =>
             _notificador.Notify(tipo, message);
@@ -47,5 +52,7 @@ namespace Application.Commands.Services.Base
 
             return false;
         }
+
+        protected abstract TEntity MapToEntity(TEntityDTO entityDTO);
     }
 }

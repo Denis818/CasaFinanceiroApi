@@ -1,6 +1,7 @@
 using Application.Commands.Dtos;
 using Application.Commands.Interfaces;
 using Application.Commands.Services.Base;
+using Application.Configurations.MappingsApp;
 using Application.Helpers;
 using Application.Resources.Messages;
 using Domain.Dtos.User.Auth;
@@ -17,9 +18,11 @@ using System.Text;
 namespace Application.Commands.Services
 {
     public class AuthCommandService(IServiceProvider service, IConfiguration _configuration)
-        : BaseCommandService<Usuario, IUsuarioRepository>(service),
+        : BaseCommandService<Usuario, UserCommandDto, IUsuarioRepository>(service),
             IAuthCommandService
     {
+        protected override Usuario MapToEntity(UserCommandDto entity) => entity.MapToEntity();
+
         public async Task<UserTokenDto> AutenticarUsuario(UserCommandDto userDto)
         {
             if (userDto == null)

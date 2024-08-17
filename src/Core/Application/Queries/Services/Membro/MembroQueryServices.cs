@@ -1,6 +1,8 @@
-﻿using Application.Queries.Interfaces;
+﻿using Application.Configurations.MappingsApp;
+using Application.Queries.Interfaces;
 using Application.Queries.Services.Base;
 using Application.Resources.Messages;
+using Domain.Dtos;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Membros;
@@ -12,7 +14,8 @@ namespace Application.Queries.Services
 {
     public class MembroQueryServices(
         IDashboardQueryServices _dashboardConsultaServices,
-        IServiceProvider service) : BaseQueryService<Membro, IMembroRepository>(service), IMembroQueryServices
+        IServiceProvider service
+    ) : BaseQueryService<Membro, MembroQueryDto, IMembroRepository>(service), IMembroQueryServices
     {
         const string ConviteParaSite =
             "\r\n\r\nPara saber mais detalhes sobre os valores acesse:\r\n"
@@ -21,10 +24,17 @@ namespace Application.Queries.Services
             + "\r\nUsuário: *visitante*"
             + "\r\nSenha: *123456*";
 
-        public async Task<IEnumerable<Membro>> GetAllAsync() =>
-            await _repository.Get().OrderBy(c => c.Nome).AsNoTracking().ToListAsync();
+        protected override MembroQueryDto MapToDTO(Membro entity) => entity.MapToDTO();
 
-        public async Task<Membro> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
+        public async Task<IEnumerable<MembroQueryDto>> GetAllAsync() =>
+            await _repository
+                .Get()
+                .Select(m => m.MapToDTO())
+                .OrderBy(c => c.Nome)
+                .AsNoTracking()
+                .ToListAsync();
+
+        public async Task<MembroQueryDto> GetByCodigoAsync(int id) => await GetByCodigoAsync(id);
 
         public async Task<string> EnviarValoresDividosPeloWhatsAppAsync(
             string nome,
@@ -33,7 +43,11 @@ namespace Application.Queries.Services
             string pix
         )
         {
-            var membro = await _repository.Get(membro => membro.Nome == nome).AsNoTracking().FirstOrDefaultAsync();
+            var membro = await _repository
+                .Get(membro => membro.Nome == nome)
+                .Select(m => m.MapToDTO())
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
 
             if (membro is null)
             {
@@ -71,7 +85,7 @@ namespace Application.Queries.Services
 
         private async Task<string> MensagemValoresCasaDividosAsync(
             string pix,
-            Membro membro,
+            MembroQueryDto membro,
             string titleMessage
         )
         {
@@ -89,7 +103,7 @@ namespace Application.Queries.Services
 
             string messageBody = "";
 
-            if (membro.Id == membroIds.CodJhon)
+            if (membro.Code == membroIds.CodJhon)
             {
                 messageBody =
                     $"Sua parte no almoço ficou esse valor: *R$ {valorPorMembro:F2}*."

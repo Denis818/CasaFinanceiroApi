@@ -12,12 +12,14 @@ using System.Text.RegularExpressions;
 namespace Application.Commands.Services
 {
     public class MembroCommandServices(IServiceProvider service)
-        : BaseCommandService<Membro, IMembroRepository>(service), IMembroComandoServices
+        : BaseCommandService<Membro, MembroCommandDto, IMembroRepository>(service), IMembroComandoServices
     {
-        public async Task<Membro> InsertAsync(MembroCommandDto membroDto)
+        protected override Membro MapToEntity(MembroCommandDto entity) => entity.MapToEntity();
+
+        public async Task InsertAsync(MembroCommandDto membroDto)
         {
             if (Validator(membroDto))
-                return null;
+                return;
 
             membroDto.Telefone = FormatFone(membroDto.Telefone);
 
@@ -27,7 +29,7 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.Informacao,
                     string.Format(Message.RegistroExistente, "O membro", membroDto.Nome)
                 );
-                return null;
+                return;
             }
 
             var membro = membroDto.MapToEntity();
@@ -42,43 +44,41 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
                 );
-                return null;
+                return;
             }
 
-            return membro;
         }
 
-        public async Task<Membro> UpdateAsync(int id, MembroCommandDto membroDto)
+        public async Task UpdateAsync(Guid code, MembroCommandDto membroDto)
         {
             if (Validator(membroDto))
-                return null;
+                return;
 
-            var membro = await _repository.GetByIdAsync(id);
+            var membro = await _repository.GetByCodigoAsync(code);
 
             if (membro is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "O membro", id)
+                    string.Format(Message.IdNaoEncontrado, "O membro", code)
                 );
-                return null;
+                return;
             }
 
-            if (_repository.ValidaMembroParaAcao(membro.Id))
+            if (_repository.ValidaMembroParaAcao(membro.Code))
             {
                 Notificar(EnumTipoNotificacao.ClientError, Message.AvisoMembroImutavel);
-                return null;
+                return;
             }
-
             if (await _repository.ExisteAsync(membroDto.Nome) is Membro membroExiste)
             {
-                if (membro.Id != membroExiste.Id)
+                if (membro.Code != membroExiste.Code)
                 {
                     Notificar(
                         EnumTipoNotificacao.Informacao,
                         string.Format(Message.RegistroExistente, "O membro", membroDto.Nome)
                     );
-                    return null;
+                    return;
                 }
             }
 
@@ -92,26 +92,26 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Atualizar")
                 );
-                return null;
+                return;
             }
 
-            return membro;
+
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(Guid code)
         {
-            var membro = await _repository.GetByIdAsync(id);
+            var membro = await _repository.GetByCodigoAsync(code);
 
             if (membro == null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "O membro", id)
+                    string.Format(Message.IdNaoEncontrado, "O membro", code)
                 );
                 return false;
             }
 
-            if (_repository.ValidaMembroParaAcao(membro.Id))
+            if (_repository.ValidaMembroParaAcao(membro.Code))
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.AvisoMembroImutavel);
                 return false;

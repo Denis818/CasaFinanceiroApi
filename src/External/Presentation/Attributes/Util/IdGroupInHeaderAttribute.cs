@@ -12,7 +12,7 @@ namespace Presentation.Attributes.Util
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
             var httpContext = context.HttpContext;
-            string grupoId = httpContext.Request.Headers["grupo-fatura-id"];
+            string grupoId = httpContext.Request.Headers["grupo-fatura-code"];
 
             if (httpContext.Request.Path.ToString().Contains("total-por-grupo"))
             {
@@ -21,7 +21,7 @@ namespace Presentation.Attributes.Util
 
             if (int.TryParse(grupoId, out int GrupoFaturasId))
             {
-                httpContext.Items["GrupoFaturaId"] = GrupoFaturasId;
+                httpContext.Items["grupo-fatura-code"] = GrupoFaturasId;
             }
             else if (httpContext.Request.Method == "GET")
             {

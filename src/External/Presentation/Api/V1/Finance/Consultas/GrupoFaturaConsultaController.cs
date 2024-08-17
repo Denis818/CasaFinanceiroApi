@@ -1,12 +1,12 @@
 ﻿using Application.Queries.Dtos;
 using Application.Queries.Interfaces;
 using Asp.Versioning;
+using Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
 using Presentation.Attributes.Util;
 using Presentation.Version;
-using Queries.Dtos;
 
 namespace Presentation.Api.V1.Finance.Consultas
 {
@@ -23,8 +23,8 @@ namespace Presentation.Api.V1.Finance.Consultas
             await _grupoFaturaConsultaService.GetAllAsync(ano);
 
         [HttpGet("{id}")]
-        public async Task<string> GetNameFatura(int id) =>
-            await _grupoFaturaConsultaService.GetNameFatura(id);
+        public async Task<string> GetNameFatura(Guid code) =>
+            await _grupoFaturaConsultaService.GetNameFatura(code);
 
         [HttpGet("status-fatura")]
         [GetIdGroupInHeaderFilter]

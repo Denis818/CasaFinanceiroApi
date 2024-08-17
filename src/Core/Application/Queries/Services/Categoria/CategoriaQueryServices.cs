@@ -1,5 +1,7 @@
-﻿using Application.Queries.Interfaces;
+﻿using Application.Configurations.MappingsApp;
+using Application.Queries.Interfaces;
 using Application.Queries.Services.Base;
+using Domain.Dtos;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Categorias;
 using Microsoft.EntityFrameworkCore;
@@ -7,11 +9,19 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Queries.Services
 {
     public class CategoriaQueryServices(IServiceProvider service)
-        : BaseQueryService<Categoria, ICategoriaRepository>(service), ICategoriaQueryServices
+        : BaseQueryService<Categoria, CategoriaQueryDto, ICategoriaRepository>(service),
+            ICategoriaQueryServices
     {
-        public async Task<IEnumerable<Categoria>> GetAllAsync() =>
-            await _repository.Get().OrderBy(c => c.Descricao).AsNoTracking().ToListAsync();
+        protected override CategoriaQueryDto MapToDTO(Categoria entity) => entity.MapToDTO();
 
-        public async Task<Categoria> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
+        public async Task<IEnumerable<CategoriaQueryDto>> GetAllAsync() =>
+            await _repository
+                .Get()
+                .OrderBy(c => c.Descricao)
+                .Select(c => c.MapToDTO())
+                .AsNoTracking()
+                .ToListAsync();
+
+        public async Task<Categoria> GetByCodigoAsync(int id) => await GetByCodigoAsync(id);
     }
 }

@@ -8,11 +8,10 @@ namespace Domain.Interfaces.Repositories
     public interface IDespesaRepository : IRepositoryBase<Despesa>
     {
         Task<RelatorioGastosDoGrupoQueryResult> GetRelatorioDeGastosDoGrupoAsync(
-            int grupoId,
-            CategoriaIdsDto categoriaIds
+            Guid grupoCode,
+            CategoriaCodsDto categoriaIds
         );
 
         Task<IEnumerable<DespesasPorGrupoQueryResult>> GetDespesaGrupoParaGraficoAsync(string ano);
-        Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync(int grupoId);
     }
 }

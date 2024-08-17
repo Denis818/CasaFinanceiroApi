@@ -10,12 +10,16 @@ using Domain.Models.Categorias;
 namespace Application.Commands.Services
 {
     public class CategoriaCommandServices(IServiceProvider service)
-        : BaseCommandService<Categoria, ICategoriaRepository>(service), ICategoriaCommandServices
+        : BaseCommandService<Categoria, CategoriaCommandDto, ICategoriaRepository>(service),
+            ICategoriaCommandServices
     {
-        public async Task<Categoria> InsertAsync(CategoriaCommandDto categoriaDto)
+        protected override Categoria MapToEntity(CategoriaCommandDto entity) =>
+            entity.MapToEntity();
+
+        public async Task InsertAsync(CategoriaCommandDto categoriaDto)
         {
             if (Validator(categoriaDto))
-                return null;
+                return;
 
             if (await _repository.ExisteAsync(nome: categoriaDto.Descricao) != null)
             {
@@ -23,7 +27,7 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.Informacao,
                     string.Format(Message.RegistroExistente, "A categoria", categoriaDto.Descricao)
                 );
-                return null;
+                return;
             }
 
             var categoria = categoriaDto.MapToEntity();
@@ -35,35 +39,33 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
                 );
-                return null;
+                return;
             }
-
-            return categoria;
         }
 
-        public async Task<Categoria> UpdateAsync(int id, CategoriaCommandDto categoriaDto)
+        public async Task UpdateAsync(Guid code, CategoriaCommandDto categoriaDto)
         {
             if (Validator(categoriaDto))
-                return null;
+                return;
 
-            var categoria = await _repository.GetByIdAsync(id);
+            var categoria = await _repository.GetByCodigoAsync(code);
 
             if (categoria is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "Categoria", id)
+                    string.Format(Message.IdNaoEncontrado, "Categoria", code)
                 );
-                return null;
+                return;
             }
 
             if (categoria.Descricao == categoriaDto.Descricao)
-                return categoria;
+                return;
 
-            if (_repository.IdentificarCategoriaParaAcao(categoria.Id))
+            if (_repository.IdentificarCategoriaParaAcao(categoria.Code))
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.AvisoCategoriaImutavel);
-                return null;
+                return;
             }
 
             if (
@@ -71,7 +73,7 @@ namespace Application.Commands.Services
                 is Categoria catergoriaExiste
             )
             {
-                if (categoria.Id != catergoriaExiste.Id)
+                if (categoria.Code != catergoriaExiste.Code)
                 {
                     Notificar(
                         EnumTipoNotificacao.Informacao,
@@ -81,7 +83,7 @@ namespace Application.Commands.Services
                             categoriaDto.Descricao
                         )
                     );
-                    return null;
+                    return;
                 }
             }
 
@@ -95,26 +97,24 @@ namespace Application.Commands.Services
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Atualizar")
                 );
-                return null;
+                return;
             }
-
-            return categoria;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(Guid code)
         {
-            var categoria = await _repository.GetByIdAsync(id);
+            var categoria = await _repository.GetByCodigoAsync(code);
 
             if (categoria == null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "Categoria", id)
+                    string.Format(Message.IdNaoEncontrado, "Categoria", code)
                 );
                 return false;
             }
 
-            if (_repository.IdentificarCategoriaParaAcao(categoria.Id))
+            if (_repository.IdentificarCategoriaParaAcao(categoria.Code))
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.AvisoCategoriaImutavel);
                 return false;

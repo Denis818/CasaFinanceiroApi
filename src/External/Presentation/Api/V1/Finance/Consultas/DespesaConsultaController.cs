@@ -3,7 +3,6 @@ using Application.Queries.Interfaces;
 using Asp.Versioning;
 using Domain.Dtos;
 using Domain.Dtos.QueryResults.Despesas;
-using Domain.Models.Despesas;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -85,7 +84,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         #region Painel De controle
 
         [HttpGet("por-grupo")]
-        public async Task<PagedResult<Despesa>> GetListDespesasPorGrupo(
+        public async Task<PagedResult<DespesaQueryDto>> GetListDespesasPorGrupo(
             [FromQuery] DespesaFiltroDto despesaFiltroDto
         )
         {
@@ -110,7 +109,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         #region Conferência de Compras
 
         [HttpGet("todos-grupos")]
-        public async Task<PagedResult<Despesa>> GetListDespesasAllGrupos(
+        public async Task<PagedResult<DespesaQueryDto>> GetListDespesasAllGrupos(
             [FromQuery] DespesaFiltroDto despesaFiltroDto,
             string ano
         )

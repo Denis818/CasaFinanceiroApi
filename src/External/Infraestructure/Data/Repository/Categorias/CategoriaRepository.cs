@@ -11,7 +11,7 @@ namespace Data.Repository.Categorias
         : RepositoryBase<Categoria, FinanceDbContext>(service),
             ICategoriaRepository
     {
-        public async Task<Categoria> ExisteAsync(int id, string nome)
+        public async Task<Categoria> ExisteAsync(Guid? code = null, string nome = "")
         {
             if (nome != null)
             {
@@ -19,35 +19,35 @@ namespace Data.Repository.Categorias
             }
             else
             {
-                return await Get(c => c.Id == id).FirstOrDefaultAsync();
+                return await Get(c => c.Code == code).FirstOrDefaultAsync();
             }
         }
 
-        public bool IdentificarCategoriaParaAcao(int idCategoria)
+        public bool IdentificarCategoriaParaAcao(Guid codeCategoria)
         {
-            var categoriaIds = GetCategoriaIds();
+            var categoriaIds = GetCategoriaCodes();
 
             var ehAlteravel =
-                idCategoria == categoriaIds.CodAluguel
-                || idCategoria == categoriaIds.CodCondominio
-                || idCategoria == categoriaIds.CodContaDeLuz
-                || idCategoria == categoriaIds.CodAlmoco
-                || idCategoria == categoriaIds.CodInternet;
+                   codeCategoria == categoriaIds.CodAluguel
+                || codeCategoria == categoriaIds.CodCondominio
+                || codeCategoria == categoriaIds.CodContaDeLuz
+                || codeCategoria == categoriaIds.CodAlmoco
+                || codeCategoria == categoriaIds.CodInternet;
 
             return ehAlteravel;
         }
 
-        public CategoriaIdsDto GetCategoriaIds()
+        public CategoriaCodsDto GetCategoriaCodes()
         {
             var categ = Get();
 
-            int idAlmoco = categ.FirstOrDefault(c => c.Descricao == "Almoço/Janta").Id;
-            int idAluguel = categ.FirstOrDefault(c => c.Descricao == "Aluguel").Id;
-            int idCondominio = categ.FirstOrDefault(c => c.Descricao == "Condomínio").Id;
-            int idContaDeLuz = categ.FirstOrDefault(c => c.Descricao == "Conta de Luz").Id;
-            int idInternet = categ.FirstOrDefault(c => c.Descricao == "Internet").Id;
+            Guid idAlmoco = categ.FirstOrDefault(c => c.Descricao == "Almoço/Janta").Code;
+            Guid idAluguel = categ.FirstOrDefault(c => c.Descricao == "Aluguel").Code;
+            Guid idCondominio = categ.FirstOrDefault(c => c.Descricao == "Condomínio").Code;
+            Guid idContaDeLuz = categ.FirstOrDefault(c => c.Descricao == "Conta de Luz").Code;
+            Guid idInternet = categ.FirstOrDefault(c => c.Descricao == "Internet").Code;
 
-            return new CategoriaIdsDto
+            return new CategoriaCodsDto
             {
                 CodAluguel = idAluguel,
                 CodCondominio = idCondominio,

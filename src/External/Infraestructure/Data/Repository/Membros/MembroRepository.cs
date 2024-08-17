@@ -14,14 +14,14 @@ namespace Infraestructure.Data.Repository.Membros
         public async Task<Membro> ExisteAsync(string nome) =>
             await Get(d => d.Nome == nome).FirstOrDefaultAsync();
 
-        public bool ValidaMembroParaAcao(int idMembro)
+        public bool ValidaMembroParaAcao(Guid codeMembro)
         {
             var membroI = GetMembersIds();
 
             var ehAlteravel =
-                idMembro == membroI.CodJhon
-                || idMembro == membroI.CodPeu
-                || idMembro == membroI.CodLaila;
+                   codeMembro == membroI.CodJhon
+                || codeMembro == membroI.CodPeu
+                || codeMembro == membroI.CodLaila;
 
             return ehAlteravel;
         }
@@ -30,15 +30,17 @@ namespace Infraestructure.Data.Repository.Membros
         {
             var membros = Get();
 
-            int? idJhon = membros.FirstOrDefault(c => c.Nome.StartsWith("Jhon"))?.Id;
-            int? idPeu = membros.FirstOrDefault(c => c.Nome.StartsWith("Peu"))?.Id;
-            int? idLaila = membros.FirstOrDefault(c => c.Nome.StartsWith("Laila"))?.Id;
+            Guid? codeJhon = membros.FirstOrDefault(c => c.Nome.StartsWith("Jhon"))?.Code;
+            Guid? codePeu = membros.FirstOrDefault(c => c.Nome.StartsWith("Peu"))?.Code;
+            Guid? codeLaila = membros.FirstOrDefault(c => c.Nome.StartsWith("Laila"))?.Code;
+
+
 
             return new MembroIdDto
             {
-                CodJhon = idJhon ?? 0,
-                CodPeu = idPeu ?? 0,
-                CodLaila = idLaila ?? 0
+                CodJhon = codeJhon ??= new Guid("00000000-0000-0000-0000-000000000000"),
+                CodPeu = codePeu ??= new Guid("00000000-0000-0000-0000-000000000000"),
+                CodLaila = codeLaila ??= new Guid("00000000-0000-0000-0000-000000000000")
             };
         }
     }
