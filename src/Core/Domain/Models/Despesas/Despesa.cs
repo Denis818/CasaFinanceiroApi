@@ -6,7 +6,13 @@ namespace Domain.Models.Despesas
 {
     public class Despesa
     {
+        public Despesa()
+        {
+            Code = Guid.NewGuid();
+        }
+
         public int Id { get; set; }
+        public Guid Code { get; set; }
 
         [JsonConverter(typeof(LongDateFormatConverter))]
         public DateTime DataCompra { get; set; }

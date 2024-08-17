@@ -17,9 +17,9 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
     {
         public static void PrepareDataBase(IServiceProvider service, string nomeDominio)
         {
-            PrepareUserMaster(service, nomeDominio);
-            PrepararVisitante(service);
-            PrepararTabelas(service).Wait();
+            //PrepareUserMaster(service, nomeDominio);
+            //PrepararVisitante(service);
+            //PrepararTabelas(service).Wait();
         }
 
         private static void PrepareUserMaster(IServiceProvider service, string nomeDominio)

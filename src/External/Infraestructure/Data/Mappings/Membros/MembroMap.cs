@@ -10,6 +10,7 @@ namespace Data.Mappings.Membros
         {
             builder.ToTable("Membros");
             builder.Property(m => m.Id).IsRequired().HasColumnType("int").ValueGeneratedOnAdd();
+            builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").ValueGeneratedOnAdd();
 
             builder.Property(d => d.DataInicio).HasColumnName("Data_Inicio").HasColumnType("datetime(6)").IsRequired();
             builder.Property(m => m.Nome).HasColumnType("varchar(30)").IsRequired();

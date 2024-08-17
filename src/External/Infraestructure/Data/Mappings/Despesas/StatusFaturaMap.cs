@@ -10,6 +10,8 @@ namespace Infraestructure.Data.Mappings.Despesas
         {
             builder.ToTable("Status_Faturas");
             builder.Property(e => e.Id).IsRequired().HasColumnType("int").ValueGeneratedOnAdd();
+            builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").ValueGeneratedOnAdd();
+
             builder.Property(e => e.Estado).HasColumnType("varchar(30)").IsRequired();
             builder.Property(e => e.FaturaNome).HasColumnName("Fatura_Nome").HasColumnType("varchar(20)").IsRequired();
 

@@ -11,6 +11,7 @@ namespace Infraestructure.Data.Mappings.Despesas
             builder.ToTable("Parametro_Alerta_Gastos");
 
             builder.HasKey(mp => mp.Id);
+            builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").ValueGeneratedOnAdd();
 
             builder.Property(mp => mp.TipoMetrica)
                 .IsRequired()

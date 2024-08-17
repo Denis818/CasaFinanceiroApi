@@ -202,7 +202,7 @@ namespace Application.Commands.Services
             }
 
             if (
-                despesaDto.CategoriaId == _categoriaIds.IdAluguel
+                despesaDto.CategoriaId == _categoriaIds.CodAluguel
                 && !despesaDto.Item.ToLower().Contains("caixa")
                 && !despesaDto.Item.ToLower().Contains("parcela ap ponto")
             )
@@ -212,7 +212,7 @@ namespace Application.Commands.Services
             }
 
             if (
-                despesaDto.CategoriaId == _categoriaIds.IdCondominio
+                despesaDto.CategoriaId == _categoriaIds.CodCondominio
                 && !despesaDto.Item.Contains(
                     "condomínio ap ponto",
                     StringComparison.CurrentCultureIgnoreCase
@@ -276,7 +276,7 @@ namespace Application.Commands.Services
             foreach (var despesa in listExistentes)
             {
                 if (
-                    despesa.CategoriaId == _categoriaIds.IdAluguel
+                    despesa.CategoriaId == _categoriaIds.CodAluguel
                     && despesa.Item.Equals(despesaDto.Item, StringComparison.OrdinalIgnoreCase)
                 )
                 {
@@ -289,7 +289,7 @@ namespace Application.Commands.Services
                     );
                     return false;
                 }
-                else if (despesa.CategoriaId != _categoriaIds.IdAluguel)
+                else if (despesa.CategoriaId != _categoriaIds.CodAluguel)
                 {
                     Notificar(
                         EnumTipoNotificacao.Informacao,
@@ -307,10 +307,10 @@ namespace Application.Commands.Services
 
         private bool EhDespesaMensal(int idCategoria)
         {
-            return idCategoria == _categoriaIds.IdAluguel
-                || idCategoria == _categoriaIds.IdCondominio
-                || idCategoria == _categoriaIds.IdContaDeLuz
-                || idCategoria == _categoriaIds.IdInternet;
+            return idCategoria == _categoriaIds.CodAluguel
+                || idCategoria == _categoriaIds.CodCondominio
+                || idCategoria == _categoriaIds.CodContaDeLuz
+                || idCategoria == _categoriaIds.CodInternet;
         }
 
         private async Task<Despesa> GetByIdAsync(int id)

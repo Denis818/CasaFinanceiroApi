@@ -40,9 +40,9 @@ namespace Data.Repository.Despesas
 
             var parameters = new object[]
             {
-                categoriaIds.IdAluguel,
-                categoriaIds.IdCondominio,
-                categoriaIds.IdContaDeLuz,
+                categoriaIds.CodAluguel,
+                categoriaIds.CodCondominio,
+                categoriaIds.CodContaDeLuz,
                 grupoId
             };
 

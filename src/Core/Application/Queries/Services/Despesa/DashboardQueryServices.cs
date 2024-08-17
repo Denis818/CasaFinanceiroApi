@@ -133,21 +133,21 @@ namespace Application.Queries.Services
                 .AsNoTracking()
                 .ToListAsync();
 
-            int membrosForaJhonCount = todosMembros.Where(m => m.Id != _membroId.IdJhon).Count();
+            int membrosForaJhonCount = todosMembros.Where(m => m.Id != _membroId.CodJhon).Count();
 
             // Despesas gerais Limpesa, Higiêne etc... (Fora Almoço)
             double totalDespesaGeraisForaAlmoco = await _queryDespesasPorGrupo
                 .Where(d =>
-                    d.CategoriaId != _categoriaIds.IdAluguel
-                    && d.CategoriaId != _categoriaIds.IdCondominio
-                    && d.CategoriaId != _categoriaIds.IdContaDeLuz
-                    && d.CategoriaId != _categoriaIds.IdAlmoco
+                    d.CategoriaId != _categoriaIds.CodAluguel
+                    && d.CategoriaId != _categoriaIds.CodCondominio
+                    && d.CategoriaId != _categoriaIds.CodContaDeLuz
+                    && d.CategoriaId != _categoriaIds.CodAlmoco
                 )
                 .SumAsync(d => d.Total);
 
             //Total somente do almoço
             double valorTotalAlmoco = await _queryDespesasPorGrupo
-                .Where(despesa => despesa.CategoriaId == _categoriaIds.IdAlmoco)
+                .Where(despesa => despesa.CategoriaId == _categoriaIds.CodAlmoco)
                 .SumAsync(despesa => despesa.Total);
 
             var custosDespesasCasa = new DespesasCustosDespesasCasaQueryDto
@@ -218,7 +218,7 @@ namespace Application.Queries.Services
         private async Task<DespesasCustosMoradiaQueryDto> GetCustosDespesasMoradiaAsync()
         {
             var listAluguel = _queryDespesasPorGrupo.Where(d =>
-                d.CategoriaId == _categoriaIds.IdAluguel
+                d.CategoriaId == _categoriaIds.CodAluguel
             );
 
             Despesa parcelaApartamento = await listAluguel
@@ -230,11 +230,11 @@ namespace Application.Queries.Services
                 .FirstOrDefaultAsync();
 
             Despesa contaDeLuz = await _queryDespesasPorGrupo
-                .Where(despesa => despesa.CategoriaId == _categoriaIds.IdContaDeLuz)
+                .Where(despesa => despesa.CategoriaId == _categoriaIds.CodContaDeLuz)
                 .FirstOrDefaultAsync();
 
             Despesa condominio = await _queryDespesasPorGrupo
-                .Where(despesa => despesa.CategoriaId == _categoriaIds.IdCondominio)
+                .Where(despesa => despesa.CategoriaId == _categoriaIds.CodCondominio)
                 .FirstOrDefaultAsync();
 
             return new DespesasCustosMoradiaQueryDto()
@@ -254,15 +254,15 @@ namespace Application.Queries.Services
                 .ToListAsync();
 
             List<Membro> listMembroForaJhonLaila = todosMembros
-                .Where(m => m.Id != _membroId.IdJhon && m.Id != _membroId.IdLaila)
+                .Where(m => m.Id != _membroId.CodJhon && m.Id != _membroId.CodLaila)
                 .ToList();
 
             List<Membro> listMembroForaJhonPeu = listMembroForaJhonLaila
-                .Where(m => m.Id != _membroId.IdPeu)
+                .Where(m => m.Id != _membroId.CodPeu)
                 .ToList();
 
             List<Despesa> listAluguel = await _queryDespesasPorGrupo
-                .Where(d => d.CategoriaId == _categoriaIds.IdAluguel)
+                .Where(d => d.CategoriaId == _categoriaIds.CodAluguel)
                 .ToListAsync();
 
             return new GrupoListMembrosDespesaDto()
@@ -545,7 +545,7 @@ namespace Application.Queries.Services
 
             double ValorMoradia(Membro membro)
             {
-                if (membro.Id == _membroId.IdPeu)
+                if (membro.Id == _membroId.CodPeu)
                 {
                     return aluguelCondominioContaLuzParaPeu.RoundTo(2);
                 }
@@ -560,12 +560,12 @@ namespace Application.Queries.Services
                 Nome = member.Nome,
 
                 ValorDespesaCasa =
-                    member.Id == _membroId.IdJhon
+                    member.Id == _membroId.CodJhon
                         ? Math.Max(almocoParteDoJhon.RoundTo(2), 0)
                         : Math.Max(despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2), 0),
 
                 ValorDespesaMoradia =
-                    member.Id == _membroId.IdJhon || member.Id == _membroId.IdLaila
+                    member.Id == _membroId.CodJhon || member.Id == _membroId.CodLaila
                         ? -1
                         : ValorMoradia(member).RoundTo(2)
             });

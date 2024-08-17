@@ -69,10 +69,10 @@ namespace Application.Queries.Services
         {
             var sugestoes = await _queryDespesasPorGrupo
                 .Where(d =>
-                    d.CategoriaId != _categoriaIds.IdAluguel
-                    && d.CategoriaId != _categoriaIds.IdCondominio
-                    && d.CategoriaId != _categoriaIds.IdContaDeLuz
-                    && d.CategoriaId != _categoriaIds.IdInternet
+                    d.CategoriaId != _categoriaIds.CodAluguel
+                    && d.CategoriaId != _categoriaIds.CodCondominio
+                    && d.CategoriaId != _categoriaIds.CodContaDeLuz
+                    && d.CategoriaId != _categoriaIds.CodInternet
                 )
                 .GroupBy(d => d.Item)
                 .Where(g => g.Select(d => d.Fornecedor).Distinct().Count() > 1)
@@ -113,10 +113,10 @@ namespace Application.Queries.Services
             {
                 var despesasSomenteCasa = _queryDespesasPorGrupo
                     .Where(c =>
-                        c.CategoriaId != _categoriaIds.IdAluguel
-                        && c.CategoriaId != _categoriaIds.IdCondominio
-                        && c.CategoriaId != _categoriaIds.IdContaDeLuz
-                        && c.CategoriaId != _categoriaIds.IdInternet
+                        c.CategoriaId != _categoriaIds.CodAluguel
+                        && c.CategoriaId != _categoriaIds.CodCondominio
+                        && c.CategoriaId != _categoriaIds.CodContaDeLuz
+                        && c.CategoriaId != _categoriaIds.CodInternet
                     )
                     .Include(c => c.Categoria)
                     .Include(g => g.GrupoFatura)

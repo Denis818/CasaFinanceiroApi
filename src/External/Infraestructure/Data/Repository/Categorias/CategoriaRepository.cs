@@ -28,11 +28,11 @@ namespace Data.Repository.Categorias
             var categoriaIds = GetCategoriaIds();
 
             var ehAlteravel =
-                idCategoria == categoriaIds.IdAluguel
-                || idCategoria == categoriaIds.IdCondominio
-                || idCategoria == categoriaIds.IdContaDeLuz
-                || idCategoria == categoriaIds.IdAlmoco
-                || idCategoria == categoriaIds.IdInternet;
+                idCategoria == categoriaIds.CodAluguel
+                || idCategoria == categoriaIds.CodCondominio
+                || idCategoria == categoriaIds.CodContaDeLuz
+                || idCategoria == categoriaIds.CodAlmoco
+                || idCategoria == categoriaIds.CodInternet;
 
             return ehAlteravel;
         }
@@ -49,11 +49,11 @@ namespace Data.Repository.Categorias
 
             return new CategoriaIdsDto
             {
-                IdAluguel = idAluguel,
-                IdCondominio = idCondominio,
-                IdContaDeLuz = idContaDeLuz,
-                IdAlmoco = idAlmoco,
-                IdInternet = idInternet
+                CodAluguel = idAluguel,
+                CodCondominio = idCondominio,
+                CodContaDeLuz = idContaDeLuz,
+                CodAlmoco = idAlmoco,
+                CodInternet = idInternet
             };
         }
     }

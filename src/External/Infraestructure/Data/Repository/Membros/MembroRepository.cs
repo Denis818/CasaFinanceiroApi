@@ -19,9 +19,9 @@ namespace Infraestructure.Data.Repository.Membros
             var membroI = GetMembersIds();
 
             var ehAlteravel =
-                idMembro == membroI.IdJhon
-                || idMembro == membroI.IdPeu
-                || idMembro == membroI.IdLaila;
+                idMembro == membroI.CodJhon
+                || idMembro == membroI.CodPeu
+                || idMembro == membroI.CodLaila;
 
             return ehAlteravel;
         }
@@ -36,9 +36,9 @@ namespace Infraestructure.Data.Repository.Membros
 
             return new MembroIdDto
             {
-                IdJhon = idJhon ?? 0,
-                IdPeu = idPeu ?? 0,
-                IdLaila = idLaila ?? 0
+                CodJhon = idJhon ?? 0,
+                CodPeu = idPeu ?? 0,
+                CodLaila = idLaila ?? 0
             };
         }
     }

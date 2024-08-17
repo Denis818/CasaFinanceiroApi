@@ -9,7 +9,10 @@ namespace Infraestructure.Data.Mappings.Categorias
         public void Configure(EntityTypeBuilder<Categoria> builder)
         {
             builder.ToTable("Categorias");
+
             builder.Property(c => c.Id).IsRequired().HasColumnType("int").ValueGeneratedOnAdd();
+
+            builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").ValueGeneratedOnAdd();
 
             builder.Property(c => c.Descricao).HasColumnType("varchar(50)").IsRequired();
 

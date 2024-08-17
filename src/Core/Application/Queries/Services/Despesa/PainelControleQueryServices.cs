@@ -48,9 +48,9 @@ namespace Application.Queries.Services
         {
             double totalDespesas = await _queryDespesasPorGrupo
                 .Where(despesa =>
-                    despesa.CategoriaId != _categoriaIds.IdAluguel
-                    && despesa.CategoriaId != _categoriaIds.IdContaDeLuz
-                    && despesa.CategoriaId != _categoriaIds.IdCondominio
+                    despesa.CategoriaId != _categoriaIds.CodAluguel
+                    && despesa.CategoriaId != _categoriaIds.CodContaDeLuz
+                    && despesa.CategoriaId != _categoriaIds.CodCondominio
                 )
                 .SumAsync(despesa => despesa.Total);
 

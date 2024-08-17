@@ -89,7 +89,7 @@ namespace Application.Queries.Services
 
             string messageBody = "";
 
-            if (membro.Id == membroIds.IdJhon)
+            if (membro.Id == membroIds.CodJhon)
             {
                 messageBody =
                     $"Sua parte no almoço ficou esse valor: *R$ {valorPorMembro:F2}*."

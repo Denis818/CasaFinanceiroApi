@@ -2,8 +2,8 @@
 {
     public class MembroIdDto
     {
-        public int IdJhon { get; set; }
-        public int IdPeu { get; set; }
-        public int IdLaila { get; set; }
+        public int CodJhon { get; set; }
+        public int CodPeu { get; set; }
+        public int CodLaila { get; set; }
     }
 }

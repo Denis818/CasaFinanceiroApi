@@ -2,10 +2,10 @@
 {
     public class CategoriaIdsDto
     {
-        public int IdAluguel { get; set; }
-        public int IdCondominio { get; set; }
-        public int IdContaDeLuz { get; set; }
-        public int IdAlmoco { get; set; }
-        public int IdInternet { get; set; }
+        public int CodAluguel { get; set; }
+        public int CodCondominio { get; set; }
+        public int CodContaDeLuz { get; set; }
+        public int CodAlmoco { get; set; }
+        public int CodInternet { get; set; }
     }
 }
