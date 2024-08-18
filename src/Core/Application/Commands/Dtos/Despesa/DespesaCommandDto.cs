@@ -1,6 +1,4 @@
-﻿using Domain.Dtos;
-
-namespace Application.Commands.Dtos
+﻿namespace Application.Commands.Dtos
 {
     public class DespesaCommandDto
     {
@@ -8,7 +6,7 @@ namespace Application.Commands.Dtos
         public double Preco { get; set; }
         public int Quantidade { get; set; }
         public string Fornecedor { get; set; }
-        public GrupoFaturaQueryDto GrupoFatura { get; set; }
+        //      public GrupoFaturaQueryDto GrupoFatura { get; set; }
         public Guid GrupoFaturaCode { get; set; }
         public Guid CategoriaCode { get; set; }
         public int GrupoFaturaId { get; set; }
