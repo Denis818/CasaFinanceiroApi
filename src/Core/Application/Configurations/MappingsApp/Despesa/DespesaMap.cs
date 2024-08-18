@@ -30,7 +30,6 @@ namespace Application.Configurations.MappingsApp
                 Preco = despesaDto.Preco,
                 Quantidade = despesaDto.Quantidade,
                 Fornecedor = despesaDto.Fornecedor,
-                DataCompra = despesaDto.DataCompra,
                 CategoriaCode = despesaDto.CategoriaCode,
                 GrupoFaturaCode = despesaDto.GrupoFaturaCode,
                 GrupoFaturaId = despesaDto.GrupoFaturaId,
@@ -44,7 +43,6 @@ namespace Application.Configurations.MappingsApp
             despesa.Preco = despesaDto.Preco;
             despesa.Quantidade = despesaDto.Quantidade;
             despesa.Fornecedor = despesaDto.Fornecedor;
-            despesa.DataCompra = despesaDto.DataCompra;
             despesa.GrupoFaturaCode = despesaDto.GrupoFaturaCode;
             despesa.CategoriaCode = despesaDto.CategoriaCode;
             despesa.GrupoFaturaId = despesaDto.GrupoFaturaId;
