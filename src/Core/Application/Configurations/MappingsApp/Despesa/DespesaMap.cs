@@ -45,6 +45,8 @@ namespace Application.Configurations.MappingsApp
             despesa.Quantidade = despesaDto.Quantidade;
             despesa.Fornecedor = despesaDto.Fornecedor;
             despesa.DataCompra = despesaDto.DataCompra;
+            despesa.GrupoFaturaCode = despesaDto.GrupoFaturaCode;
+            despesa.CategoriaCode = despesaDto.CategoriaCode;
             despesa.GrupoFaturaId = despesaDto.GrupoFaturaId;
             despesa.CategoriaId = despesaDto.CategoriaId;
         }
