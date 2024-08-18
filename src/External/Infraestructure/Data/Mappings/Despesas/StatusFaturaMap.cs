@@ -9,6 +9,7 @@ namespace Infraestructure.Data.Mappings.Despesas
         public void Configure(EntityTypeBuilder<StatusFatura> builder)
         {
             builder.ToTable("Status_Faturas");
+
             builder.Property(e => e.Id).IsRequired().HasColumnType("int").ValueGeneratedOnAdd();
             builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").IsRequired().ValueGeneratedOnAdd();
 
@@ -19,10 +20,10 @@ namespace Infraestructure.Data.Mappings.Despesas
 
             builder.HasOne(s => s.GrupoFatura)
                    .WithMany(g => g.StatusFaturas)
-                   .HasForeignKey(s => s.GrupoFaturaId)
+                   .HasForeignKey(s => s.GrupoFaturaCode)
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasIndex(s => s.GrupoFaturaId).HasDatabaseName("IX_Status_Faturas_GrupoFaturaId");
+            builder.HasIndex(s => s.GrupoFaturaCode).HasDatabaseName("IX_Status_Faturas_GrupoFaturaCode");
             builder.HasIndex(c => c.FaturaNome).HasDatabaseName("IX_Status_Fatura_Fatura_Nome");
             builder.HasIndex(c => c.Estado).HasDatabaseName("IX_Status_Fatura_Estado");
         }

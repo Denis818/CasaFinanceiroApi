@@ -1,6 +1,7 @@
 ﻿using Data.DataContext;
 using Data.Repository.Base;
 using Domain.Dtos;
+using Domain.Dtos.QueryResults;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Categorias;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ namespace Data.Repository.Categorias
             var categoriaIds = GetCategoriaCodes();
 
             var naoEhAlteravel =
-                   codeCategoria == categoriaIds.CodAluguel
+                codeCategoria == categoriaIds.CodAluguel
                 || codeCategoria == categoriaIds.CodCondominio
                 || codeCategoria == categoriaIds.CodContaDeLuz
                 || codeCategoria == categoriaIds.CodAlmoco
@@ -55,6 +56,34 @@ namespace Data.Repository.Categorias
                 CodAlmoco = idAlmoco,
                 CodInternet = idInternet
             };
+        }
+
+        public async Task<IEnumerable<CategoriaQueryResult>> GetAll(Guid grupoCode)
+        {
+            var sql =
+                @"
+                 SELECT 
+                     c.Code,
+                     c.Descricao,
+                     COALESCE(SUM(d.Total), 0) AS Total,
+                     COUNT(d.Id) AS QuantidadeDeItens 
+                 FROM 
+                     Categorias c
+                 LEFT JOIN 
+                     Despesas d ON d.CategoriaCode = c.Code AND d.GrupoFaturaCode = {0}
+                 GROUP BY 
+                     c.Code, c.Descricao
+                 ORDER BY
+                     c.Descricao";
+
+            var parameters = new object[] { grupoCode };
+
+            var listAgrupada = await ExecuteSqlRawAsync<CategoriaQueryResult>(
+                sql,
+                parameters
+            );
+
+            return listAgrupada;
         }
     }
 }

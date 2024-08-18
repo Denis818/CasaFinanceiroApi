@@ -22,7 +22,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         public async Task<IEnumerable<GrupoFaturaQueryDto>> GetAllAsync(string ano) =>
             await _grupoFaturaConsultaService.GetAllAsync(ano);
 
-        [HttpGet("{id}")]
+        [HttpGet("{code}")]
         public async Task<string> GetNameFatura(Guid code) =>
             await _grupoFaturaConsultaService.GetNameFatura(code);
 

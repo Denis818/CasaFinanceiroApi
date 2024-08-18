@@ -21,18 +21,18 @@ namespace Data.Repository.Despesas
                  SELECT 
                      gf.Nome AS GrupoFaturaNome,
                      SUM(CASE 
-                             WHEN d.CategoriaId IN ({0}, {1}, {2}) THEN d.Total 
+                             WHEN d.CategoriaCode IN ({0}, {1}, {2}) THEN d.Total 
                              ELSE 0 
                          END) AS TotalGastosMoradia,
                      SUM(CASE 
-                             WHEN d.CategoriaId NOT IN ({0}, {1}, {2}) THEN d.Total 
+                             WHEN d.CategoriaCode NOT IN ({0}, {1}, {2}) THEN d.Total 
                              ELSE 0 
                          END) AS TotalGastosCasa,
                      SUM(d.Total) AS TotalGeral
                  FROM 
                      Despesas d
                  JOIN 
-                     Grupo_Fatura gf ON d.GrupoFaturaId = gf.Id
+                     Grupo_Fatura gf ON d.GrupoFaturaCode = gf.Code
                  WHERE 
                      gf.Code = {3}
                  GROUP BY 
@@ -46,7 +46,10 @@ namespace Data.Repository.Despesas
                 grupoCode
             };
 
-            var result = await ExecuteSqlRawAsync<RelatorioGastosDoGrupoQueryResult>(sql, parameters);
+            var result = await ExecuteSqlRawAsync<RelatorioGastosDoGrupoQueryResult>(
+                sql,
+                parameters
+            );
 
             return result.FirstOrDefault() ?? new RelatorioGastosDoGrupoQueryResult();
         }
@@ -63,7 +66,7 @@ namespace Data.Repository.Despesas
                  FROM 
                      Despesas d
                  JOIN 
-                     Grupo_Fatura gf ON d.GrupoFaturaId = gf.Id
+                     Grupo_Fatura gf ON d.GrupoFaturaCode = gf.Code
                  WHERE 
                      gf.Ano = {0}
                  GROUP BY 
@@ -100,35 +103,6 @@ namespace Data.Repository.Despesas
                     return monthOrder[monthName];
                 })
                 .ToList();
-        }
-
-        public async Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync(
-            Guid grupoCode
-        )
-        {
-            var sql =
-                @"
-                 SELECT 
-                     c.Descricao AS Categoria,
-                     COALESCE(SUM(d.Total), 0) AS Total,
-                     COUNT(d.Id) AS QuantidadeDeItens
-                 FROM 
-                     Despesas d
-                 JOIN 
-                     Categorias c ON d.CategoriaId = c.Id
-                 WHERE 
-                     d.GrupoFaturaCode = {0}
-                 GROUP BY 
-                     c.Descricao";
-
-            var parameters = new object[] { grupoCode };
-
-            var listAgrupada = await ExecuteSqlRawAsync<TotalPorCategoriaQueryResult>(
-                sql,
-                parameters
-            );
-
-            return listAgrupada;
         }
     }
 }

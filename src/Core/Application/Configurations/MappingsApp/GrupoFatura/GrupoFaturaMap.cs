@@ -13,6 +13,7 @@ namespace Application.Configurations.MappingsApp
                 Nome = grupoFatura.Nome,
                 Ano = grupoFatura.Ano,
                 Code = grupoFatura.Code,
+                DataCriacao = grupoFatura.DataCriacao,
                 StatusFaturas = grupoFatura.StatusFaturas.Select(s => s.MapToDTO()).ToList()
             };
         }

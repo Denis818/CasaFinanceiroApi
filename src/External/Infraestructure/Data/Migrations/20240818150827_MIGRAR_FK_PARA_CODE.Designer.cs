@@ -4,6 +4,7 @@ using Data.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(FinanceDbContext))]
-    partial class FinanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240818150827_MIGRAR_FK_PARA_CODE")]
+    partial class MIGRAR_FK_PARA_CODE
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,23 +24,6 @@ namespace Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("Domain.Dtos.QueryResults.CategoriaQueryResult", b =>
-                {
-                    b.Property<Guid>("Code")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Descricao")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("QuantidadeDeItens")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Total")
-                        .HasColumnType("double");
-
-                    b.ToTable("CategoriaQueryResult");
-                });
 
             modelBuilder.Entity("Domain.Dtos.QueryResults.Despesas.DespesasPorGrupoQueryResult", b =>
                 {
@@ -67,6 +53,20 @@ namespace Data.Migrations
                     b.ToTable("DespesasRelatorioGastosDoGrupo");
                 });
 
+            modelBuilder.Entity("Domain.Dtos.TotalPorCategoriaQueryResult", b =>
+                {
+                    b.Property<string>("Categoria")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("QuantidadeDeItens")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Total")
+                        .HasColumnType("double");
+
+                    b.ToTable("DespesasTotalPorCategoria");
+                });
+
             modelBuilder.Entity("Domain.Models.Categorias.Categoria", b =>
                 {
                     b.Property<Guid>("Code")
@@ -77,13 +77,19 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(50)");
 
-                    b.HasKey("Code");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasIndex("Code")
-                        .HasDatabaseName("IX_Categorias_Code");
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Code");
 
                     b.HasIndex("Descricao")
                         .HasDatabaseName("IX_Categorias_Descricao");
+
+                    b.HasIndex("Id")
+                        .HasDatabaseName("IX_Categorias_Id");
 
                     b.ToTable("Categorias", (string)null);
                 });
@@ -161,6 +167,12 @@ namespace Data.Migrations
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("Data_Criacao");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
                         .IsRequired()

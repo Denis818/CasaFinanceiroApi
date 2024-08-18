@@ -10,14 +10,14 @@ namespace Infraestructure.Data.Mappings.Categorias
         {
             builder.ToTable("Categorias");
 
-            builder.Property(c => c.Id).IsRequired().HasColumnType("int").ValueGeneratedOnAdd();
+            builder.HasKey(e => new { e.Code });
 
             builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").IsRequired().ValueGeneratedOnAdd();
 
             builder.Property(c => c.Descricao).HasColumnType("varchar(50)").IsRequired();
 
             builder.HasIndex(c => c.Descricao).HasDatabaseName("IX_Categorias_Descricao");
-            builder.HasIndex(c => c.Id).HasDatabaseName("IX_Categorias_Id");
+            builder.HasIndex(c => c.Code).HasDatabaseName("IX_Categorias_Code");
         }
     }
 }

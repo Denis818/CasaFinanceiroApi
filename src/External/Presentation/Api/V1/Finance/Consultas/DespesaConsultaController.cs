@@ -35,10 +35,6 @@ namespace Presentation.Api.V1.Finance.Consultas
             string ano
         ) => await dashboardConsultaServices.GetDespesaGrupoParaGraficoAsync(ano);
 
-        [HttpGet("total-por-categoria")]
-        public async Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync() =>
-            await dashboardConsultaServices.GetTotalPorCategoriaAsync();
-
         [HttpGet("despesas-dividas-por-membro")]
         public async Task<DespesasDivididasMensalQueryDto> GetDespesasDivididasMensalAsync() =>
             await dashboardConsultaServices.GetDespesasDivididasMensalAsync();

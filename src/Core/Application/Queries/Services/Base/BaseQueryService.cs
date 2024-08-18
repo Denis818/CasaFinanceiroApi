@@ -46,7 +46,8 @@ namespace Application.Queries.Services.Base
             _queryDespesasPorGrupo = _despesaRepository
                 .Get(d => d.GrupoFaturaCode == _grupoCode)
                 .Include(c => c.Categoria)
-                .Include(c => c.GrupoFatura);
+                .Include(g => g.GrupoFatura)
+                .Include(g => g.GrupoFatura.StatusFaturas);
         }
 
         public void Notificar(EnumTipoNotificacao tipo, string message) =>

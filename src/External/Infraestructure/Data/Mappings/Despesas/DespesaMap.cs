@@ -18,8 +18,6 @@ namespace Infraestructure.Data.Mappings.Despesas
             builder.Property(d => d.Quantidade).HasColumnType("int").IsRequired();
             builder.Property(d => d.Fornecedor).HasColumnType("varchar(50)").IsRequired();
             builder.Property(d => d.Total).HasColumnType("double(7, 2)").IsRequired();
-            builder.Property(d => d.CategoriaId).HasColumnType("int").IsRequired();
-            builder.Property(d => d.GrupoFaturaId).HasColumnType("int").IsRequired();
 
             builder.Property(d => d.CategoriaCode).HasColumnType("char(36)").IsRequired();
             builder.Property(d => d.GrupoFaturaCode).HasColumnType("char(36)").IsRequired();
@@ -27,19 +25,19 @@ namespace Infraestructure.Data.Mappings.Despesas
             builder
                 .HasOne(d => d.Categoria)
                 .WithMany(c => c.Despesas)
-                .HasForeignKey(d => d.CategoriaId);
+                .HasForeignKey(d => d.CategoriaCode);
 
             builder
                 .HasOne(d => d.GrupoFatura)
                 .WithMany(c => c.Despesas)
-                .HasForeignKey(d => d.GrupoFaturaId)
+                .HasForeignKey(d => d.GrupoFaturaCode)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasIndex(d => d.Id).HasDatabaseName("IX_Despesas_Id");
             builder.HasIndex(d => d.Item).HasDatabaseName("IX_Despesas_Item");
             builder.HasIndex(d => d.DataCompra).HasDatabaseName("IX_Despesas_DataCompra");
             builder.HasIndex(d => d.Fornecedor).HasDatabaseName("IX_Despesas_Fornecedor");
-            builder.HasIndex(d => d.GrupoFaturaId).HasDatabaseName("IX_Despesas_GrupoFaturaId");
+            builder.HasIndex(d => d.GrupoFaturaCode).HasDatabaseName("IX_Despesas_GrupoFaturaCode");
 
         }
     }

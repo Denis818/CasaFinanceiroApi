@@ -8,7 +8,6 @@ namespace Domain.Models.Despesas
 
         public string FaturaNome { get; set; }
         public string Estado { get; set; }
-        public int GrupoFaturaId { get; set; }
         public Guid GrupoFaturaCode { get; set; }
         public GrupoFatura GrupoFatura { get; set; }
     }

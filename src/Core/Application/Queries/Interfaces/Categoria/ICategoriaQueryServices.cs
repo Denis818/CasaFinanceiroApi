@@ -1,10 +1,10 @@
-﻿using Domain.Dtos;
+﻿using Domain.Dtos.QueryResults;
 
 namespace Application.Queries.Interfaces
 {
     public interface ICategoriaQueryServices
     {
-        Task<IEnumerable<CategoriaQueryDto>> GetAllAsync();
-        Task<CategoriaQueryDto> GetByCodigoAsync(Guid code);
+        Task<IEnumerable<CategoriaQueryResult>> GetAllAsync();
+        Task<CategoriaQueryResult> GetByCodigoAsync(Guid code);
     }
 }

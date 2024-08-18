@@ -1,5 +1,6 @@
 ﻿using Domain.Converters.DatesTimes;
 using Domain.Dtos.Base;
+using Domain.Dtos.QueryResults;
 using System.Text.Json.Serialization;
 
 namespace Domain.Dtos
@@ -15,6 +16,6 @@ namespace Domain.Dtos
         public string Fornecedor { get; set; }
         public double Total { get; set; }
         public GrupoFaturaQueryDto GrupoFatura { get; set; }
-        public CategoriaQueryDto Categoria { get; set; }
+        public CategoriaQueryResult Categoria { get; set; }
     }
 }

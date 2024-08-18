@@ -20,9 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Queries.Services
 {
-    public class DashboardQueryServices
-        : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>,
-            IDashboardQueryServices
+    public class DashboardQueryServices : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>, IDashboardQueryServices
     {
         private readonly PdfTableHelper _pdfTableCasa = new();
         private readonly PdfTableHelper _pdfTableMoradia = new();
@@ -47,29 +45,12 @@ namespace Application.Queries.Services
             _despesaDomainServices = despesaDomainServices;
 
             _membroId = _membroRepository.GetMembersIds();
-            _grupoFatura = _grupoFaturaRepository.GetByCodigoAsync(_grupoCode).Result.MapToDTO();
+            _grupoFatura = _grupoFaturaRepository.GetByCodigoAsync(_grupoCode).Result?.MapToDTO();
         }
 
         protected override DespesaQueryDto MapToDTO(Despesa entity) => entity.MapToDTO();
 
         #region Dashboard
-
-        public async Task<IEnumerable<TotalPorCategoriaQueryResult>> GetTotalPorCategoriaAsync()
-        {
-            var listAgrupada = await _repository.GetTotalPorCategoriaAsync(_grupoCode);
-
-            if (!listAgrupada.Any())
-            {
-                Notificar(
-                    EnumTipoNotificacao.Informacao,
-                    string.Format(Message.DespesasNaoEncontradas, "")
-                );
-                return [];
-            }
-
-            return listAgrupada;
-        }
-
         public async Task<IEnumerable<DespesasPorGrupoQueryResult>> GetDespesaGrupoParaGraficoAsync(
             string ano
         )
