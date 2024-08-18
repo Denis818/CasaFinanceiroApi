@@ -56,7 +56,7 @@ namespace Application.Commands.Services
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "Categoria", code)
+                    string.Format(Message.NaoEncontrado, "Categoria")
                 );
                 return false;
             }
@@ -114,7 +114,7 @@ namespace Application.Commands.Services
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "Categoria", code)
+                    string.Format(Message.NaoEncontrado, "Categoria")
                 );
                 return false;
             }

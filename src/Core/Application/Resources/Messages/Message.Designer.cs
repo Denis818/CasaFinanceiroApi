@@ -169,20 +169,20 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} com id:{1} não existe..
-        /// </summary>
-        public static string IdNaoEncontrado {
-            get {
-                return ResourceManager.GetString("IdNaoEncontrado", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Modelo não é valido..
         /// </summary>
         public static string ModeloInvalido {
             get {
                 return ResourceManager.GetString("ModeloInvalido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} não foi encontrada..
+        /// </summary>
+        public static string NaoEncontrado {
+            get {
+                return ResourceManager.GetString("NaoEncontrado", resourceCulture);
             }
         }
         

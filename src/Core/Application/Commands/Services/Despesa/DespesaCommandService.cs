@@ -70,11 +70,7 @@ namespace Application.Commands.Services
                 {
                     Notificar(
                         EnumTipoNotificacao.NotFount,
-                        string.Format(
-                            Message.IdNaoEncontrado,
-                            "A categoria",
-                            despesaDto.CategoriaCode
-                        )
+                        string.Format(Message.NaoEncontrado, "A categoria")
                     );
                     continue;
                 }
@@ -127,7 +123,7 @@ namespace Application.Commands.Services
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "A despesa", code)
+                    string.Format(Message.NaoEncontrado, "A despesa")
                 );
                 return false;
             }
@@ -162,7 +158,7 @@ namespace Application.Commands.Services
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "A despesa", code)
+                    string.Format(Message.NaoEncontrado, "A despesa")
                 );
                 return false;
             }
@@ -192,7 +188,7 @@ namespace Application.Commands.Services
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "A categoria", despesaDto.CategoriaCode)
+                    string.Format(Message.NaoEncontrado, "A categoria")
                 );
                 return false;
             }
@@ -224,9 +220,8 @@ namespace Application.Commands.Services
                 Notificar(
                     EnumTipoNotificacao.NotFount,
                     string.Format(
-                        Message.IdNaoEncontrado,
-                        "O Grupo de Despesa",
-                        despesaDto.GrupoFaturaCode
+                        Message.NaoEncontrado,
+                        "O Grupo de Despesa"
                     )
                 );
                 return false;

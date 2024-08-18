@@ -153,11 +153,11 @@
   <data name="ErroAoSalvarNoBanco" xml:space="preserve">
     <value>Ocorreu um erro ao {0}.</value>
   </data>
-  <data name="IdNaoEncontrado" xml:space="preserve">
-    <value>{0} com id:{1} não existe.</value>
-  </data>
   <data name="ModeloInvalido" xml:space="preserve">
     <value>Modelo não é valido.</value>
+  </data>
+  <data name="NaoEncontrado" xml:space="preserve">
+    <value>{0} não foi encontrada.</value>
   </data>
   <data name="NomeDominioNaoEncontrado" xml:space="preserve">
     <value>O nome de domínio '{0}' não existe.</value>

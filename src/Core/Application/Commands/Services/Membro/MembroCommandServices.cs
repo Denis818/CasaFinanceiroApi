@@ -62,7 +62,7 @@ namespace Application.Commands.Services
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "O membro", code)
+                    string.Format(Message.NaoEncontrado, "O membro")
                 );
                 return false;
             }
@@ -108,7 +108,7 @@ namespace Application.Commands.Services
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
-                    string.Format(Message.IdNaoEncontrado, "O membro", code)
+                    string.Format(Message.NaoEncontrado, "O membro")
                 );
                 return false;
             }
