@@ -23,7 +23,6 @@ namespace Application.Configurations.MappingsApp
             {
                 Nome = membroDto.Nome,
                 Telefone = membroDto.Telefone,
-                DataInicio = membroDto.DataInicio
             };
         }
 
@@ -31,7 +30,6 @@ namespace Application.Configurations.MappingsApp
         {
             membro.Nome = membroDto.Nome;
             membro.Telefone = membroDto.Telefone;
-            membro.DataInicio = membroDto.DataInicio;
         }
     }
 }
