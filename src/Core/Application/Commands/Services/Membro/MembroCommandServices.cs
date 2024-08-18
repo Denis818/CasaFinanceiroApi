@@ -53,6 +53,15 @@ namespace Application.Commands.Services
 
         public async Task<bool> UpdateAsync(Guid code, MembroCommandDto membroDto)
         {
+            if (membroDto is null)
+            {
+                Notificar(
+                     EnumTipoNotificacao.NotFount,
+                    "Nulo não é valido"
+                 );
+                return false;
+
+            }
             if (Validator(membroDto))
                 return false;
 
