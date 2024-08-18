@@ -20,10 +20,11 @@ namespace Infraestructure.Data.Mappings.Despesas
 
             builder.HasOne(s => s.GrupoFatura)
                    .WithMany(g => g.StatusFaturas)
-                   .HasForeignKey(s => s.GrupoFaturaCode)
+                   .HasForeignKey(s => s.GrupoFaturaId)
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasIndex(s => s.GrupoFaturaCode).HasDatabaseName("IX_Status_Faturas_GrupoFaturaCode");
+            builder.HasIndex(s => s.GrupoFaturaId).HasDatabaseName("IX_Despesas_GrupoFaturaId");
             builder.HasIndex(c => c.FaturaNome).HasDatabaseName("IX_Status_Fatura_Fatura_Nome");
             builder.HasIndex(c => c.Estado).HasDatabaseName("IX_Status_Fatura_Estado");
         }

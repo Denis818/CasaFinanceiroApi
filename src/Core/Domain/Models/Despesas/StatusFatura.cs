@@ -10,5 +10,6 @@ namespace Domain.Models.Despesas
         public string Estado { get; set; }
         public Guid GrupoFaturaCode { get; set; }
         public GrupoFatura GrupoFatura { get; set; }
+        public int GrupoFaturaId { get; set; }
     }
 }

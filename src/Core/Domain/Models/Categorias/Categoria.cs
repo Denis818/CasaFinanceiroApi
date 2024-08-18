@@ -6,6 +6,8 @@ namespace Domain.Models.Categorias
 {
     public class Categoria : EntityBase
     {
+        public int Id { get; set; }
+
         public string Descricao { get; set; }
 
         [JsonIgnore]

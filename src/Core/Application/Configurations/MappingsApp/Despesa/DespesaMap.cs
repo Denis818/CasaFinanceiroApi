@@ -32,7 +32,9 @@ namespace Application.Configurations.MappingsApp
                 Fornecedor = despesaDto.Fornecedor,
                 DataCompra = despesaDto.DataCompra,
                 CategoriaCode = despesaDto.CategoriaCode,
-                GrupoFaturaCode = despesaDto.GrupoFaturaCode
+                GrupoFaturaCode = despesaDto.GrupoFaturaCode,
+                GrupoFaturaId = despesaDto.GrupoFaturaId,
+                CategoriaId = despesaDto.CategoriaId
             };
         }
 
@@ -43,6 +45,8 @@ namespace Application.Configurations.MappingsApp
             despesa.Quantidade = despesaDto.Quantidade;
             despesa.Fornecedor = despesaDto.Fornecedor;
             despesa.DataCompra = despesaDto.DataCompra;
+            despesa.GrupoFaturaId = despesaDto.GrupoFaturaId;
+            despesa.CategoriaId = despesaDto.CategoriaId;
         }
     }
 }

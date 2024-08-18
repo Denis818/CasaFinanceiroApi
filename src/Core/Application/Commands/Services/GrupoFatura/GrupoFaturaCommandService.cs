@@ -54,12 +54,14 @@ namespace Application.Commands.Services
                 new()
                 {
                     Estado = EnumStatusFatura.CasaAberto.ToString(),
-                    FaturaNome = EnumFaturaTipo.Casa.ToString()
+                    FaturaNome = EnumFaturaTipo.Casa.ToString(),
+                    GrupoFaturaCode = grupoFatura.Code
                 },
                 new()
                 {
                     Estado = EnumStatusFatura.MoradiaAberto.ToString(),
-                    FaturaNome = EnumFaturaTipo.Moradia.ToString()
+                    FaturaNome = EnumFaturaTipo.Moradia.ToString(),
+                    GrupoFaturaCode = grupoFatura.Code
                 }
             ];
 

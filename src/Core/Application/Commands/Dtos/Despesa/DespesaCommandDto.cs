@@ -14,5 +14,7 @@ namespace Application.Commands.Dtos
         public string Fornecedor { get; set; }
         public Guid GrupoFaturaCode { get; set; }
         public Guid CategoriaCode { get; set; }
+        public int GrupoFaturaId { get; set; }
+        public int CategoriaId { get; set; }
     }
 }

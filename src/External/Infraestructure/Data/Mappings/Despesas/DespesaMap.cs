@@ -10,7 +10,12 @@ namespace Infraestructure.Data.Mappings.Despesas
         {
             builder.ToTable("Despesas");
             builder.Property(d => d.Id).HasColumnType("int").IsRequired().ValueGeneratedOnAdd();
-            builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").IsRequired().ValueGeneratedOnAdd();
+            builder
+                .Property(c => c.Code)
+                .IsRequired()
+                .HasColumnType("char(36)")
+                .IsRequired()
+                .ValueGeneratedOnAdd();
 
             builder.Property(d => d.DataCompra).HasColumnType("datetime(6)").IsRequired();
             builder.Property(d => d.Item).HasColumnType("varchar(50)").IsRequired();
@@ -22,15 +27,18 @@ namespace Infraestructure.Data.Mappings.Despesas
             builder.Property(d => d.CategoriaCode).HasColumnType("char(36)").IsRequired();
             builder.Property(d => d.GrupoFaturaCode).HasColumnType("char(36)").IsRequired();
 
+            builder.Property(d => d.CategoriaId).HasColumnType("int").IsRequired();
+            builder.Property(d => d.GrupoFaturaId).HasColumnType("int").IsRequired();
+
             builder
                 .HasOne(d => d.Categoria)
                 .WithMany(c => c.Despesas)
-                .HasForeignKey(d => d.CategoriaCode);
+                .HasForeignKey(d => d.CategoriaId);
 
             builder
                 .HasOne(d => d.GrupoFatura)
                 .WithMany(c => c.Despesas)
-                .HasForeignKey(d => d.GrupoFaturaCode)
+                .HasForeignKey(d => d.GrupoFaturaId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasIndex(d => d.Id).HasDatabaseName("IX_Despesas_Id");
@@ -38,7 +46,7 @@ namespace Infraestructure.Data.Mappings.Despesas
             builder.HasIndex(d => d.DataCompra).HasDatabaseName("IX_Despesas_DataCompra");
             builder.HasIndex(d => d.Fornecedor).HasDatabaseName("IX_Despesas_Fornecedor");
             builder.HasIndex(d => d.GrupoFaturaCode).HasDatabaseName("IX_Despesas_GrupoFaturaCode");
-
+            builder.HasIndex(d => d.GrupoFaturaId).HasDatabaseName("IX_Despesas_GrupoFaturaId");
         }
     }
 }

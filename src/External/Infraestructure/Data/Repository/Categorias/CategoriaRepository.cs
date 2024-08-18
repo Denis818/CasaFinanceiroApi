@@ -70,7 +70,7 @@ namespace Data.Repository.Categorias
                  FROM 
                      Categorias c
                  LEFT JOIN 
-                     Despesas d ON d.CategoriaCode = c.Code AND d.GrupoFaturaCode = {0}
+                     Despesas d ON d.CategoriaId = c.Id AND d.GrupoFaturaCode = {0}
                  GROUP BY 
                      c.Code, c.Descricao
                  ORDER BY

@@ -32,7 +32,7 @@ namespace Data.Repository.Despesas
                  FROM 
                      Despesas d
                  JOIN 
-                     Grupo_Fatura gf ON d.GrupoFaturaCode = gf.Code
+                     Grupo_Fatura gf ON d.GrupoFaturaId = gf.Id
                  WHERE 
                      gf.Code = {3}
                  GROUP BY 
@@ -66,7 +66,7 @@ namespace Data.Repository.Despesas
                  FROM 
                      Despesas d
                  JOIN 
-                     Grupo_Fatura gf ON d.GrupoFaturaCode = gf.Code
+                     Grupo_Fatura gf ON d.GrupoFaturaId = gf.Id
                  WHERE 
                      gf.Ano = {0}
                  GROUP BY 

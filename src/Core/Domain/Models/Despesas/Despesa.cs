@@ -13,8 +13,11 @@ namespace Domain.Models.Despesas
         public string Fornecedor { get; set; }
         public double Total { get; set; }
         public GrupoFatura GrupoFatura { get; set; }
+        public int GrupoFaturaId { get; set; }
         public Categoria Categoria { get; set; }
+        public int CategoriaId { get; set; }
         public Guid GrupoFaturaCode { get; set; }
         public Guid CategoriaCode { get; set; }
+
     }
 }

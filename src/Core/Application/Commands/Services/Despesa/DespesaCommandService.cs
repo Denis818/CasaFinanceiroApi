@@ -30,7 +30,9 @@ namespace Application.Commands.Services
             if (Validator(despesaDto))
                 return false;
 
-            if (!await ValidarDespesaAsync(despesaDto))
+            (bool despesaIsValid, despesaDto) = await ValidarDespesaAsync(despesaDto);
+
+            if (!despesaIsValid)
                 return false;
 
             var despesa = despesaDto.MapToEntity();
@@ -128,7 +130,9 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            if (!await ValidarDespesaAsync(despesaDto, code))
+            (bool despesaIsValid, despesaDto) = await ValidarDespesaAsync(despesaDto, code);
+
+            if (!despesaIsValid)
                 return false;
 
             despesa.MapUpdateEntity(despesaDto);
@@ -179,19 +183,34 @@ namespace Application.Commands.Services
 
         #region Metodos de Suporte
 
-        private async Task<bool> ValidarDespesaAsync(
+        private async Task<(bool, DespesaCommandDto)> ValidarDespesaAsync(
             DespesaCommandDto despesaDto,
             Guid? codeDespesaInEdicao = null
         )
         {
-            if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaCode) is null)
+            var categoria = await _categoriaRepository.ExisteAsync(despesaDto.CategoriaCode);
+            var grupoFatura = await _GrupoFaturaRepository.ExisteAsync(despesaDto.GrupoFaturaCode);
+
+            if (categoria is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
                     string.Format(Message.NaoEncontrado, "A categoria")
                 );
-                return false;
+                return (false, null);
             }
+
+            if (grupoFatura is null)
+            {
+                Notificar(
+                    EnumTipoNotificacao.NotFount,
+                    string.Format(Message.NaoEncontrado, "O Grupo de Despesa")
+                );
+                return (false, null);
+            }
+
+            despesaDto.CategoriaId = categoria.Id;
+            despesaDto.GrupoFaturaId = grupoFatura.Id;
 
             if (
                 despesaDto.CategoriaCode == _categoriaIds.CodAluguel
@@ -200,7 +219,7 @@ namespace Application.Commands.Services
             )
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.CadastroAluguelIncorreto);
-                return false;
+                return (false, null);
             }
 
             if (
@@ -212,27 +231,15 @@ namespace Application.Commands.Services
             )
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.CadastroCondominioIncorreto);
-                return false;
-            }
-
-            if (await _GrupoFaturaRepository.ExisteAsync(despesaDto.GrupoFaturaCode) is null)
-            {
-                Notificar(
-                    EnumTipoNotificacao.NotFount,
-                    string.Format(
-                        Message.NaoEncontrado,
-                        "O Grupo de Despesa"
-                    )
-                );
-                return false;
+                return (false, null);
             }
 
             if (!await IsDespesaMensalExistenteAsync(despesaDto, codeDespesaInEdicao))
             {
-                return false;
+                return (false, null);
             }
 
-            return true;
+            return (true, despesaDto);
         }
 
         private async Task<bool> IsDespesaMensalExistenteAsync(

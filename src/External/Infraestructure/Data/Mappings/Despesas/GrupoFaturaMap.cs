@@ -10,7 +10,9 @@ namespace Infraestructure.Data.Mappings.Despesas
         {
             builder.ToTable("Grupo_Fatura");
 
-            builder.HasKey(e => new { e.Code });
+            builder.HasKey(e => new { e.Id });
+
+            builder.Property(d => d.Id).HasColumnType("int").IsRequired().ValueGeneratedOnAdd();
 
             builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").IsRequired().ValueGeneratedOnAdd();
 
