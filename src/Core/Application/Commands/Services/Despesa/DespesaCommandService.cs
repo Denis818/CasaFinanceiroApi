@@ -213,7 +213,6 @@ namespace Application.Commands.Services
 
             despesaDto.CategoriaId = categoria.Id;
             despesaDto.GrupoFaturaId = grupoFatura.Id;
-            //     despesaDto.GrupoFatura = grupoFatura.MapToDTO();
 
             if (
                 despesaDto.CategoriaCode == _categoriaIds.CodAluguel
