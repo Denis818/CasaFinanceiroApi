@@ -137,6 +137,8 @@ namespace Application.Commands.Services
 
             despesa.MapUpdateEntity(despesaDto);
 
+            despesa.GrupoFatura = await _GrupoFaturaRepository.GetByCodigoAsync(despesaDto.GrupoFaturaCode);
+
             despesa.Total = despesa.Preco * despesa.Quantidade;
             despesa.DataCompra = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
 
