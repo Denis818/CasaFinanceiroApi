@@ -15,7 +15,7 @@ namespace Web.Middleware
             catch (Exception ex)
             {
                 var message =
-                    $"Erro interno no servidor. {ex}";
+                    $"Erro interno no servidor. {ex} || {ex.Message}";
 
                 var response = new ResponseDTO<string>()
                 {
