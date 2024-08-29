@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using Web.Extensios.Application;
 using Web.Extensios.DependencyManagers;
 using Web.Extensios.Swagger;
@@ -13,12 +14,14 @@ app.ConfigureSwaggerUI();
 
 app.UseCorsPolicy(builder.Environment);
 
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<IdentificadorDataBaseMiddleware>();
+
+app.UseIpRateLimiting();
+
 app.UseHttpsRedirection();
 
 app.UseRouting();
-
-app.UseMiddleware<ExceptionMiddleware>();
-app.UseMiddleware<IdentificadorDataBaseMiddleware>();
 
 app.UseAuthentication();
 

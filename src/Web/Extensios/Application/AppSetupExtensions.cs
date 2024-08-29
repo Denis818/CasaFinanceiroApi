@@ -1,4 +1,5 @@
-﻿using Presentation.Version;
+﻿using AspNetCoreRateLimit;
+using Presentation.Version;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Web.Extensios.DependencyManagers;
@@ -32,7 +33,8 @@ namespace Web.Extensios.Application
                 reloadOnChange: true
             );
 
-            builder.Services.ConfigureWebApi();
+            builder.ConfigureRateLimit();
+            builder.ConfigureWebApiVersions();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddApiDependencyServices(builder.Configuration);
             builder.Services.AddSwaggerConfiguration();
@@ -41,6 +43,18 @@ namespace Web.Extensios.Application
             {
                 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
             }
+        }
+
+        public static void ConfigureRateLimit(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddOptions();
+            builder.Services.AddMemoryCache();
+
+            builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+            builder.Services.Configure<IpRateLimitPolicies>(builder.Configuration.GetSection("IpRateLimitPolicies"));
+
+            builder.Services.AddInMemoryRateLimiting();
+            builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
         }
     }
 }

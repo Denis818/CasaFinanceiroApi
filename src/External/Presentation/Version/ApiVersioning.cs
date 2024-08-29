@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Presentation.Api.Base;
@@ -14,11 +15,11 @@ namespace Presentation.Version
 
         public static readonly string[] ListVersions = [V1, V2];
 
-        public static void ConfigureWebApi(this IServiceCollection services)
+        public static void ConfigureWebApiVersions(this WebApplicationBuilder builder)
         {
             var presentationAssembly = typeof(MainController).Assembly;
 
-            services
+            builder.Services
                 .AddControllers(options =>
                 {
                     options.Conventions.Add(new ApiVersioningFilter());
@@ -30,22 +31,17 @@ namespace Presentation.Version
                     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 });
 
-            services.Configure<ApiBehaviorOptions>(options =>
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            services.AddApiVersioning(setup =>
+            builder.Services.AddApiVersioning(setup =>
             {
                 setup.AssumeDefaultVersionWhenUnspecified = true;
                 setup.ReportApiVersions = true;
                 setup.DefaultApiVersion = new ApiVersion(1, 0);
             });
-            //.AddApiExplorer(options =>
-            //{
-            //    options.SubstituteApiVersionInUrl = true;
-            //    options.GroupNameFormat = "'v'VVV";
-            //});
         }
     }
 }
