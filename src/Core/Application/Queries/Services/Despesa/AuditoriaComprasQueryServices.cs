@@ -14,13 +14,13 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Queries.Services
 {
-    public class ConferenciaComprasQueryServices(IServiceProvider service)
+    public class AuditoriaComprasQueryServices(IServiceProvider service)
         : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>(service),
-            IConferenciaComprasQueryServices
+            IAuditoriaComprasQueryServices
     {
         protected override DespesaQueryDto MapToDTO(Despesa entity) => entity.MapToDTO();
 
-        #region Conferência de Compras
+        #region Auditoria de Compras
         public async Task<PagedResult<DespesaQueryDto>> GetListDespesasAllGroups(
             DespesaFiltroDto despesaFiltroDto,
             string ano
@@ -67,9 +67,7 @@ namespace Application.Queries.Services
             return listaPaginada;
         }
 
-        public async Task<
-            List<DespesasSugestaoEconomiaQueryDto>
-        > GetSugestoesEconomiaPorGrupoAsync()
+        public async Task<List<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaPorGrupoAsync()
         {
             var sugestoes = await _queryDespesasPorGrupo
                 .Where(d =>
@@ -100,9 +98,7 @@ namespace Application.Queries.Services
             return sugestoes;
         }
 
-        public async Task<
-            IEnumerable<DespesasSugestaoDeFornecedorQueryDto>
-        > SugestaoDeFornecedorMaisBarato(int paginaAtual, int itensPorPagina)
+        public async Task<IEnumerable<DespesasSugestaoDeFornecedorQueryDto>> SugestaoDeFornecedorMaisBarato(int paginaAtual, int itensPorPagina)
         {
             var queryDespesasPorGrupo = _repository
                 .Get(d => d.GrupoFatura.Code == _grupoCode)

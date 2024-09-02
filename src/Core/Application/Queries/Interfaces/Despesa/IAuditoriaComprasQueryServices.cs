@@ -4,7 +4,7 @@ using Domain.Utilities;
 
 namespace Application.Queries.Interfaces
 {
-    public interface IConferenciaComprasQueryServices
+    public interface IAuditoriaComprasQueryServices
     {
         Task<PagedResult<DespesaQueryDto>> GetListDespesasAllGroups(DespesaFiltroDto despesaFiltroDto, string ano);
         Task<List<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaPorGrupoAsync();

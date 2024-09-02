@@ -24,7 +24,8 @@ namespace Presentation.Api.V1.Finance.Consultas
     public class DespesaConsultaController(
         IDashboardQueryServices dashboardConsultaServices,
         IPainelControleQueryServices painelControleConsultaServices,
-        IConferenciaComprasQueryServices conferenciaComprasConsultaServices,
+        IAuditoriaComprasQueryServices auditoriaComprasConsultaServices,
+        IComparativoFaturasQueryServices comparativoFaturasQueryServices,
         IServiceProvider service
     ) : MainController(service)
     {
@@ -102,7 +103,7 @@ namespace Presentation.Api.V1.Finance.Consultas
 
         #endregion
 
-        #region Conferência de Compras
+        #region Auditoria de Compras
 
         [HttpGet("todos-grupos")]
         public async Task<PagedResult<DespesaQueryDto>> GetListDespesasAllGrupos(
@@ -110,7 +111,7 @@ namespace Presentation.Api.V1.Finance.Consultas
             string ano
         )
         {
-            return await conferenciaComprasConsultaServices.GetListDespesasAllGroups(
+            return await auditoriaComprasConsultaServices.GetListDespesasAllGroups(
                 despesaFiltroDto,
                 ano
             );
@@ -121,7 +122,7 @@ namespace Presentation.Api.V1.Finance.Consultas
             int paginaAtual = 1,
             int itensPorPagina = 10)
         {
-            return await conferenciaComprasConsultaServices.SugestaoDeFornecedorMaisBarato(
+            return await auditoriaComprasConsultaServices.SugestaoDeFornecedorMaisBarato(
                 paginaAtual,
                 itensPorPagina
             );
@@ -129,8 +130,17 @@ namespace Presentation.Api.V1.Finance.Consultas
 
         [HttpGet("sugestoes-economia")]
         public async Task<IEnumerable<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaPorGrupoAsync() =>
-            await conferenciaComprasConsultaServices.GetSugestoesEconomiaPorGrupoAsync();
+            await auditoriaComprasConsultaServices.GetSugestoesEconomiaPorGrupoAsync();
 
+        #endregion
+
+        #region Comparativo de Faturas
+        [HttpGet("comparativo-faturas")]
+        public async Task<ActionResult<List<ComparativoFaturasQueryDto>>> GetComparativoFaturas(Guid grupoFaturaCode1, Guid grupoFaturaCode2)
+        {
+            var resultado = await comparativoFaturasQueryServices.GetComparativoFaturasAsync(grupoFaturaCode1, grupoFaturaCode2);
+            return Ok(resultado);
+        }
         #endregion
     }
 }

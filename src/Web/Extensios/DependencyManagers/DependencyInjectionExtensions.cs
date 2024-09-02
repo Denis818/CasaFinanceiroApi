@@ -63,7 +63,8 @@ namespace Web.Extensios.DependencyManagers
 
             services.AddScoped<IDashboardQueryServices, DashboardQueryServices>();
             services.AddScoped<IPainelControleQueryServices, PainelControleQueryServices>();
-            services.AddScoped<IConferenciaComprasQueryServices, ConferenciaComprasQueryServices>();
+            services.AddScoped<IAuditoriaComprasQueryServices, AuditoriaComprasQueryServices>();
+            services.AddScoped<IComparativoFaturasQueryServices, ComparativoFaturasQueryServices>();
         }
 
         public static void AddCompanyConnectionStrings(
