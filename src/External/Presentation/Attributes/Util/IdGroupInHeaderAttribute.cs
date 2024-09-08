@@ -11,6 +11,15 @@ namespace Presentation.Attributes.Util
     {
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
+            var endpoint = context.ActionDescriptor.EndpointMetadata
+               .OfType<IgnoreGrupoIdAttribute>()
+               .FirstOrDefault();
+
+            if (endpoint != null)
+            {
+                return;
+            }
+
             var httpContext = context.HttpContext;
             string grupoId = httpContext.Request.Headers["grupo-fatura-code"];
 
@@ -38,5 +47,10 @@ namespace Presentation.Attributes.Util
         }
 
         public void OnResourceExecuted(ResourceExecutedContext context) { }
+    }
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    public class IgnoreGrupoIdAttribute : Attribute
+    {
     }
 }

@@ -7,7 +7,7 @@ using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Queries.Services
+namespace Application.Queries.Services.Telas
 {
     public class ComparativoFaturasQueryServices(IServiceProvider service)
         : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>(service),

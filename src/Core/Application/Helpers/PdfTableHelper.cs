@@ -27,7 +27,7 @@ namespace Application.Helpers
         {
             Table table = new Table(UnitValue.CreatePercentArray(PdfTableStyle.NumColumns))
                 .SetWidth(UnitValue.CreatePercentValue(PdfTableStyle.WidthPercentage))
-                .SetHorizontalAlignment(HorizontalAlignment.CENTER);
+                .SetHorizontalAlignment(PdfTableStyle.PositionTable);
 
             Cell titleCell = CreateTitle(title);
             table.AddHeaderCell(titleCell);
@@ -47,7 +47,7 @@ namespace Application.Helpers
                         .SetFontSize(PdfTableStyle.FontSizeHeaderTable)
                 )
                 .SetBackgroundColor(PdfTableStyle.BackgroundColor)
-                .SetTextAlignment(TextAlignment.CENTER)
+                .SetTextAlignment(PdfTableStyle.TextAlignmentTitleDocument)
                 .SetBorder(new SolidBorder(PdfTableStyle.BorderWidth));
 
             return cell;
@@ -62,6 +62,7 @@ namespace Application.Helpers
                         new Paragraph(value.Key)
                             .SetFont(PdfTableStyle.FontColumns)
                             .SetFontSize(PdfTableStyle.FontSizeColumns)
+                            .SetTextAlignment(PdfTableStyle.TextAlignmentColumnKey)
                     )
                     .SetBackgroundColor(PdfTableStyle.BackgroundColor)
                     .SetPadding(3)
@@ -74,6 +75,7 @@ namespace Application.Helpers
                         new Paragraph(value.Value)
                             .SetFont(PdfTableStyle.FontColumns)
                             .SetFontSize(PdfTableStyle.FontSizeColumns)
+                            .SetTextAlignment(PdfTableStyle.TextAlignmentColumnValue)
                     )
                     .SetBackgroundColor(PdfTableStyle.BackgroundColor)
                     .SetPadding(3)
@@ -81,6 +83,32 @@ namespace Application.Helpers
 
                 table.AddCell(valueColumn);
             }
+        }
+
+        public void CreateSingleColumnTable(Document doc, List<string> items)
+        {
+            Table table = new Table(1)
+                .SetWidth(UnitValue.CreatePercentValue(PdfTableStyle.WidthPercentage))
+                .SetHorizontalAlignment(PdfTableStyle.PositionTable);
+
+            foreach (var item in items)
+            {
+                var cell = new Cell()
+                    .Add(
+                        new Paragraph(item)
+                            .SetFont(PdfTableStyle.FontColumns)
+                            .SetFontSize(PdfTableStyle.FontSizeColumns)
+                            .SetTextAlignment(PdfTableStyle.TextAlignmentColumnValue)
+                    )
+                    .SetBackgroundColor(PdfTableStyle.BackgroundColor)
+                    .SetPadding(5)
+                    .SetBorder(new SolidBorder(PdfTableStyle.BorderWidth));
+
+                table.AddCell(cell);
+            }
+
+            doc.Add(table);
+            doc.Add(new Paragraph(" ").SetMarginBottom(5));
         }
     }
 
@@ -91,10 +119,14 @@ namespace Application.Helpers
         sbyte? fontSizeTitle = null,
         sbyte? fontSizeHeaderTable = null,
         sbyte? fontSizeColumns = null,
+        HorizontalAlignment? positionTable = null,
         Color backgroundColor = null,
         float? borderWidth = null,
         sbyte? widthPercentage = null,
-        sbyte? numColumns = null
+        sbyte? numColumns = null,
+        TextAlignment? textAlignmentTitleDocument = null,
+        TextAlignment? textAlignmentColumnKey = null,
+        TextAlignment? textAlignmentColumnValue = null
     )
     {
         public PdfFont FontTitle { get; set; } =
@@ -108,10 +140,19 @@ namespace Application.Helpers
         public sbyte FontSizeHeaderTable { get; set; } = fontSizeHeaderTable ?? 12;
         public sbyte FontSizeColumns { get; set; } = fontSizeColumns ?? 11;
 
-        public Color BackgroundColor { get; set; } =
-            backgroundColor ?? new DeviceRgb(249, 249, 249);
+        public HorizontalAlignment PositionTable { get; set; } = positionTable ?? HorizontalAlignment.CENTER;
+        public Color BackgroundColor { get; set; } = backgroundColor ?? new DeviceRgb(249, 249, 249);
         public float BorderWidth { get; set; } = borderWidth ?? 1.5f;
         public sbyte WidthPercentage { get; set; } = widthPercentage ?? 80;
         public sbyte NumColumns { get; set; } = numColumns ?? 2;
+
+
+        public TextAlignment TextAlignmentTitleDocument { get; set; } =
+            textAlignmentTitleDocument ?? TextAlignment.CENTER;
+        public TextAlignment TextAlignmentColumnKey { get; set; } =
+            textAlignmentColumnKey ?? TextAlignment.CENTER;
+
+        public TextAlignment TextAlignmentColumnValue { get; set; } =
+          textAlignmentColumnValue ?? TextAlignment.CENTER;
     }
 }

@@ -8,6 +8,7 @@ using Domain.Models.Categorias;
 using Domain.Models.Despesas;
 using Domain.Models.Membros;
 using Domain.Models.Users;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 
@@ -17,9 +18,13 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
     {
         public static void PrepareDataBase(IServiceProvider service, string nomeDominio)
         {
-            //PrepareUserMaster(service, nomeDominio);
-            //PrepararVisitante(service);
-            //PrepararTabelas(service).Wait();
+            PrepareUserMaster(service, nomeDominio);
+            PrepararVisitante(service);
+            PrepararCategorias(service).Wait();
+            PrepararMembros(service).Wait();
+            PrepararGruposFaturas(service).Wait();
+            PrepararParametroDeAlertaDeGastos(service).Wait();
+            PrepararListaCompras(service).Wait();
         }
 
         private static void PrepareUserMaster(IServiceProvider service, string nomeDominio)
@@ -59,7 +64,9 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             usuarioRepository.InsertAsync(usuario).Wait();
             usuarioRepository.SaveChangesAsync().Wait();
 
-            authService.AddPermissaoAsync(new UserPermissionCommandDto(usuario.Id, permissoes)).Wait();
+            authService
+                .AddPermissaoAsync(new UserPermissionCommandDto(usuario.Id, permissoes))
+                .Wait();
         }
 
         private static void PrepararVisitante(IServiceProvider service)
@@ -87,14 +94,13 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             usuarioRepository.SaveChangesAsync().Wait();
         }
 
-        private static async Task PrepararTabelas(IServiceProvider service)
+        private static async Task PrepararCategorias(IServiceProvider service)
         {
             var categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
-            var memberRepository = service.GetRequiredService<IMembroRepository>();
-            var grupoFaturaRepository = service.GetRequiredService<IGrupoFaturaRepository>();
-            var parametroDeAlertaDeGastosRepository = service.GetRequiredService<IParametroDeAlertaDeGastosRepository>();
 
-            if (categoriaRepository.Get().ToList().Count < 1)
+            var list = await categoriaRepository.Get().ToListAsync();
+
+            if (list.Count < 1)
             {
                 var listCategoria = new List<Categoria>
                 {
@@ -111,8 +117,15 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 await categoriaRepository.InsertRangeAsync(listCategoria);
                 await categoriaRepository.SaveChangesAsync();
             }
+        }
 
-            if (memberRepository.Get().ToList().Count < 1)
+        private static async Task PrepararMembros(IServiceProvider service)
+        {
+            var memberRepository = service.GetRequiredService<IMembroRepository>();
+
+            var list = await memberRepository.Get().ToListAsync();
+
+            if (list.Count < 1)
             {
                 var dataInicio = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
 
@@ -153,8 +166,15 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 await memberRepository.InsertRangeAsync(listMember);
                 await memberRepository.SaveChangesAsync();
             }
+        }
 
-            if (grupoFaturaRepository.Get().ToList().Count < 1)
+        private static async Task PrepararGruposFaturas(IServiceProvider service)
+        {
+            var grupoFaturaRepository = service.GetRequiredService<IGrupoFaturaRepository>();
+
+            var list = await grupoFaturaRepository.Get().ToListAsync();
+
+            if (list.Count < 1)
             {
                 var dataCriacao = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
 
@@ -185,8 +205,16 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 await grupoFaturaRepository.InsertAsync(grupoFatura);
                 await grupoFaturaRepository.SaveChangesAsync();
             }
+        }
 
-            if (parametroDeAlertaDeGastosRepository.Get().ToList().Count < 1)
+        private static async Task PrepararParametroDeAlertaDeGastos(IServiceProvider service)
+        {
+            var parametroDeAlertaDeGastosRepository =
+                service.GetRequiredService<IParametroDeAlertaDeGastosRepository>();
+
+            var list = await parametroDeAlertaDeGastosRepository.Get().ToListAsync();
+
+            if (list.Count < 1)
             {
                 var listMetricasPersonalizadas = new List<ParametroDeAlertaDeGastos>
                 {
@@ -210,8 +238,48 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                     },
                 };
 
-                await parametroDeAlertaDeGastosRepository.InsertRangeAsync(listMetricasPersonalizadas);
+                await parametroDeAlertaDeGastosRepository.InsertRangeAsync(
+                    listMetricasPersonalizadas
+                );
                 await parametroDeAlertaDeGastosRepository.SaveChangesAsync();
+            }
+        }
+
+        private static async Task PrepararListaCompras(IServiceProvider service)
+        {
+            var listaComprasRepository = service.GetRequiredService<IListaComprasRepository>();
+
+            var list = await listaComprasRepository.Get().ToListAsync();
+
+            if (list.Count < 1)
+            {
+                var itensIniciais = new List<ListaCompras>
+                {
+                    new() { Item = "Arroz" },
+                    new() { Item = "Feijão" },
+                    new() { Item = "Sabonete" },
+                    new() { Item = "Macarrão" },
+                    new() { Item = "Molho de Tomate" },
+                    new() { Item = "Sabão Líquido para Roupas" },
+                    new() { Item = "Amaciante" },
+                    new() { Item = "Bolacha" },
+                    new() { Item = "Óleo" },
+                    new() { Item = "Sal" },
+                    new() { Item = "Papel Higiênico" },
+                    new() { Item = "Ovos" },
+                    new() { Item = "Trigo" },
+                    new() { Item = "Fubá" },
+                    new() { Item = "Leite" },
+                    new() { Item = "Detergente" },
+                    new() { Item = "Desinfetante" },
+                    new() { Item = "Açúcar" },
+                    new() { Item = "Pasta de Dente" },
+                    new() { Item = "Café" },
+                    new() { Item = "Caldo de Galinha" }
+                };
+
+                await listaComprasRepository.InsertRangeAsync(itensIniciais);
+                await listaComprasRepository.SaveChangesAsync();
             }
         }
     }

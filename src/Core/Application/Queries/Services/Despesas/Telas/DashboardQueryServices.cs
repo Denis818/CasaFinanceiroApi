@@ -15,15 +15,21 @@ using Domain.Interfaces.Services.Despesa;
 using Domain.Models.Despesas;
 using iText.Kernel.Pdf;
 using iText.Layout;
+using iText.Layout.Properties;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Application.Queries.Services
+namespace Application.Queries.Services.Telas
 {
-    public class DashboardQueryServices : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>, IDashboardQueryServices
+    public class DashboardQueryServices
+        : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>,
+            IDashboardQueryServices
     {
-        private readonly PdfTableHelper _pdfTableCasa = new();
-        private readonly PdfTableHelper _pdfTableMoradia = new();
+        private readonly PdfTableHelper _pdfTableCasa =
+            new(new PdfTableStyle(textAlignmentColumnKey: TextAlignment.LEFT));
+
+        private readonly PdfTableHelper _pdfTableMoradia =
+            new(new PdfTableStyle(textAlignmentColumnKey: TextAlignment.LEFT));
 
         private readonly IGrupoFaturaRepository _grupoFaturaRepository;
         private readonly IMembroRepository _membroRepository;
@@ -247,7 +253,8 @@ namespace Application.Queries.Services
                 .ToList();
 
             List<DespesaQueryDto> listAluguel = await _queryDespesasPorGrupo
-                .Where(d => d.Categoria.Code == _categoriaIds.CodAluguel).Select(m => m.MapToDTO())
+                .Where(d => d.Categoria.Code == _categoriaIds.CodAluguel)
+                .Select(m => m.MapToDTO())
                 .ToListAsync();
 
             return new GrupoListMembrosDespesaDto()

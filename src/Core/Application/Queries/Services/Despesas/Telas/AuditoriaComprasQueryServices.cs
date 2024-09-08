@@ -12,7 +12,7 @@ using Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Application.Queries.Services
+namespace Application.Queries.Services.Telas
 {
     public class AuditoriaComprasQueryServices(IServiceProvider service)
         : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>(service),

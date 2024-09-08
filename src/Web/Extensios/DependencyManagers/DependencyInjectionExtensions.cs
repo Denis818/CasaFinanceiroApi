@@ -1,7 +1,9 @@
 ﻿using Application.Commands.Interfaces;
 using Application.Commands.Services;
 using Application.Queries.Interfaces;
+using Application.Queries.Interfaces.Despesa;
 using Application.Queries.Services;
+using Application.Queries.Services.Telas;
 using Application.Utilities;
 using Data.Repository.Categorias;
 using Data.Repository.Despesas;
@@ -12,6 +14,7 @@ using Domain.Interfaces.Utilities;
 using Domain.Services;
 using Infraestructure.Data.Configurations;
 using Infraestructure.Data.Repository;
+using Infraestructure.Data.Repository.Despesas;
 using Infraestructure.Data.Repository.Membros;
 using Presentation.ModelState;
 using Presentation.ModelState.Interface;
@@ -32,6 +35,7 @@ namespace Web.Extensios.DependencyManagers
         {
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IDespesaRepository, DespesaRepository>();
+            services.AddScoped<IListaComprasRepository, ListaComprasRepository>();
             services.AddScoped<IMembroRepository, MembroRepository>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
             services.AddScoped<IGrupoFaturaRepository, GrupoFaturaRepository>();
@@ -59,6 +63,7 @@ namespace Web.Extensios.DependencyManagers
         {
             services.AddScoped<ICategoriaQueryServices, CategoriaQueryServices>();
             services.AddScoped<IGrupoFaturaQueryService, GrupoFaturaQueryService>();
+            services.AddScoped<IListaComprasQueryService, ListaComprasQueryService>();
             services.AddScoped<IMembroQueryServices, MembroQueryServices>();
 
             services.AddScoped<IDashboardQueryServices, DashboardQueryServices>();

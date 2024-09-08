@@ -101,6 +101,23 @@ namespace Presentation.Api.V1.Finance.Consultas
         public async Task<object> GetParametroDeAlertaDeGastos() =>
             await painelControleConsultaServices.GetParametroDeAlertaDeGastos();
 
+        [HttpGet("pdf-lista-compras")]
+        [IgnoreGrupoId]
+        public async Task<FileContentResult> ExportaPdfListaDeComprasAsync()
+        {
+            byte[] pdfBytes = await painelControleConsultaServices.ExportaPdfListaDeComprasAsync();
+
+            var contentDisposition = new ContentDisposition
+            {
+                FileName = "lista-de-compras.pdf",
+                Inline = false
+            };
+
+            Response.Headers.Append("Content-Disposition", contentDisposition.ToString());
+
+            return File(pdfBytes, "application/pdf");
+        }
+
         #endregion
 
         #region Auditoria de Compras

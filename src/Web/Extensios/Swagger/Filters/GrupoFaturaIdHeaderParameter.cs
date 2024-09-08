@@ -18,22 +18,33 @@ namespace Web.Extensios.Swagger.Filters
                 .OfType<GetIdGroupInHeaderFilterAttribute>()
                 .Any();
 
+            var controllerIgnoraIdGrupo = context
+                .MethodInfo.DeclaringType.GetCustomAttributes(true)
+                .OfType<IgnoreGrupoIdAttribute>()
+                .Any();
+
+            var endPointIgnoraIdGrupo = context
+                .MethodInfo.GetCustomAttributes(true)
+                .OfType<IgnoreGrupoIdAttribute>()
+                .Any();
+
             if (
                 (controllerPrecisaIdGrupo || endPointPrecisaIdGrupo)
+                && !controllerIgnoraIdGrupo
+                && !endPointIgnoraIdGrupo
                 && context.ApiDescription.HttpMethod == "GET"
             )
             {
-                operation.Parameters ??= [];
+                operation.Parameters ??= new List<OpenApiParameter>();
 
                 operation.Parameters.Add(
                     new OpenApiParameter
                     {
                         Name = "grupo-fatura-code",
                         In = ParameterLocation.Header,
-                        Description =
-                            "Adicionar o Code de um grupo de despesas no cabeçalho da requisição",
                         Required = false,
-                        Schema = new OpenApiSchema { Type = "int" }
+                        Schema = new OpenApiSchema { Type = "string" },
+                        Description = "Adicionar o Code de um grupo de despesas no cabeçalho da requisição",
                     }
                 );
             }

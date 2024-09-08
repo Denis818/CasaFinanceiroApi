@@ -1,6 +1,8 @@
 ﻿using Application.Configurations.MappingsApp;
+using Application.Helpers;
 using Application.Queries.Dtos;
 using Application.Queries.Interfaces;
+using Application.Queries.Interfaces.Despesa;
 using Application.Queries.Services.Base;
 using Application.Resources.Messages;
 using Application.Utilities;
@@ -9,15 +11,21 @@ using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Domain.Utilities;
+using iText.Kernel.Pdf;
+using iText.Layout;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Queries.Services
+namespace Application.Queries.Services.Telas
 {
-    public class PainelControleQueryServices(IServiceProvider service, IParametroDeAlertaDeGastosRepository _parametroDeAlertaDeGastosRepository)
-        : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>(service), IPainelControleQueryServices
+    public class PainelControleQueryServices(
+        IServiceProvider service,
+        IListaComprasQueryService _listaComprasQueryService,
+        IParametroDeAlertaDeGastosRepository _parametroDeAlertaDeGastosRepository
+    )
+        : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>(service),
+            IPainelControleQueryServices
     {
         protected override DespesaQueryDto MapToDTO(Despesa entity) => entity.MapToDTO();
-
 
         #region Painel de Controle
 
@@ -53,7 +61,7 @@ namespace Application.Queries.Services
         {
             double totalDespesas = await _queryDespesasPorGrupo
                 .Where(despesa =>
-                       despesa.Categoria.Code != _categoriaIds.CodAluguel
+                    despesa.Categoria.Code != _categoriaIds.CodAluguel
                     && despesa.Categoria.Code != _categoriaIds.CodContaDeLuz
                     && despesa.Categoria.Code != _categoriaIds.CodCondominio
                 )
@@ -130,6 +138,33 @@ namespace Application.Queries.Services
             }
 
             return despesas;
+        }
+
+        #endregion
+
+        #region Exporta Lista de Compras
+
+        public async Task<byte[]> ExportaPdfListaDeComprasAsync()
+        {
+            var customStyle = new PdfTableStyle(widthPercentage: 50);
+
+            var pdfHelper = new PdfTableHelper(customStyle);
+
+            var listaCompras = await _listaComprasQueryService.GetAllAsync() ?? [];
+
+            using var memoryStream = new MemoryStream();
+            using var writer = new PdfWriter(memoryStream);
+            using var pdfDocument = new PdfDocument(writer);
+            using var doc = new Document(pdfDocument);
+
+            pdfHelper.CreateTitleDocument(doc, "Lista de Compras");
+
+            var itensListaCompras = listaCompras.Select(x => x.Item).ToList();
+
+            pdfHelper.CreateSingleColumnTable(doc, itensListaCompras);
+
+            doc.Close();
+            return memoryStream.ToArray();
         }
 
         #endregion
