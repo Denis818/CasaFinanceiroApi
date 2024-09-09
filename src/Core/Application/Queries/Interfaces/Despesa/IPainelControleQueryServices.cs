@@ -10,6 +10,5 @@ namespace Application.Queries.Interfaces
         Task<(double, double)> CompararFaturaComTotalDeDespesas(double faturaCartao);
         Task<PagedResult<DespesaQueryDto>> GetListDespesasPorGrupo(DespesaFiltroDto despesaFiltroDto);
         Task<IList<ParametroDeAlertaDeGastos>> GetParametroDeAlertaDeGastos();
-        Task<byte[]> ExportaPdfListaDeComprasAsync();
     }
 }

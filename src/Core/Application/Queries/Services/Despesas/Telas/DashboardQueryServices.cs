@@ -97,14 +97,14 @@ namespace Application.Queries.Services.Telas
         public async Task<RelatorioGastosDoGrupoQueryResult> GetRelatorioDeGastosDoGrupoAsync() =>
             await _repository.GetRelatorioDeGastosDoGrupoAsync(_grupoCode, _categoriaIds);
 
-        public async Task<byte[]> DownloadPdfRelatorioDeDespesaCasa()
+        public async Task<byte[]> ExportarPdfRelatorioDeDespesaCasa()
         {
             var custosCasaDto = await CalcularDistribuicaoCustosCasaAsync();
 
             return GerarRelatorioDespesaCasaPdf(custosCasaDto);
         }
 
-        public async Task<byte[]> DownloadPdfRelatorioDeDespesaMoradia()
+        public async Task<byte[]> ExportarPdfRelatorioDeDespesaMoradia()
         {
             var custosMoradiaDto = await CalcularDistribuicaoCustosMoradiaAsync();
 

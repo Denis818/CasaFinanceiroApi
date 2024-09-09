@@ -45,9 +45,9 @@ namespace Presentation.Api.V1.Finance.Consultas
             await dashboardConsultaServices.GetRelatorioDeGastosDoGrupoAsync();
 
         [HttpGet("pdf-despesas-casa")]
-        public async Task<FileContentResult> DownloadCalculoCasa()
+        public async Task<FileContentResult> ExportarPdfRelatorioDeDespesaCasa()
         {
-            byte[] pdfBytes = await dashboardConsultaServices.DownloadPdfRelatorioDeDespesaCasa();
+            byte[] pdfBytes = await dashboardConsultaServices.ExportarPdfRelatorioDeDespesaCasa();
 
             var contentDisposition = new ContentDisposition
             {
@@ -61,10 +61,10 @@ namespace Presentation.Api.V1.Finance.Consultas
         }
 
         [HttpGet("pdf-despesas-moradia")]
-        public async Task<FileContentResult> DownloadCalculoMoradia()
+        public async Task<FileContentResult> ExportarPdfRelatorioDeDespesaMoradia()
         {
             byte[] pdfBytes =
-                await dashboardConsultaServices.DownloadPdfRelatorioDeDespesaMoradia();
+                await dashboardConsultaServices.ExportarPdfRelatorioDeDespesaMoradia();
 
             var contentDisposition = new ContentDisposition
             {
@@ -100,23 +100,6 @@ namespace Presentation.Api.V1.Finance.Consultas
         [HttpGet("parametro-alerta-gastos")]
         public async Task<object> GetParametroDeAlertaDeGastos() =>
             await painelControleConsultaServices.GetParametroDeAlertaDeGastos();
-
-        [HttpGet("pdf-lista-compras")]
-        [IgnoreGrupoId]
-        public async Task<FileContentResult> ExportaPdfListaDeComprasAsync()
-        {
-            byte[] pdfBytes = await painelControleConsultaServices.ExportaPdfListaDeComprasAsync();
-
-            var contentDisposition = new ContentDisposition
-            {
-                FileName = "lista-de-compras.pdf",
-                Inline = false
-            };
-
-            Response.Headers.Append("Content-Disposition", contentDisposition.ToString());
-
-            return File(pdfBytes, "application/pdf");
-        }
 
         #endregion
 

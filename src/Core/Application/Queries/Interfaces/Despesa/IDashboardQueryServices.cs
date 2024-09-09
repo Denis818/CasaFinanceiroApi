@@ -5,8 +5,8 @@ namespace Application.Queries.Interfaces
 {
     public interface IDashboardQueryServices
     {
-        Task<byte[]> DownloadPdfRelatorioDeDespesaCasa();
-        Task<byte[]> DownloadPdfRelatorioDeDespesaMoradia();
+        Task<byte[]> ExportarPdfRelatorioDeDespesaCasa();
+        Task<byte[]> ExportarPdfRelatorioDeDespesaMoradia();
         Task<DespesasDivididasMensalQueryDto> GetDespesasDivididasMensalAsync();
         Task<IEnumerable<DespesasPorGrupoQueryResult>> GetDespesaGrupoParaGraficoAsync(string ano);
         Task<RelatorioGastosDoGrupoQueryResult> GetRelatorioDeGastosDoGrupoAsync();
