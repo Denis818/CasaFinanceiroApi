@@ -16,22 +16,22 @@ namespace Presentation.Api.V1.Finance.Comandos
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
     [ApiVersionRoute("lista-compras")]
-    public class ListaComprasComandoController(IServiceProvider service, IListaComprasCommandService listaComprasCommandService)
+    public class ProdutoListaComprasComandoController(IServiceProvider service, IProdutoListaComprasCommandService ProdutoListaComprasCommandService)
         : MainController(service)
     {
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<bool> PostAsync(ListaComprasCommandDto item) =>
-              await listaComprasCommandService.InsertAsync(item);
+        public async Task<bool> PostAsync(ProdutoListaComprasCommandDto item) =>
+              await ProdutoListaComprasCommandService.InsertAsync(item);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task<bool> PutAsync(Guid code, ListaComprasCommandDto item) =>
-            await listaComprasCommandService.UpdateAsync(code, item);
+        public async Task<bool> PutAsync(Guid code, ProdutoListaComprasCommandDto item) =>
+            await ProdutoListaComprasCommandService.UpdateAsync(code, item);
 
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
-        public async Task<bool> DeleteAsync(Guid code) => await listaComprasCommandService.DeleteAsync(code);
+        public async Task<bool> DeleteAsync(Guid code) => await ProdutoListaComprasCommandService.DeleteAsync(code);
 
     }
 }

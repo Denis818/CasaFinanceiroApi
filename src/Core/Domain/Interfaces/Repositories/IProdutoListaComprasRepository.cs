@@ -3,7 +3,7 @@ using Domain.Models.Despesas;
 
 namespace Domain.Interfaces.Repositories
 {
-    public interface IListaComprasRepository : IRepositoryBase<ListaCompras>
+    public interface IProdutoListaComprasRepository : IRepositoryBase<ProdutoListaCompras>
     {
     }
 }

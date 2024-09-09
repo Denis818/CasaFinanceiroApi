@@ -35,7 +35,7 @@ namespace Web.Extensios.DependencyManagers
         {
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IDespesaRepository, DespesaRepository>();
-            services.AddScoped<IListaComprasRepository, ListaComprasRepository>();
+            services.AddScoped<IProdutoListaComprasRepository, ProdutoListaComprasRepository>();
             services.AddScoped<IMembroRepository, MembroRepository>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
             services.AddScoped<IGrupoFaturaRepository, GrupoFaturaRepository>();
@@ -54,7 +54,7 @@ namespace Web.Extensios.DependencyManagers
 
             services.AddScoped<ICategoriaCommandServices, CategoriaCommandServices>();
             services.AddScoped<IDespesaCommandService, DespesaCommandService>();
-            services.AddScoped<IListaComprasCommandService, ListaComprasCommandService>();
+            services.AddScoped<IProdutoListaComprasCommandService, ProdutoListaComprasCommandService>();
             services.AddScoped<IGrupoFaturaCommandService, GrupoFaturaCommandService>();
             services.AddScoped<IMembroComandoServices, MembroCommandServices>();
             services.AddScoped<IParametroDeAlertaDeGastosCommandService, ParametroDeAlertaDeGastosCommandService>();
@@ -64,7 +64,7 @@ namespace Web.Extensios.DependencyManagers
         {
             services.AddScoped<ICategoriaQueryServices, CategoriaQueryServices>();
             services.AddScoped<IGrupoFaturaQueryService, GrupoFaturaQueryService>();
-            services.AddScoped<IListaComprasQueryService, ListaComprasQueryService>();
+            services.AddScoped<IProdutoListaComprasQueryService, ProdutoListaComprasQueryService>();
             services.AddScoped<IMembroQueryServices, MembroQueryServices>();
 
             services.AddScoped<IDashboardQueryServices, DashboardQueryServices>();

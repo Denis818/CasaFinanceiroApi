@@ -24,7 +24,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             PrepararMembros(service).Wait();
             PrepararGruposFaturas(service).Wait();
             PrepararParametroDeAlertaDeGastos(service).Wait();
-            PrepararListaCompras(service).Wait();
+            PrepararProdutoListaCompras(service).Wait();
         }
 
         private static void PrepareUserMaster(IServiceProvider service, string nomeDominio)
@@ -245,15 +245,15 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             }
         }
 
-        private static async Task PrepararListaCompras(IServiceProvider service)
+        private static async Task PrepararProdutoListaCompras(IServiceProvider service)
         {
-            var listaComprasRepository = service.GetRequiredService<IListaComprasRepository>();
+            var ProdutoListaComprasRepository = service.GetRequiredService<IProdutoListaComprasRepository>();
 
-            var list = await listaComprasRepository.Get().ToListAsync();
+            var list = await ProdutoListaComprasRepository.Get().ToListAsync();
 
             if (list.Count < 1)
             {
-                var itensIniciais = new List<ListaCompras>
+                var itensIniciais = new List<ProdutoListaCompras>
                 {
                     new() { Item = "Arroz" },
                     new() { Item = "Feijão" },
@@ -278,8 +278,8 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                     new() { Item = "Caldo de Galinha" }
                 };
 
-                await listaComprasRepository.InsertRangeAsync(itensIniciais);
-                await listaComprasRepository.SaveChangesAsync();
+                await ProdutoListaComprasRepository.InsertRangeAsync(itensIniciais);
+                await ProdutoListaComprasRepository.SaveChangesAsync();
             }
         }
     }

@@ -1,6 +1,6 @@
-﻿using Application.Queries.Interfaces.Despesa;
+﻿using Application.Queries.Dtos;
+using Application.Queries.Interfaces.Despesa;
 using Asp.Versioning;
-using Domain.Dtos.Despesas;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
@@ -13,13 +13,13 @@ namespace Presentation.Api.V1.Finance.Consultas
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
     [ApiVersionRoute("lista-compras")]
-    public class ListaComprasConsultaController(
+    public class ProdutoListaComprasConsultaController(
         IServiceProvider service,
-        IListaComprasQueryService _listaComprasQueryService
+        IProdutoListaComprasQueryService _ProdutoListaComprasQueryService
     ) : MainController(service)
     {
         [HttpGet]
-        public async Task<IEnumerable<ListaComprasQueryDto>> GetAllAsync() =>
-            await _listaComprasQueryService.GetAllAsync();
+        public async Task<IEnumerable<ProdutoListaComprasQueryDto>> GetAllAsync() =>
+            await _ProdutoListaComprasQueryService.GetAllAsync();
     }
 }

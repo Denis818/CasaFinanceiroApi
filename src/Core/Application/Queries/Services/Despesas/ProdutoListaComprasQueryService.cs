@@ -1,19 +1,19 @@
 ﻿using Application.Configurations.MappingsApp;
+using Application.Queries.Dtos;
 using Application.Queries.Interfaces.Despesa;
 using Application.Queries.Services.Base;
-using Domain.Dtos.Despesas;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries.Services
 {
-    public class ListaComprasQueryService(IServiceProvider service)
-        : BaseQueryService<ListaCompras, ListaComprasQueryDto, IListaComprasRepository>(service), IListaComprasQueryService
+    public class ProdutoListaComprasQueryService(IServiceProvider service)
+        : BaseQueryService<ProdutoListaCompras, ProdutoListaComprasQueryDto, IProdutoListaComprasRepository>(service), IProdutoListaComprasQueryService
     {
-        protected override ListaComprasQueryDto MapToDTO(ListaCompras entity) => entity.MapToDTO();
+        protected override ProdutoListaComprasQueryDto MapToDTO(ProdutoListaCompras entity) => entity.MapToDTO();
 
-        public async Task<IEnumerable<ListaComprasQueryDto>> GetAllAsync() =>
+        public async Task<IEnumerable<ProdutoListaComprasQueryDto>> GetAllAsync() =>
             await _repository
                 .Get()
                 .OrderBy(c => c.Item)

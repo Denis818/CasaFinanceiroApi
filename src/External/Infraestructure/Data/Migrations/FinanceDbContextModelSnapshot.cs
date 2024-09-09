@@ -201,7 +201,7 @@ namespace Data.Migrations
                     b.ToTable("Grupo_Fatura", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.Despesas.ListaCompras", b =>
+            modelBuilder.Entity("Domain.Models.Despesas.ProdutoListaCompras", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -220,15 +220,15 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
-                        .HasDatabaseName("IX_Lista_Compras_Code");
+                        .HasDatabaseName("IX_Produto_Lista_Compras_Code");
 
                     b.HasIndex("Id")
-                        .HasDatabaseName("IX_Lista_Compras_Id");
+                        .HasDatabaseName("IX_Produto_Lista_Compras_Id");
 
                     b.HasIndex("Item")
-                        .HasDatabaseName("IX_Lista_Compras_Item");
+                        .HasDatabaseName("IX_Produto_Lista_Compras_Item");
 
-                    b.ToTable("Lista_Compras", (string)null);
+                    b.ToTable("Produto_Lista_Compras", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Despesas.ParametroDeAlertaDeGastos", b =>

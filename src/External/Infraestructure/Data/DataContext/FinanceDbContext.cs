@@ -13,7 +13,7 @@ namespace Data.DataContext
     {
         #region Models
         public DbSet<Despesa> Despesas { get; set; }
-        public DbSet<ListaCompras> ListaCompras { get; set; }
+        public DbSet<ProdutoListaCompras> ProdutoListaCompras { get; set; }
         public DbSet<ParametroDeAlertaDeGastos> ParametroDeAlertaDeGastoss { get; set; }
         public DbSet<GrupoFatura> GrupoFaturas { get; set; }
         public DbSet<StatusFatura> StatusFaturas { get; set; }

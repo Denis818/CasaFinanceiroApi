@@ -2,7 +2,7 @@
 
 namespace Application.Commands.Dtos.Despesa
 {
-    public class ListaComprasCommandDto : CommandBaseDTO
+    public class ProdutoListaComprasCommandDto : CommandBaseDTO
     {
         public string Item { get; set; }
     }

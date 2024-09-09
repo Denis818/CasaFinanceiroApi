@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Commands.Validators.Finance
 {
-    public class ListaComprasValidator : AbstractValidator<ListaComprasCommandDto>
+    public class ProdutoListaComprasValidator : AbstractValidator<ProdutoListaComprasCommandDto>
     {
-        public ListaComprasValidator()
+        public ProdutoListaComprasValidator()
         {
             RuleFor(x => x.Item)
                 .NotEmpty()

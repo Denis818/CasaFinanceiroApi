@@ -19,7 +19,7 @@ namespace Application.Queries.Services.Telas
 {
     public class PainelControleQueryServices(
         IServiceProvider service,
-        IListaComprasQueryService _listaComprasQueryService,
+        IProdutoListaComprasQueryService _ProdutoListaComprasQueryService,
         IParametroDeAlertaDeGastosRepository _parametroDeAlertaDeGastosRepository
     )
         : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>(service),
@@ -150,7 +150,7 @@ namespace Application.Queries.Services.Telas
 
             var pdfHelper = new PdfTableHelper(customStyle);
 
-            var listaCompras = await _listaComprasQueryService.GetAllAsync() ?? [];
+            var ProdutoListaCompras = await _ProdutoListaComprasQueryService.GetAllAsync() ?? [];
 
             using var memoryStream = new MemoryStream();
             using var writer = new PdfWriter(memoryStream);
@@ -159,9 +159,9 @@ namespace Application.Queries.Services.Telas
 
             pdfHelper.CreateTitleDocument(doc, "Lista de Compras");
 
-            var itensListaCompras = listaCompras.Select(x => x.Item).ToList();
+            var itensProdutoListaCompras = ProdutoListaCompras.Select(x => x.Item).ToList();
 
-            pdfHelper.CreateSingleColumnTable(doc, itensListaCompras);
+            pdfHelper.CreateSingleColumnTable(doc, itensProdutoListaCompras);
 
             doc.Close();
             return memoryStream.ToArray();

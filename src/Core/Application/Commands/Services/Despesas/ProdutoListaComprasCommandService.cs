@@ -10,32 +10,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.Services
 {
-    public class ListaComprasCommandService(IServiceProvider service)
-        : BaseCommandService<ListaCompras, ListaComprasCommandDto, IListaComprasRepository>(service), IListaComprasCommandService
+    public class ProdutoListaComprasCommandService(IServiceProvider service)
+        : BaseCommandService<ProdutoListaCompras, ProdutoListaComprasCommandDto, IProdutoListaComprasRepository>(service), IProdutoListaComprasCommandService
     {
-        protected override ListaCompras MapToEntity(ListaComprasCommandDto entity) =>
+        protected override ProdutoListaCompras MapToEntity(ProdutoListaComprasCommandDto entity) =>
             entity.MapToEntity();
 
-        public async Task<bool> InsertAsync(ListaComprasCommandDto listaComprasCommandDto)
+        public async Task<bool> InsertAsync(ProdutoListaComprasCommandDto ProdutoListaComprasCommandDto)
         {
-            if (Validator(listaComprasCommandDto))
+            if (Validator(ProdutoListaComprasCommandDto))
                 return false;
 
-            var itemExistente = await _repository.Get().FirstOrDefaultAsync(item => item.Item == listaComprasCommandDto.Item);
+            var itemExistente = await _repository.Get().FirstOrDefaultAsync(item => item.Item == ProdutoListaComprasCommandDto.Item);
 
             if (itemExistente != null)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
-                    string.Format(Message.RegistroExistente, "O Item", listaComprasCommandDto.Item)
+                    string.Format(Message.RegistroExistente, "O Item", ProdutoListaComprasCommandDto.Item)
                 );
 
                 return false;
             }
 
-            var listaCompras = listaComprasCommandDto.MapToEntity();
+            var ProdutoListaCompras = ProdutoListaComprasCommandDto.MapToEntity();
 
-            await _repository.InsertAsync(listaCompras);
+            await _repository.InsertAsync(ProdutoListaCompras);
 
             if (!await _repository.SaveChangesAsync())
             {
@@ -50,9 +50,9 @@ namespace Application.Commands.Services
             return true;
         }
 
-        public async Task<bool> UpdateAsync(Guid code, ListaComprasCommandDto ListaComprasCommandDto)
+        public async Task<bool> UpdateAsync(Guid code, ProdutoListaComprasCommandDto ProdutoListaComprasCommandDto)
         {
-            if (ListaComprasCommandDto is null)
+            if (ProdutoListaComprasCommandDto is null)
             {
                 Notificar(
                      EnumTipoNotificacao.NotFount,
@@ -61,12 +61,12 @@ namespace Application.Commands.Services
                 return false;
 
             }
-            if (Validator(ListaComprasCommandDto))
+            if (Validator(ProdutoListaComprasCommandDto))
                 return false;
 
-            var listaCompras = await _repository.GetByCodigoAsync(code);
+            var ProdutoListaCompras = await _repository.GetByCodigoAsync(code);
 
-            if (listaCompras is null)
+            if (ProdutoListaCompras is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -76,9 +76,9 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            listaCompras.MapUpdateEntity(ListaComprasCommandDto);
+            ProdutoListaCompras.MapUpdateEntity(ProdutoListaComprasCommandDto);
 
-            _repository.Update(listaCompras);
+            _repository.Update(ProdutoListaCompras);
 
             if (!await _repository.SaveChangesAsync())
             {
@@ -94,9 +94,9 @@ namespace Application.Commands.Services
 
         public async Task<bool> DeleteAsync(Guid code)
         {
-            var listaCompras = await _repository.GetByCodigoAsync(code);
+            var ProdutoListaCompras = await _repository.GetByCodigoAsync(code);
 
-            if (listaCompras == null)
+            if (ProdutoListaCompras == null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -106,7 +106,7 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            _repository.Delete(listaCompras);
+            _repository.Delete(ProdutoListaCompras);
 
             if (!await _repository.SaveChangesAsync())
             {

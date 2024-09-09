@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infraestructure.Data.Mappings.Despesas
 {
-    internal class ListaComprasMap : IEntityTypeConfiguration<ListaCompras>
+    internal class ProdutoListaComprasMap : IEntityTypeConfiguration<ProdutoListaCompras>
     {
-        public void Configure(EntityTypeBuilder<ListaCompras> builder)
+        public void Configure(EntityTypeBuilder<ProdutoListaCompras> builder)
         {
-            builder.ToTable("Lista_Compras");
+            builder.ToTable("Produto_Lista_Compras");
 
             builder.HasKey(e => new { e.Id });
 
@@ -17,9 +17,9 @@ namespace Infraestructure.Data.Mappings.Despesas
 
             builder.Property(d => d.Item).HasColumnType("varchar(50)").IsRequired();
 
-            builder.HasIndex(c => c.Code).HasDatabaseName("IX_Lista_Compras_Code");
-            builder.HasIndex(c => c.Id).HasDatabaseName("IX_Lista_Compras_Id");
-            builder.HasIndex(c => c.Item).HasDatabaseName("IX_Lista_Compras_Item");
+            builder.HasIndex(c => c.Code).HasDatabaseName("IX_Produto_Lista_Compras_Code");
+            builder.HasIndex(c => c.Id).HasDatabaseName("IX_Produto_Lista_Compras_Id");
+            builder.HasIndex(c => c.Item).HasDatabaseName("IX_Produto_Lista_Compras_Item");
         }
     }
 }
