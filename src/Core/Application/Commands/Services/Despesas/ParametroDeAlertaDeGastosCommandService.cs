@@ -43,7 +43,6 @@ namespace Application.Commands.Services
 
                 var parametroDeAlertaDeGastos = await _repository
                     .Get(parametroDeAlertaDeGastos =>
-                        /*parametroDeAlertaDeGastos.Id == parametroDeAlertaDeGastosDto.Id &&*/
                         parametroDeAlertaDeGastos.TipoMetrica
                         == parametroDeAlertaDeGastosDto.TipoMetrica
                     )

@@ -54,6 +54,7 @@ namespace Web.Extensios.DependencyManagers
 
             services.AddScoped<ICategoriaCommandServices, CategoriaCommandServices>();
             services.AddScoped<IDespesaCommandService, DespesaCommandService>();
+            services.AddScoped<IListaComprasCommandService, ListaComprasCommandService>();
             services.AddScoped<IGrupoFaturaCommandService, GrupoFaturaCommandService>();
             services.AddScoped<IMembroComandoServices, MembroCommandServices>();
             services.AddScoped<IParametroDeAlertaDeGastosCommandService, ParametroDeAlertaDeGastosCommandService>();
