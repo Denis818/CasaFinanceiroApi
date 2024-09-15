@@ -37,7 +37,7 @@ namespace Application.Queries.Services.Base
             _httpContext = service.GetRequiredService<IHttpContextAccessor>().HttpContext;
             _categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
 
-            _categoriaIds = _categoriaRepository.GetCategoriaCodes();
+            _categoriaIds = _categoriaRepository.GetCategoriaCodesAsync().Result;
             _grupoCode = (Guid)(
                 _httpContext.Items["grupo-fatura-code"]
                 ?? new Guid("00000000-0000-0000-0000-000000000000")

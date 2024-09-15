@@ -64,7 +64,9 @@ namespace Application.Commands.Services
             if (categoria.Descricao == categoriaDto.Descricao)
                 return false;
 
-            if (_repository.IdentificarCategoriaParaAcao(categoria.Code))
+            bool isValid = await _repository.IdentificarCategoriaParaAcaoAsync(categoria.Code);
+
+            if (isValid)
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.AvisoCategoriaImutavel);
                 return false;
@@ -119,7 +121,9 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            if (_repository.IdentificarCategoriaParaAcao(categoria.Code))
+            bool isValid = await _repository.IdentificarCategoriaParaAcaoAsync(categoria.Code);
+
+            if (isValid)
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.AvisoCategoriaImutavel);
                 return false;

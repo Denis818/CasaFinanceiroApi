@@ -1,5 +1,4 @@
 ﻿using Domain.Dtos.Despesas;
-using Domain.Dtos.Despesas.Consultas;
 
 namespace Domain.Interfaces.Services.Despesa
 {

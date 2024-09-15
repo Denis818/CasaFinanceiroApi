@@ -24,9 +24,9 @@ namespace Data.Repository.Categorias
             }
         }
 
-        public bool IdentificarCategoriaParaAcao(Guid codeCategoria)
+        public async Task<bool> IdentificarCategoriaParaAcaoAsync(Guid codeCategoria)
         {
-            var categoriaIds = GetCategoriaCodes();
+            var categoriaIds = await GetCategoriaCodesAsync();
 
             var naoEhAlteravel =
                 codeCategoria == categoriaIds.CodAluguel
@@ -38,23 +38,23 @@ namespace Data.Repository.Categorias
             return naoEhAlteravel;
         }
 
-        public CategoriaCodsDto GetCategoriaCodes()
+        public async Task<CategoriaCodsDto> GetCategoriaCodesAsync()
         {
             var categ = Get();
 
-            Guid idAlmoco = categ.FirstOrDefault(c => c.Descricao == "Almoço/Janta").Code;
-            Guid idAluguel = categ.FirstOrDefault(c => c.Descricao == "Aluguel").Code;
-            Guid idCondominio = categ.FirstOrDefault(c => c.Descricao == "Condomínio").Code;
-            Guid idContaDeLuz = categ.FirstOrDefault(c => c.Descricao == "Conta de Luz").Code;
-            Guid idInternet = categ.FirstOrDefault(c => c.Descricao == "Internet").Code;
+            var idAlmoco = await categ.FirstOrDefaultAsync(c => c.Descricao == "Almoço/Janta");
+            var idAluguel = await categ.FirstOrDefaultAsync(c => c.Descricao == "Aluguel");
+            var idCondominio = await categ.FirstOrDefaultAsync(c => c.Descricao == "Condomínio");
+            var idContaDeLuz = await categ.FirstOrDefaultAsync(c => c.Descricao == "Conta de Luz");
+            var idInternet = await categ.FirstOrDefaultAsync(c => c.Descricao == "Internet");
 
             return new CategoriaCodsDto
             {
-                CodAluguel = idAluguel,
-                CodCondominio = idCondominio,
-                CodContaDeLuz = idContaDeLuz,
-                CodAlmoco = idAlmoco,
-                CodInternet = idInternet
+                CodAluguel = idAluguel.Code,
+                CodCondominio = idCondominio.Code,
+                CodContaDeLuz = idContaDeLuz.Code,
+                CodAlmoco = idAlmoco.Code,
+                CodInternet = idInternet.Code
             };
         }
 

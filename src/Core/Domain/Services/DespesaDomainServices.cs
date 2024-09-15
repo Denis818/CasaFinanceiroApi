@@ -1,5 +1,4 @@
 ﻿using Domain.Dtos.Despesas;
-using Domain.Dtos.Despesas.Consultas;
 using Domain.Extensions.Help;
 using Domain.Interfaces.Services.Despesa;
 
