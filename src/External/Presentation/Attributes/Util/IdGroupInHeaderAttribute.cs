@@ -11,9 +11,9 @@ namespace Presentation.Attributes.Util
     {
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
-            var endpoint = context
-                .ActionDescriptor.EndpointMetadata.OfType<IgnoreGrupoIdAttribute>()
-                .FirstOrDefault();
+            var endpoint = context.ActionDescriptor.EndpointMetadata
+               .OfType<IgnoreGrupoIdAttribute>()
+               .FirstOrDefault();
 
             if (endpoint != null)
             {
@@ -28,11 +28,9 @@ namespace Presentation.Attributes.Util
                 return;
             }
 
-            if (Guid.TryParse(grupoId, out Guid grupoFaturasId))
+            if (Guid.TryParse(grupoId, out Guid GrupoFaturasId))
             {
-                GrupoFaturasIdIsValid(grupoFaturasId, context);
-
-                httpContext.Items["grupo-fatura-code"] = grupoFaturasId;
+                httpContext.Items["grupo-fatura-code"] = GrupoFaturasId;
             }
             else if (httpContext.Request.Method == "GET")
             {
@@ -48,22 +46,11 @@ namespace Presentation.Attributes.Util
             }
         }
 
-        public void GrupoFaturasIdIsValid(Guid grupoFaturasId, ResourceExecutingContext context)
-        {
-            if (grupoFaturasId.ToString() == "00000000-0000-0000-0000-000000000000")
-            {
-                context.Result = new BadRequestObjectResult(
-                    new ResponseDTO<string>()
-                    {
-                        Mensagens = [new("", EnumTipoNotificacao.Informacao)]
-                    }
-                );
-            }
-        }
-
         public void OnResourceExecuted(ResourceExecutedContext context) { }
     }
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class IgnoreGrupoIdAttribute : Attribute { }
+    public class IgnoreGrupoIdAttribute : Attribute
+    {
+    }
 }
