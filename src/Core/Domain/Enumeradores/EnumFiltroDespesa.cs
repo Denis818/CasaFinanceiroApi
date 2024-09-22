@@ -5,6 +5,7 @@
         Item,
         Categoria,
         Fornecedor,
-        GrupoFatura
+        GrupoFatura,
+        Preco
     }
 }

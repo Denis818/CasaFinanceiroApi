@@ -101,6 +101,17 @@ namespace Application.Queries.Services.Telas
                     despesa.Fornecedor.ToLower().Contains(filter.ToLower())
                 );
                 break;
+
+                case EnumFiltroDespesa.Preco:
+                if (double.TryParse(filter, out _))
+                {
+                    string filterPreco = filter.Replace(",", ".");
+
+                    query = query.Where(despesa =>
+                        despesa.Preco.ToString().Contains(filterPreco)
+                    );
+                }
+                break;
             }
 
             return query.OrderByDescending(d => d.DataCompra);
