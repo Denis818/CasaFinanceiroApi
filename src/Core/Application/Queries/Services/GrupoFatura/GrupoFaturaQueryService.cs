@@ -44,7 +44,7 @@ namespace Application.Queries.Services
                         })
                         .ToList(),
                 })
-                .OrderBy(c => c.Nome)
+                .OrderBy(c => c.DataCriacao)
                 .ToListAsync();
 
             return listGruposFaturas;
