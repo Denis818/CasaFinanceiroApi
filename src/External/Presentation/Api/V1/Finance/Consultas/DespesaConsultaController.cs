@@ -1,5 +1,5 @@
 ﻿using Application.Queries.Dtos;
-using Application.Queries.Interfaces;
+using Application.Queries.Interfaces.Telas;
 using Asp.Versioning;
 using Domain.Dtos;
 using Domain.Utilities;

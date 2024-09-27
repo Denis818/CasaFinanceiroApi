@@ -1,5 +1,5 @@
 ﻿using Application.Queries.Dtos;
-using Application.Queries.Interfaces.Despesa;
+using Application.Queries.Interfaces.ListaCompras;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

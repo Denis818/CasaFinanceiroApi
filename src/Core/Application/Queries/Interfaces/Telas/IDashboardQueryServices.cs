@@ -1,6 +1,6 @@
 ﻿using Application.Queries.Dtos;
 
-namespace Application.Queries.Interfaces
+namespace Application.Queries.Interfaces.Telas
 {
     public interface IDashboardQueryServices
     {

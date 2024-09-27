@@ -2,8 +2,11 @@
 using Application.Commands.Services;
 using Application.Commands.Services.ListaCompras;
 using Application.Queries.Interfaces;
-using Application.Queries.Interfaces.Despesa;
+using Application.Queries.Interfaces.Despesas;
+using Application.Queries.Interfaces.ListaCompras;
+using Application.Queries.Interfaces.Telas;
 using Application.Queries.Services;
+using Application.Queries.Services.Despesas;
 using Application.Queries.Services.ListaCompras;
 using Application.Queries.Services.Telas;
 using Application.Utilities;
@@ -69,6 +72,7 @@ namespace Web.Extensios.DependencyManagers
 
         public static void AddDependecyQueriesServices(this IServiceCollection services)
         {
+            services.AddScoped<IDespesaFiltroService, DespesaFiltroService>();
             services.AddScoped<ICategoriaQueryServices, CategoriaQueryServices>();
             services.AddScoped<IGrupoFaturaQueryService, GrupoFaturaQueryService>();
             services.AddScoped<IProdutoListaComprasQueryService, ProdutoListaComprasQueryService>();

@@ -1,7 +1,7 @@
 ﻿using Application.Configurations.MappingsApp;
 using Application.Helpers;
 using Application.Queries.Dtos;
-using Application.Queries.Interfaces.Despesa;
+using Application.Queries.Interfaces.ListaCompras;
 using Application.Queries.Services.Base;
 using Domain.Interfaces.Repositories.ListaCompras;
 using Domain.Models.ListaCompras;

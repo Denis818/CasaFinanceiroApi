@@ -3,7 +3,7 @@ using Domain.Dtos;
 using Domain.Models.Despesas;
 using Domain.Utilities;
 
-namespace Application.Queries.Interfaces
+namespace Application.Queries.Interfaces.Telas
 {
     public interface IPainelControleQueryServices
     {

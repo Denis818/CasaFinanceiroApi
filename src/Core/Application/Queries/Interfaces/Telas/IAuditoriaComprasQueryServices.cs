@@ -2,7 +2,7 @@
 using Domain.Dtos;
 using Domain.Utilities;
 
-namespace Application.Queries.Interfaces
+namespace Application.Queries.Interfaces.Telas
 {
     public interface IAuditoriaComprasQueryServices
     {

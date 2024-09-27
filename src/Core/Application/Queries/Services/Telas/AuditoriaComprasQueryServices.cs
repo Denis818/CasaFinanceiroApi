@@ -1,6 +1,7 @@
 ﻿using Application.Configurations.MappingsApp;
 using Application.Queries.Dtos;
-using Application.Queries.Interfaces;
+using Application.Queries.Interfaces.Despesas;
+using Application.Queries.Interfaces.Telas;
 using Application.Queries.Services.Base;
 using Application.Resources.Messages;
 using Application.Utilities;
@@ -14,7 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Queries.Services.Telas
 {
-    public class AuditoriaComprasQueryServices(IServiceProvider service)
+    public class AuditoriaComprasQueryServices(IServiceProvider service, IDespesaFiltroService despesaFiltro)
         : BaseQueryService<Despesa, DespesaDto, IDespesaRepository>(service),
             IAuditoriaComprasQueryServices
     {
@@ -40,7 +41,7 @@ namespace Application.Queries.Services.Telas
                 );
             }
 
-            var query = GetDespesasFiltradas(
+            var query = despesaFiltro.GetDespesasFiltradas(
                 queryDespesasAllGrupo,
                 despesaFiltroDto.Filter,
                 despesaFiltroDto.TipoFiltro
@@ -98,7 +99,8 @@ namespace Application.Queries.Services.Telas
             return sugestoes;
         }
 
-        public async Task<IEnumerable<DespesasSugestaoDeFornecedorQueryDto>> SugestaoDeFornecedorMaisBarato(int paginaAtual, int itensPorPagina)
+        public async Task<IEnumerable<DespesasSugestaoDeFornecedorQueryDto>> SugestaoDeFornecedorMaisBarato
+            (int paginaAtual, int itensPorPagina)
         {
             var queryDespesasPorGrupo = _repository
                 .Get(d => d.GrupoFatura.Code == _grupoCode)
@@ -166,55 +168,8 @@ namespace Application.Queries.Services.Telas
 
             return sugestoes;
         }
+
         #endregion
-
-        #region Filter Despesas
-        private IOrderedQueryable<Despesa> GetDespesasFiltradas(
-            IQueryable<Despesa> query,
-            string filter,
-            EnumFiltroDespesa tipoFiltro
-        )
-        {
-            switch (tipoFiltro)
-            {
-                case EnumFiltroDespesa.Item:
-                query = query.Where(despesa =>
-                    despesa.Item.ToLower().Contains(filter.ToLower())
-                );
-                break;
-
-                case EnumFiltroDespesa.Categoria:
-                query = query.Where(despesa =>
-                    despesa.Categoria.Descricao.ToLower().Contains(filter.ToLower())
-                );
-                break;
-
-                case EnumFiltroDespesa.Fornecedor:
-                query = query.Where(despesa =>
-                    despesa.Fornecedor.ToLower().Contains(filter.ToLower())
-                );
-                break;
-
-                case EnumFiltroDespesa.GrupoFatura:
-                query = query.Where(despesa =>
-                    despesa.GrupoFatura.Nome.ToLower().Contains(filter.ToLower())
-                );
-                break;
-
-                case EnumFiltroDespesa.Preco:
-                if (double.TryParse(filter, out _))
-                {
-                    string filterPreco = filter.Replace(",", ".");
-
-                    query = query.Where(despesa =>
-                        despesa.Preco.ToString().Contains(filterPreco)
-                    );
-                }
-                break;
-            }
-
-            return query.OrderByDescending(d => d.DataCompra);
-        }
 
         private async Task<PagedResult<DespesaDto>> GetAllDespesas(
             IQueryable<Despesa> query,
@@ -244,7 +199,5 @@ namespace Application.Queries.Services.Telas
 
             return despesas;
         }
-
-        #endregion
     }
 }

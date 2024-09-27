@@ -1,6 +1,7 @@
 ﻿using Application.Configurations.MappingsApp;
 using Application.Queries.Dtos;
-using Application.Queries.Interfaces;
+using Application.Queries.Interfaces.Despesas;
+using Application.Queries.Interfaces.Telas;
 using Application.Queries.Services.Base;
 using Application.Resources.Messages;
 using Application.Utilities;
@@ -15,6 +16,7 @@ namespace Application.Queries.Services.Telas
 {
     public class PainelControleQueryServices(
         IServiceProvider service,
+        IDespesaFiltroService despesaFiltro,
         IParametroDeAlertaDeGastosRepository _parametroDeAlertaDeGastosRepository
     )
         : BaseQueryService<Despesa, DespesaDto, IDespesaRepository>(service),
@@ -37,7 +39,7 @@ namespace Application.Queries.Services.Telas
                 );
             }
 
-            var query = GetDespesasFiltradas(
+            var query = despesaFiltro.GetDespesasFiltradas(
                 _queryDespesasPorGrupo,
                 despesaFiltroDto.Filter,
                 despesaFiltroDto.TipoFiltro
@@ -74,49 +76,6 @@ namespace Application.Queries.Services.Telas
 
         #endregion
 
-        #region Filter Despesas
-
-        private IOrderedQueryable<Despesa> GetDespesasFiltradas(
-            IQueryable<Despesa> query,
-            string filter,
-            EnumFiltroDespesa tipoFiltro
-        )
-        {
-            switch (tipoFiltro)
-            {
-                case EnumFiltroDespesa.Item:
-                query = query.Where(despesa =>
-                    despesa.Item.ToLower().Contains(filter.ToLower())
-                );
-                break;
-
-                case EnumFiltroDespesa.Categoria:
-                query = query.Where(despesa =>
-                    despesa.Categoria.Descricao.ToLower().Contains(filter.ToLower())
-                );
-                break;
-
-                case EnumFiltroDespesa.Fornecedor:
-                query = query.Where(despesa =>
-                    despesa.Fornecedor.ToLower().Contains(filter.ToLower())
-                );
-                break;
-
-                case EnumFiltroDespesa.Preco:
-                if (double.TryParse(filter, out _))
-                {
-                    string filterPreco = filter.Replace(",", ".");
-
-                    query = query.Where(despesa =>
-                        despesa.Preco.ToString().Contains(filterPreco)
-                    );
-                }
-                break;
-            }
-
-            return query.OrderByDescending(d => d.DataCompra);
-        }
-
         private async Task<PagedResult<DespesaDto>> GetAllDespesas(
             IQueryable<Despesa> query,
             int paginaAtual,
@@ -145,7 +104,5 @@ namespace Application.Queries.Services.Telas
 
             return despesas;
         }
-
-        #endregion
     }
 }

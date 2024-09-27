@@ -1,6 +1,6 @@
 ﻿using Application.Queries.Dtos;
 
-namespace Application.Queries.Interfaces.Despesa
+namespace Application.Queries.Interfaces.ListaCompras
 {
     public interface IProdutoListaComprasQueryService
     {

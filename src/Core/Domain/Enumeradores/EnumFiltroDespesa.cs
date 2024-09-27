@@ -6,6 +6,8 @@
         Categoria,
         Fornecedor,
         GrupoFatura,
-        Preco
+        Preco,
+        PrecoMenorOuIgual,
+        PrecoMaiorOuIgual
     }
 }

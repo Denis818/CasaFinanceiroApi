@@ -1,5 +1,6 @@
 ﻿using Application.Configurations.MappingsApp;
 using Application.Queries.Interfaces;
+using Application.Queries.Interfaces.Telas;
 using Application.Queries.Services.Base;
 using Application.Resources.Messages;
 using Domain.Dtos;
