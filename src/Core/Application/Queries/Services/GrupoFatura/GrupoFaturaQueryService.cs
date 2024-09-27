@@ -26,6 +26,7 @@ namespace Application.Queries.Services
         {
             var listGruposFaturas = await _repository
                 .Get(fatura => fatura.Ano == ano)
+                .OrderByDescending(fatura => fatura.DataCriacao.Date)
                 .Include(s => s.StatusFaturas)
                 .Include(fatura => fatura.Despesas)
                 .Select(fatura => new GrupoFaturaQueryDto
@@ -44,7 +45,6 @@ namespace Application.Queries.Services
                         })
                         .ToList(),
                 })
-                .OrderBy(c => c.Nome)
                 .ToListAsync();
 
             return listGruposFaturas;
@@ -101,7 +101,7 @@ namespace Application.Queries.Services
         {
             var listGruposFaturas = await _repository
                 .Get(fatura => fatura.Ano == ano)
-                .OrderBy(fatura => fatura.Nome)
+                .OrderByDescending(fatura => fatura.DataCriacao.Date)
                 .AsNoTracking()
                 .Select(fatura => new GrupoFaturaSeletorQueryDto
                 {
