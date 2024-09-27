@@ -1,6 +1,4 @@
-﻿using Domain.Dtos.QueryResults;
-using Domain.Dtos.QueryResults.Despesas;
-using Domain.Models.Categorias;
+﻿using Domain.Models.Categorias;
 using Domain.Models.Despesas;
 using Domain.Models.GrupoFaturas;
 using Domain.Models.ListaCompras;
@@ -25,18 +23,9 @@ namespace Data.DataContext
         public DbSet<Permissao> Permissoes { get; set; }
         #endregion
 
-        #region QueryResults
-        public DbSet<RelatorioGastosDoGrupoQueryResult> DespesasRelatorioGastosDoGrupo { get; set; }
-        public DbSet<DespesasPorGrupoQueryResult> DespesasPorGrupoQueryDto { get; set; }
-        public DbSet<CategoriaQueryResult> CategoriaQueryResult { get; set; }
-
-        #endregion
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            ConfigureQueryResults(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(FinanceDbContext).Assembly);
         }
@@ -46,13 +35,6 @@ namespace Data.DataContext
             Database.CurrentTransaction?.Commit();
 
             Database.SetConnectionString(newStringConnection);
-        }
-
-        private void ConfigureQueryResults(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<RelatorioGastosDoGrupoQueryResult>().HasNoKey();
-            modelBuilder.Entity<DespesasPorGrupoQueryResult>().HasNoKey();
-            modelBuilder.Entity<CategoriaQueryResult>().HasNoKey();
         }
     }
 }

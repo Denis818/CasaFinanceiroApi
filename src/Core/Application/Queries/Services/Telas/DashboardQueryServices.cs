@@ -6,7 +6,6 @@ using Application.Queries.Services.Base;
 using Application.Resources.Messages;
 using Domain.Dtos;
 using Domain.Dtos.Despesas;
-using Domain.Dtos.QueryResults.Despesas;
 using Domain.Enumeradores;
 using Domain.Extensions.Help;
 using Domain.Interfaces.Repositories;
@@ -19,7 +18,6 @@ using iText.Layout;
 using iText.Layout.Properties;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
 namespace Application.Queries.Services.Telas
 {
     public class DashboardQueryServices
@@ -58,23 +56,46 @@ namespace Application.Queries.Services.Telas
         protected override DespesaDto MapToDTO(Despesa entity) => entity.MapToDTO();
 
         #region Dashboard
-        public async Task<IEnumerable<DespesasPorGrupoQueryResult>> GetDespesaGrupoParaGraficoAsync(
+        public async Task<IEnumerable<DespesasPorGrupoQueryDto>> GetDespesaGrupoParaGraficoAsync(
             string ano
         )
         {
-            var list = await _repository.GetDespesaGrupoParaGraficoAsync(ano);
-
-            if (list.IsNullOrEmpty())
+            var monthOrder = new Dictionary<string, int>
             {
-                Notificar(
-                    EnumTipoNotificacao.Informacao,
-                    "Não há despesa em nenhum grupo de fatura"
-                );
+                { "Janeiro", 1 },
+                { "Fevereiro", 2 },
+                { "Março", 3 },
+                { "Abril", 4 },
+                { "Maio", 5 },
+                { "Junho", 6 },
+                { "Julho", 7 },
+                { "Agosto", 8 },
+                { "Setembro", 9 },
+                { "Outubro", 10 },
+                { "Novembro", 11 },
+                { "Dezembro", 12 }
+            };
 
-                return [];
-            }
+            var despesasPorGrupo = await _repository
+                .Get(despesa => despesa.GrupoFatura.Ano == ano)
+                .AsNoTracking()
+                .GroupBy(d => d.GrupoFatura.Nome)
+                .Select(group => new DespesasPorGrupoQueryDto
+                {
+                    GrupoNome = group.Key,
+                    Total = group.Sum(d => d.Total)
+                })
+                .ToListAsync();
 
-            return list;
+            var result = despesasPorGrupo
+                .OrderBy(dto =>
+                {
+                    var monthName = dto.GrupoNome.Split(' ')[2];
+                    return monthOrder[monthName];
+                })
+                .ToList();
+
+            return result;
         }
 
         public async Task<DespesasDivididasMensalQueryDto> GetDespesasDivididasMensalAsync()
@@ -95,8 +116,46 @@ namespace Application.Queries.Services.Telas
             return new DespesasDivididasMensalQueryDto { DespesasPorMembro = despesasPorMembro };
         }
 
-        public async Task<RelatorioGastosDoGrupoQueryResult> GetRelatorioDeGastosDoGrupoAsync() =>
-            await _repository.GetRelatorioDeGastosDoGrupoAsync(_grupoCode, _categoriaIds);
+        public async Task<RelatorioGastosDoGrupoQueryDto> GetRelatorioDeGastosDoGrupoAsync()
+        {
+            string grupoNome = _grupoFaturaRepository
+                .Get(g => g.Code == _grupoFatura.Code)
+                .AsNoTracking()
+                .FirstOrDefault()
+                ?.Nome;
+
+            if (grupoNome.IsNullOrEmpty())
+            {
+                Notificar(EnumTipoNotificacao.Informacao, Message.SelecioneUmGrupoDesesa);
+                return new();
+            }
+
+            double totalGastoMoradia = await _queryDespesasPorGrupo
+                .Where(d =>
+                    d.Categoria.Code == _categoriaIds.CodAluguel
+                    || d.Categoria.Code == _categoriaIds.CodCondominio
+                    || d.Categoria.Code == _categoriaIds.CodContaDeLuz
+                )
+                .SumAsync(d => d.Total);
+
+            double totalGastosCasa = await _queryDespesasPorGrupo
+                .Where(d =>
+                    d.Categoria.Code != _categoriaIds.CodAluguel
+                    && d.Categoria.Code != _categoriaIds.CodCondominio
+                    && d.Categoria.Code != _categoriaIds.CodContaDeLuz
+                )
+                .SumAsync(d => d.Total);
+
+            var totalGeral = totalGastoMoradia + totalGastosCasa;
+
+            return new RelatorioGastosDoGrupoQueryDto
+            {
+                GrupoFaturaNome = grupoNome,
+                TotalGeral = totalGeral.RoundTo(2),
+                TotalGastosCasa = totalGastosCasa.RoundTo(2),
+                TotalGastosMoradia = totalGastoMoradia.RoundTo(2),
+            };
+        }
 
         public async Task<byte[]> ExportarPdfRelatorioDeDespesaCasa()
         {
@@ -270,9 +329,7 @@ namespace Application.Queries.Services.Telas
 
         #region Gerar Relatório PDF Casa
 
-        private byte[] GerarRelatorioDespesaCasaPdf(
-            DespesasDistribuicaoCustosCasaDto custosCasaDto
-        )
+        private byte[] GerarRelatorioDespesaCasaPdf(DespesasDistribuicaoCustosCasaDto custosCasaDto)
         {
             using var memoryStream = new MemoryStream();
             using var writer = new PdfWriter(memoryStream);

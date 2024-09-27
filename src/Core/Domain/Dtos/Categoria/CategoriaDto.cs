@@ -1,8 +1,8 @@
 ﻿using Domain.Dtos.Base;
 
-namespace Domain.Dtos.QueryResults
+namespace Domain.Dtos.Categoria
 {
-    public class CategoriaQueryResult : BaseDto
+    public class CategoriaDto : BaseDto
     {
         public string Descricao { get; set; }
         public double Total { get; set; }

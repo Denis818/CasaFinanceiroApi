@@ -1,14 +1,14 @@
 ﻿using Application.Commands.Dtos;
-using Domain.Dtos.QueryResults;
+using Domain.Dtos.Categoria;
 using Domain.Models.Categorias;
 
 namespace Application.Configurations.MappingsApp
 {
     public static class CategoriaMap
     {
-        public static CategoriaQueryResult MapToDTO(this Categoria categoria)
+        public static CategoriaDto MapToDTO(this Categoria categoria)
         {
-            return new CategoriaQueryResult
+            return new CategoriaDto
             {
                 Descricao = categoria.Descricao,
                 Code = categoria.Code
