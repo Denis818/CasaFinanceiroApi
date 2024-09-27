@@ -6,7 +6,7 @@ using Application.Helpers;
 using Application.Resources.Messages;
 using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Repositories.Users;
 using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

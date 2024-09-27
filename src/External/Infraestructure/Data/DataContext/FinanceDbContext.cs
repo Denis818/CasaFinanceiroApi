@@ -2,6 +2,8 @@
 using Domain.Dtos.QueryResults.Despesas;
 using Domain.Models.Categorias;
 using Domain.Models.Despesas;
+using Domain.Models.GrupoFaturas;
+using Domain.Models.ListaCompras;
 using Domain.Models.Membros;
 using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;

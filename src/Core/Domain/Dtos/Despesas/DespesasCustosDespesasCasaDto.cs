@@ -1,8 +1,8 @@
 ﻿namespace Domain.Dtos.Despesas
 {
-    public class DespesasCustosDespesasCasaQueryDto
+    public class DespesasCustosDespesasCasaDto
     {
-        public List<MembroQueryDto> TodosMembros { get; set; }
+        public List<MembroDto> TodosMembros { get; set; }
         public double ValorTotalAlmoco { get; set; }
         public double TotalDespesaGeraisForaAlmoco { get; set; }
         public int MembrosForaJhonCount { get; set; }

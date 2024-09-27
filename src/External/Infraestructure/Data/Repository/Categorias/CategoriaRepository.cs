@@ -2,7 +2,7 @@
 using Data.Repository.Base;
 using Domain.Dtos;
 using Domain.Dtos.QueryResults;
-using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Repositories.Categorias;
 using Domain.Models.Categorias;
 using Microsoft.EntityFrameworkCore;
 

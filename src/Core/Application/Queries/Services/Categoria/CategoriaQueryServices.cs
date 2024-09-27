@@ -2,7 +2,7 @@
 using Application.Queries.Interfaces;
 using Application.Queries.Services.Base;
 using Domain.Dtos.QueryResults;
-using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Repositories.Categorias;
 using Domain.Models.Categorias;
 
 namespace Application.Queries.Services

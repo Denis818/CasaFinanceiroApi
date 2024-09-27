@@ -2,7 +2,7 @@
 
 namespace Domain.Dtos
 {
-    public class StatusFaturaQueryDto : QueryBaseDTO
+    public class StatusFaturaDto : BaseDto
     {
         public string FaturaNome { get; set; }
         public string Estado { get; set; }

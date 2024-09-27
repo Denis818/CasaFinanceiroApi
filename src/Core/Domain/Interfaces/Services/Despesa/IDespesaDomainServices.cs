@@ -5,11 +5,11 @@ namespace Domain.Interfaces.Services.Despesa
     public interface IDespesaDomainServices
     {
         DespesasDistribuicaoCustosMoradiaDto CalcularDistribuicaoCustosMoradia(
-            DespesasCustosMoradiaQueryDto custosDespesasMoradia
+            DespesasCustosMoradiaDto custosDespesasMoradia
         );
 
-        DespesasDistribuicaoCustosCasaQueryDto CalcularDistribuicaoCustosCasa(
-            DespesasCustosDespesasCasaQueryDto custosDespesasCasa
+        DespesasDistribuicaoCustosCasaDto CalcularDistribuicaoCustosCasa(
+            DespesasCustosDespesasCasaDto custosDespesasCasa
         );
     }
 }

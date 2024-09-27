@@ -17,7 +17,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         : MainController(service)
     {
         [HttpGet]
-        public async Task<IEnumerable<MembroQueryDto>> GetAllDespesaAsync() =>
+        public async Task<IEnumerable<MembroDto>> GetAllDespesaAsync() =>
             await _membroConsultaServices.GetAllAsync();
 
         [HttpGet("enviar-mensagem")]

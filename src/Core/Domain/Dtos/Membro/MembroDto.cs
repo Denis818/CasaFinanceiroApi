@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Domain.Dtos
 {
-    public class MembroQueryDto : QueryBaseDTO
+    public class MembroDto : BaseDto
     {
         public string Nome { get; set; }
         public string Telefone { get; set; }

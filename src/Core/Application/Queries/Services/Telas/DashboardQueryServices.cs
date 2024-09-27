@@ -10,6 +10,8 @@ using Domain.Dtos.QueryResults.Despesas;
 using Domain.Enumeradores;
 using Domain.Extensions.Help;
 using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Repositories.GrupoFaturas;
+using Domain.Interfaces.Repositories.Membros;
 using Domain.Interfaces.Services.Despesa;
 using Domain.Models.Despesas;
 using iText.Kernel.Pdf;
@@ -21,7 +23,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Application.Queries.Services.Telas
 {
     public class DashboardQueryServices
-        : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>,
+        : BaseQueryService<Despesa, DespesaDto, IDespesaRepository>,
             IDashboardQueryServices
     {
         private readonly PdfTableHelper _pdfTableCasa =
@@ -35,7 +37,7 @@ namespace Application.Queries.Services.Telas
         private readonly IDespesaDomainServices _despesaDomainServices;
 
         private readonly MembroIdDto _membroId;
-        private readonly GrupoFaturaQueryDto _grupoFatura;
+        private readonly GrupoFaturaDto _grupoFatura;
 
         public DashboardQueryServices(
             IServiceProvider service,
@@ -53,7 +55,7 @@ namespace Application.Queries.Services.Telas
             _grupoFatura = _grupoFaturaRepository.GetByCodigoAsync(_grupoCode).Result?.MapToDTO();
         }
 
-        protected override DespesaQueryDto MapToDTO(Despesa entity) => entity.MapToDTO();
+        protected override DespesaDto MapToDTO(Despesa entity) => entity.MapToDTO();
 
         #region Dashboard
         public async Task<IEnumerable<DespesasPorGrupoQueryResult>> GetDespesaGrupoParaGraficoAsync(
@@ -114,7 +116,7 @@ namespace Application.Queries.Services.Telas
 
         #region Calculo Despesas
 
-        private async Task<DespesasDistribuicaoCustosCasaQueryDto> CalcularDistribuicaoCustosCasaAsync()
+        private async Task<DespesasDistribuicaoCustosCasaDto> CalcularDistribuicaoCustosCasaAsync()
         {
             var todosMembros = await _membroRepository
                 .Get(m => m.DataInicio.Date.Month <= _grupoFatura.DataCriacao.Date.Month)
@@ -139,7 +141,7 @@ namespace Application.Queries.Services.Telas
                 .Where(despesa => despesa.Categoria.Code == _categoriaIds.CodAlmoco)
                 .SumAsync(despesa => despesa.Total);
 
-            var custosDespesasCasa = new DespesasCustosDespesasCasaQueryDto
+            var custosDespesasCasa = new DespesasCustosDespesasCasaDto
             {
                 TodosMembros = todosMembros,
                 ValorTotalAlmoco = valorTotalAlmoco,
@@ -154,7 +156,7 @@ namespace Application.Queries.Services.Telas
             return distribuicaoCustosCasa;
         }
 
-        private async Task<DetalhamentoDespesasMoradiaQueryDto> CalcularDistribuicaoCustosMoradiaAsync()
+        private async Task<DetalhamentoDespesasMoradiaDto> CalcularDistribuicaoCustosMoradiaAsync()
         {
             var grupoListMembrosDespesa = await GetGrupoListMembrosDespesa();
 
@@ -171,7 +173,7 @@ namespace Application.Queries.Services.Telas
                     string.Format(Message.DespesasNaoEncontradas, "de Moradia")
                 );
 
-                return new DetalhamentoDespesasMoradiaQueryDto
+                return new DetalhamentoDespesasMoradiaDto
                 {
                     GrupoListMembrosDespesa = grupoListMembrosDespesa,
                     CustosDespesasMoradia = custosDespesasMoradiaDto,
@@ -182,7 +184,7 @@ namespace Application.Queries.Services.Telas
                 };
             }
 
-            var custosMoradiaDto = new DespesasCustosMoradiaQueryDto
+            var custosMoradiaDto = new DespesasCustosMoradiaDto
             {
                 ParcelaApartamento = custosDespesasMoradiaDto.ParcelaApartamento,
                 ParcelaCaixa = custosDespesasMoradiaDto.ParcelaCaixa,
@@ -192,7 +194,7 @@ namespace Application.Queries.Services.Telas
                 MembrosForaJhonCount = grupoListMembrosDespesa.ListMembroForaJhon.Count
             };
 
-            return new DetalhamentoDespesasMoradiaQueryDto()
+            return new DetalhamentoDespesasMoradiaDto()
             {
                 GrupoListMembrosDespesa = grupoListMembrosDespesa,
 
@@ -204,7 +206,7 @@ namespace Application.Queries.Services.Telas
             };
         }
 
-        private async Task<DespesasCustosMoradiaQueryDto> GetCustosDespesasMoradiaAsync()
+        private async Task<DespesasCustosMoradiaDto> GetCustosDespesasMoradiaAsync()
         {
             var listAluguel = _queryDespesasPorGrupo.Where(d =>
                 d.Categoria.Code == _categoriaIds.CodAluguel
@@ -226,7 +228,7 @@ namespace Application.Queries.Services.Telas
                 .Where(despesa => despesa.Categoria.Code == _categoriaIds.CodCondominio)
                 .FirstOrDefaultAsync();
 
-            return new DespesasCustosMoradiaQueryDto()
+            return new DespesasCustosMoradiaDto()
             {
                 Condominio = condominio?.Preco ?? 0,
                 ContaDeLuz = contaDeLuz?.Preco ?? 0,
@@ -235,28 +237,28 @@ namespace Application.Queries.Services.Telas
             };
         }
 
-        private async Task<GrupoListMembrosDespesaQueryDto> GetGrupoListMembrosDespesa()
+        private async Task<GrupoListMembrosDespesaDto> GetGrupoListMembrosDespesa()
         {
-            List<MembroQueryDto> todosMembros = await _membroRepository
+            List<MembroDto> todosMembros = await _membroRepository
                 .Get(m => m.DataInicio <= _grupoFatura.DataCriacao)
                 .AsNoTracking()
                 .Select(m => m.MapToDTO())
                 .ToListAsync();
 
-            List<MembroQueryDto> listMembroForaJhonLaila = todosMembros
+            List<MembroDto> listMembroForaJhonLaila = todosMembros
                 .Where(m => m.Code != _membroId.CodJhon && m.Code != _membroId.CodLaila)
                 .ToList();
 
-            List<MembroQueryDto> listMembroForaJhonPeu = listMembroForaJhonLaila
+            List<MembroDto> listMembroForaJhonPeu = listMembroForaJhonLaila
                 .Where(m => m.Code != _membroId.CodPeu)
                 .ToList();
 
-            List<DespesaQueryDto> listAluguel = await _queryDespesasPorGrupo
+            List<DespesaDto> listAluguel = await _queryDespesasPorGrupo
                 .Where(d => d.Categoria.Code == _categoriaIds.CodAluguel)
                 .Select(m => m.MapToDTO())
                 .ToListAsync();
 
-            return new GrupoListMembrosDespesaQueryDto()
+            return new GrupoListMembrosDespesaDto()
             {
                 ListAluguel = listAluguel,
                 ListMembroForaJhon = listMembroForaJhonLaila,
@@ -269,7 +271,7 @@ namespace Application.Queries.Services.Telas
         #region Gerar Relatório PDF Casa
 
         private byte[] GerarRelatorioDespesaCasaPdf(
-            DespesasDistribuicaoCustosCasaQueryDto custosCasaDto
+            DespesasDistribuicaoCustosCasaDto custosCasaDto
         )
         {
             using var memoryStream = new MemoryStream();
@@ -332,7 +334,7 @@ namespace Application.Queries.Services.Telas
 
         private void CreateTableValoresParaCada(
             Document doc,
-            List<MembroQueryDto> membros,
+            List<MembroDto> membros,
             double despesaGeraisMaisAlmocoDividioPorMembro,
             double totalAlmocoParteDoJhon
         )
@@ -356,7 +358,7 @@ namespace Application.Queries.Services.Telas
 
         #region Gerar Relatório PDF Moradia
 
-        private byte[] GerarRelatorioDespesaMoradiaPdf(DetalhamentoDespesasMoradiaQueryDto custosMoradia)
+        private byte[] GerarRelatorioDespesaMoradiaPdf(DetalhamentoDespesasMoradiaDto custosMoradia)
         {
             using var memoryStream = new MemoryStream();
             using var writer = new PdfWriter(memoryStream);
@@ -446,7 +448,7 @@ namespace Application.Queries.Services.Telas
 
         private void TableParcelaCaixaApto(
             Document doc,
-            IList<MembroQueryDto> listMembroForaJhon,
+            IList<MembroDto> listMembroForaJhon,
             double valorAptoMaisCaixaParaCadaMembro
         )
         {
@@ -473,7 +475,7 @@ namespace Application.Queries.Services.Telas
 
         private void TableContaLuzAndCondominio(
             Document doc,
-            IList<MembroQueryDto> listMembroForaJhon,
+            IList<MembroDto> listMembroForaJhon,
             double valorLuzMaisCondominioParaCadaMembro
         )
         {
@@ -496,7 +498,7 @@ namespace Application.Queries.Services.Telas
 
         private void TableValoresParaCada(
             Document doc,
-            IList<MembroQueryDto> listMembroForaJhon,
+            IList<MembroDto> listMembroForaJhon,
             double valorParaMembrosForaPeu,
             double valorParaDoPeu
         )
@@ -535,7 +537,7 @@ namespace Application.Queries.Services.Telas
                 .Select(m => m.MapToDTO())
                 .ToListAsync();
 
-            double ValorMoradia(MembroQueryDto membro)
+            double ValorMoradia(MembroDto membro)
             {
                 if (membro.Code == _membroId.CodPeu)
                 {

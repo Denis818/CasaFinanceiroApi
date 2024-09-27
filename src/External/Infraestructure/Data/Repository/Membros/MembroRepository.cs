@@ -1,7 +1,7 @@
 ﻿using Data.DataContext;
 using Data.Repository.Base;
 using Domain.Dtos;
-using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Repositories.Membros;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
 

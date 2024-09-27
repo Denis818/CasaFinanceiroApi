@@ -2,7 +2,7 @@
 
 namespace Application.Queries.Dtos
 {
-    public class GrupoFaturaSeletorQueryDto : QueryBaseDTO
+    public class GrupoFaturaSeletorQueryDto : BaseDto
     {
         public string Nome { get; set; }
     }

@@ -1,6 +1,6 @@
 ﻿using Application.Commands.Dtos.Despesa;
 using Application.Queries.Dtos;
-using Domain.Models.Despesas;
+using Domain.Models.ListaCompras;
 
 namespace Application.Configurations.MappingsApp
 {

@@ -5,7 +5,7 @@ using Application.Configurations.MappingsApp;
 using Application.Resources.Messages;
 using Domain.Converters.DatesTimes;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Repositories.Membros;
 using Domain.Models.Membros;
 using System.Text.RegularExpressions;
 

@@ -4,8 +4,8 @@ using Application.Commands.Services.Base;
 using Application.Configurations.MappingsApp;
 using Application.Resources.Messages;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repositories;
-using Domain.Models.Despesas;
+using Domain.Interfaces.Repositories.ListaCompras;
+using Domain.Models.ListaCompras;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.Services.ListaCompras

@@ -8,6 +8,8 @@ using Domain.Dtos;
 using Domain.Enumeradores;
 using Domain.Extensions.Help;
 using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Repositories.Categorias;
+using Domain.Interfaces.Repositories.GrupoFaturas;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 

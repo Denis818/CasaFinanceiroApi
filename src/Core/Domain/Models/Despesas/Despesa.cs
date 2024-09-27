@@ -1,5 +1,6 @@
 ﻿using Domain.Models.Base;
 using Domain.Models.Categorias;
+using Domain.Models.GrupoFaturas;
 
 namespace Domain.Models.Despesas
 {

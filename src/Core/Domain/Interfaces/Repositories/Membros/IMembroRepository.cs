@@ -2,7 +2,7 @@
 using Domain.Interfaces.Repositories.Base;
 using Domain.Models.Membros;
 
-namespace Domain.Interfaces.Repositories
+namespace Domain.Interfaces.Repositories.Membros
 {
     public interface IMembroRepository : IRepositoryBase<Membro>
     {

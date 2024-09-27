@@ -1,7 +1,7 @@
 ﻿using Domain.Interfaces.Repositories.Base;
-using Domain.Models.Despesas;
+using Domain.Models.GrupoFaturas;
 
-namespace Domain.Interfaces.Repositories
+namespace Domain.Interfaces.Repositories.GrupoFaturas
 {
     public interface IGrupoFaturaRepository : IRepositoryBase<GrupoFatura>
     {

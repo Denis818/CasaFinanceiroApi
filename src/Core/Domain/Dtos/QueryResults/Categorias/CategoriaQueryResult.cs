@@ -2,7 +2,7 @@
 
 namespace Domain.Dtos.QueryResults
 {
-    public class CategoriaQueryResult : QueryBaseDTO
+    public class CategoriaQueryResult : BaseDto
     {
         public string Descricao { get; set; }
         public double Total { get; set; }

@@ -81,7 +81,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         #region Painel De controle
 
         [HttpGet("por-grupo")]
-        public async Task<PagedResult<DespesaQueryDto>> GetListDespesasPorGrupo(
+        public async Task<PagedResult<DespesaDto>> GetListDespesasPorGrupo(
             [FromQuery] DespesaFiltroDto despesaFiltroDto
         )
         {
@@ -106,7 +106,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         #region Auditoria de Compras
 
         [HttpGet("todos-grupos")]
-        public async Task<PagedResult<DespesaQueryDto>> GetListDespesasAllGrupos(
+        public async Task<PagedResult<DespesaDto>> GetListDespesasAllGrupos(
             [FromQuery] DespesaFiltroDto despesaFiltroDto,
             string ano
         )

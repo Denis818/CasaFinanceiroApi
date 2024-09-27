@@ -1,7 +1,7 @@
 ﻿using Domain.Interfaces.Repositories.Base;
-using Domain.Models.Despesas;
+using Domain.Models.ListaCompras;
 
-namespace Domain.Interfaces.Repositories
+namespace Domain.Interfaces.Repositories.ListaCompras
 {
     public interface IProdutoListaComprasRepository : IRepositoryBase<ProdutoListaCompras>
     {

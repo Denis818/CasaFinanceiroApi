@@ -6,7 +6,8 @@ using Domain.Converters.DatesTimes;
 using Domain.Dtos;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
-using Domain.Models.Despesas;
+using Domain.Interfaces.Repositories.GrupoFaturas;
+using Domain.Models.GrupoFaturas;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
@@ -17,19 +18,19 @@ namespace Application.Queries.Services
         IStatusFaturaRepository _statusFaturaRepository,
         IGrupoFaturaRepository _grupoFaturaRepository
     )
-        : BaseQueryService<GrupoFatura, GrupoFaturaQueryDto, IGrupoFaturaRepository>(service),
+        : BaseQueryService<GrupoFatura, GrupoFaturaDto, IGrupoFaturaRepository>(service),
             IGrupoFaturaQueryService
     {
-        protected override GrupoFaturaQueryDto MapToDTO(GrupoFatura entity) => entity.MapToDTO();
+        protected override GrupoFaturaDto MapToDTO(GrupoFatura entity) => entity.MapToDTO();
 
-        public async Task<IEnumerable<GrupoFaturaQueryDto>> GetAllAsync(string ano)
+        public async Task<IEnumerable<GrupoFaturaDto>> GetAllAsync(string ano)
         {
             var listGruposFaturas = await _repository
                 .Get(fatura => fatura.Ano == ano)
                 .OrderByDescending(fatura => fatura.DataCriacao.Date)
                 .Include(s => s.StatusFaturas)
                 .Include(fatura => fatura.Despesas)
-                .Select(fatura => new GrupoFaturaQueryDto
+                .Select(fatura => new GrupoFaturaDto
                 {
                     Code = fatura.Code,
                     Nome = fatura.Nome,
@@ -37,7 +38,7 @@ namespace Application.Queries.Services
                     QuantidadeDespesas = fatura.Despesas.Count,
                     TotalDespesas = fatura.Despesas.Sum(despesa => despesa.Total),
                     StatusFaturas = fatura
-                        .StatusFaturas.Select(s => new StatusFaturaQueryDto
+                        .StatusFaturas.Select(s => new StatusFaturaDto
                         {
                             Code = s.Code,
                             FaturaNome = s.FaturaNome,
@@ -72,7 +73,7 @@ namespace Application.Queries.Services
             return fatura == null ? "Não encontrado" : fatura.Nome;
         }
 
-        public async Task<StatusFaturaQueryDto> GetStatusFaturaDtoByNameAsync(string status)
+        public async Task<StatusFaturaDto> GetStatusFaturaDtoByNameAsync(string status)
         {
             var grupoFaturaCode = (Guid)_httpContext.Items["grupo-fatura-code"];
 
@@ -87,10 +88,10 @@ namespace Application.Queries.Services
                     ? EnumStatusFatura.CasaFechado.ToString()
                     : EnumStatusFatura.MoradiaFechado.ToString();
 
-                return new StatusFaturaQueryDto { Estado = defaultState };
+                return new StatusFaturaDto { Estado = defaultState };
             }
 
-            return new StatusFaturaQueryDto { Estado = statusFatura.Estado };
+            return new StatusFaturaDto { Estado = statusFatura.Estado };
         }
 
         #region Metodos de Suporte

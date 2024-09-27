@@ -1,6 +1,6 @@
 ﻿namespace Domain.Dtos.Despesas
 {
-    public class DespesasCustosMoradiaQueryDto
+    public class DespesasCustosMoradiaDto
     {
         public double ParcelaApartamento { get; set; }
         public double ParcelaCaixa { get; set; }

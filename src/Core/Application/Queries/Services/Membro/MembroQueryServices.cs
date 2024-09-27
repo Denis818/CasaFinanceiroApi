@@ -4,7 +4,7 @@ using Application.Queries.Services.Base;
 using Application.Resources.Messages;
 using Domain.Dtos;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Repositories.Membros;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,7 +15,7 @@ namespace Application.Queries.Services
     public class MembroQueryServices(
         IDashboardQueryServices _dashboardConsultaServices,
         IServiceProvider service
-    ) : BaseQueryService<Membro, MembroQueryDto, IMembroRepository>(service), IMembroQueryServices
+    ) : BaseQueryService<Membro, MembroDto, IMembroRepository>(service), IMembroQueryServices
     {
         const string ConviteParaSite =
             "\r\n\r\nPara saber mais detalhes sobre os valores acesse:\r\n"
@@ -24,9 +24,9 @@ namespace Application.Queries.Services
             + "\r\nUsuário: *visitante*"
             + "\r\nSenha: *123456*";
 
-        protected override MembroQueryDto MapToDTO(Membro entity) => entity.MapToDTO();
+        protected override MembroDto MapToDTO(Membro entity) => entity.MapToDTO();
 
-        public async Task<IEnumerable<MembroQueryDto>> GetAllAsync() =>
+        public async Task<IEnumerable<MembroDto>> GetAllAsync() =>
             await _repository
                 .Get()
                 .OrderBy(c => c.Nome)
@@ -34,7 +34,7 @@ namespace Application.Queries.Services
                 .Select(m => m.MapToDTO())
                 .ToListAsync();
 
-        public async Task<MembroQueryDto> GetByCodigoAsync(int id) => await GetByCodigoAsync(id);
+        public async Task<MembroDto> GetByCodigoAsync(int id) => await GetByCodigoAsync(id);
 
         public async Task<string> EnviarValoresDividosPeloWhatsAppAsync(
             string nome,
@@ -85,7 +85,7 @@ namespace Application.Queries.Services
 
         private async Task<string> MensagemValoresCasaDividosAsync(
             string pix,
-            MembroQueryDto membro,
+            MembroDto membro,
             string titleMessage
         )
         {

@@ -1,7 +1,7 @@
 ﻿using Data.DataContext;
 using Data.Repository.Base;
 using Domain.Interfaces.Repositories;
-using Domain.Models.Despesas;
+using Domain.Models.GrupoFaturas;
 
 namespace Infraestructure.Data.Repository
 {

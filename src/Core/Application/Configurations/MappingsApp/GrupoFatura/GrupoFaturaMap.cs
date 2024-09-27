@@ -1,14 +1,14 @@
 ﻿using Application.Commands.Dtos;
 using Domain.Dtos;
-using Domain.Models.Despesas;
+using Domain.Models.GrupoFaturas;
 
 namespace Application.Configurations.MappingsApp
 {
     public static class GrupoFaturaMap
     {
-        public static GrupoFaturaQueryDto MapToDTO(this GrupoFatura grupoFatura)
+        public static GrupoFaturaDto MapToDTO(this GrupoFatura grupoFatura)
         {
-            return new GrupoFaturaQueryDto
+            return new GrupoFaturaDto
             {
                 Nome = grupoFatura.Nome,
                 Ano = grupoFatura.Ano,

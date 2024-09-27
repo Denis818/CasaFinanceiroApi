@@ -1,6 +1,7 @@
 ﻿using Domain.Models.Base;
+using Domain.Models.Despesas;
 
-namespace Domain.Models.Despesas
+namespace Domain.Models.GrupoFaturas
 {
     public class GrupoFatura : EntityBase
     {

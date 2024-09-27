@@ -1,4 +1,4 @@
-﻿using Domain.Models.Despesas;
+﻿using Domain.Models.ListaCompras;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

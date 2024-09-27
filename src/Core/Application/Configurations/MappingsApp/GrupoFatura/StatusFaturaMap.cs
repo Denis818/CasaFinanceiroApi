@@ -1,14 +1,14 @@
 ﻿using Application.Commands.Dtos;
 using Domain.Dtos;
-using Domain.Models.Despesas;
+using Domain.Models.GrupoFaturas;
 
 namespace Application.Configurations.MappingsApp
 {
     public static class StatusFaturaMap
     {
-        public static StatusFaturaQueryDto MapToDTO(this StatusFatura statusfatura)
+        public static StatusFaturaDto MapToDTO(this StatusFatura statusfatura)
         {
-            return new StatusFaturaQueryDto
+            return new StatusFaturaDto
             {
                 FaturaNome = statusfatura.FaturaNome,
                 Estado = statusfatura.Estado,

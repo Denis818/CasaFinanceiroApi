@@ -1,4 +1,4 @@
-﻿using Domain.Models.Despesas;
+﻿using Domain.Models.GrupoFaturas;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

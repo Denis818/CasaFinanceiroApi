@@ -2,7 +2,7 @@
 
 namespace Application.Queries.Dtos
 {
-    public class ParametroDeAlertaDeGastosQueryDto : QueryBaseDTO
+    public class ParametroDeAlertaDeGastosQueryDto : BaseDto
     {
         public string TipoMetrica { get; set; }
         public decimal LimiteVermelho { get; set; }

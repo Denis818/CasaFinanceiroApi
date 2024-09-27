@@ -6,9 +6,9 @@ namespace Application.Configurations.MappingsApp
 {
     public static class DespesaMap
     {
-        public static DespesaQueryDto MapToDTO(this Despesa despesa)
+        public static DespesaDto MapToDTO(this Despesa despesa)
         {
-            return new DespesaQueryDto
+            return new DespesaDto
             {
                 Code = despesa.Code,
                 Item = despesa.Item,

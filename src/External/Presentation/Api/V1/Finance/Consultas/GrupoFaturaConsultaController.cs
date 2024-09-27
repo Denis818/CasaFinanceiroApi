@@ -19,7 +19,7 @@ namespace Presentation.Api.V1.Finance.Consultas
         IGrupoFaturaQueryService _grupoFaturaConsultaService) : MainController(service)
     {
         [HttpGet]
-        public async Task<IEnumerable<GrupoFaturaQueryDto>> GetAllAsync(string ano) =>
+        public async Task<IEnumerable<GrupoFaturaDto>> GetAllAsync(string ano) =>
             await _grupoFaturaConsultaService.GetAllAsync(ano);
 
         [HttpGet("{code}")]
@@ -28,7 +28,7 @@ namespace Presentation.Api.V1.Finance.Consultas
 
         [HttpGet("status-fatura")]
         [GetIdGroupInHeaderFilter]
-        public async Task<StatusFaturaQueryDto> GetStatusFaturaDtoByNameAsync(string status) =>
+        public async Task<StatusFaturaDto> GetStatusFaturaDtoByNameAsync(string status) =>
             await _grupoFaturaConsultaService.GetStatusFaturaDtoByNameAsync(status);
 
         [HttpGet("seletor-grupo-fatura")]

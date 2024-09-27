@@ -1,6 +1,6 @@
 ﻿using Domain.Models.Base;
 
-namespace Domain.Models.Despesas
+namespace Domain.Models.GrupoFaturas
 {
     public class StatusFatura : EntityBase
     {

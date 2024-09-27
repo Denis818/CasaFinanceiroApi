@@ -3,7 +3,7 @@ using Domain.Dtos.QueryResults;
 using Domain.Interfaces.Repositories.Base;
 using Domain.Models.Categorias;
 
-namespace Domain.Interfaces.Repositories
+namespace Domain.Interfaces.Repositories.Categorias
 {
     public interface ICategoriaRepository : IRepositoryBase<Categoria>
     {

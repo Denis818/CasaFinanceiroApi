@@ -6,9 +6,9 @@ namespace Application.Configurations.MappingsApp
 {
     public static class MembroMap
     {
-        public static MembroQueryDto MapToDTO(this Membro membro)
+        public static MembroDto MapToDTO(this Membro membro)
         {
-            return new MembroQueryDto
+            return new MembroDto
             {
                 Nome = membro.Nome,
                 Telefone = membro.Telefone,

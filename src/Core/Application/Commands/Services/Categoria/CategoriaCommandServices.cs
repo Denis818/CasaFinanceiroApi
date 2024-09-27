@@ -4,7 +4,7 @@ using Application.Commands.Services.Base;
 using Application.Configurations.MappingsApp;
 using Application.Resources.Messages;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Repositories.Categorias;
 using Domain.Models.Categorias;
 
 namespace Application.Commands.Services

@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace Domain.Dtos
 {
-    public class DespesaQueryDto : QueryBaseDTO
+    public class DespesaDto : BaseDto
     {
 
         [JsonConverter(typeof(LongDateFormatConverter))]
@@ -15,7 +15,7 @@ namespace Domain.Dtos
         public int Quantidade { get; set; }
         public string Fornecedor { get; set; }
         public double Total { get; set; }
-        public GrupoFaturaQueryDto GrupoFatura { get; set; }
+        public GrupoFaturaDto GrupoFatura { get; set; }
         public CategoriaQueryResult Categoria { get; set; }
     }
 }

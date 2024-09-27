@@ -8,7 +8,7 @@ namespace Application.Queries.Interfaces
     public interface IPainelControleQueryServices
     {
         Task<(double, double)> CompararFaturaComTotalDeDespesas(double faturaCartao);
-        Task<PagedResult<DespesaQueryDto>> GetListDespesasPorGrupo(DespesaFiltroDto despesaFiltroDto);
+        Task<PagedResult<DespesaDto>> GetListDespesasPorGrupo(DespesaFiltroDto despesaFiltroDto);
         Task<IList<ParametroDeAlertaDeGastos>> GetParametroDeAlertaDeGastos();
     }
 }

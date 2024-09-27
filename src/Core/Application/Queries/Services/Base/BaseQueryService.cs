@@ -3,6 +3,7 @@ using Domain.Dtos.Base;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Repositories.Base;
+using Domain.Interfaces.Repositories.Categorias;
 using Domain.Interfaces.Utilities;
 using Domain.Models.Base;
 using Domain.Models.Despesas;
@@ -15,7 +16,7 @@ namespace Application.Queries.Services.Base
     public abstract class BaseQueryService<TEntity, TQueryDTO, TIRepository>
         where TIRepository : class, IRepositoryBase<TEntity>
         where TEntity : EntityBase
-        where TQueryDTO : QueryBaseDTO
+        where TQueryDTO : BaseDto
     {
         private readonly INotifier _notificador;
         private readonly IDespesaRepository _despesaRepository;

@@ -2,7 +2,7 @@
 
 namespace Application.Queries.Dtos
 {
-    public class ProdutoListaComprasQueryDto : QueryBaseDTO
+    public class ProdutoListaComprasQueryDto : BaseDto
     {
         public string Item { get; set; }
     }

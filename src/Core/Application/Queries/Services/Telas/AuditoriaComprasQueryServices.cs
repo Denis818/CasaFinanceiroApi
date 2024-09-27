@@ -15,13 +15,13 @@ using Microsoft.IdentityModel.Tokens;
 namespace Application.Queries.Services.Telas
 {
     public class AuditoriaComprasQueryServices(IServiceProvider service)
-        : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>(service),
+        : BaseQueryService<Despesa, DespesaDto, IDespesaRepository>(service),
             IAuditoriaComprasQueryServices
     {
-        protected override DespesaQueryDto MapToDTO(Despesa entity) => entity.MapToDTO();
+        protected override DespesaDto MapToDTO(Despesa entity) => entity.MapToDTO();
 
         #region Auditoria de Compras
-        public async Task<PagedResult<DespesaQueryDto>> GetListDespesasAllGroups(
+        public async Task<PagedResult<DespesaDto>> GetListDespesasAllGroups(
             DespesaFiltroDto despesaFiltroDto,
             string ano
         )
@@ -216,7 +216,7 @@ namespace Application.Queries.Services.Telas
             return query.OrderByDescending(d => d.DataCompra);
         }
 
-        private async Task<PagedResult<DespesaQueryDto>> GetAllDespesas(
+        private async Task<PagedResult<DespesaDto>> GetAllDespesas(
             IQueryable<Despesa> query,
             int paginaAtual,
             int itensPorPagina

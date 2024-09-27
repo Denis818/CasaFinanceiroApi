@@ -17,14 +17,14 @@ namespace Application.Queries.Services.Telas
         IServiceProvider service,
         IParametroDeAlertaDeGastosRepository _parametroDeAlertaDeGastosRepository
     )
-        : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>(service),
+        : BaseQueryService<Despesa, DespesaDto, IDespesaRepository>(service),
             IPainelControleQueryServices
     {
-        protected override DespesaQueryDto MapToDTO(Despesa entity) => entity.MapToDTO();
+        protected override DespesaDto MapToDTO(Despesa entity) => entity.MapToDTO();
 
         #region Painel de Controle
 
-        public async Task<PagedResult<DespesaQueryDto>> GetListDespesasPorGrupo(
+        public async Task<PagedResult<DespesaDto>> GetListDespesasPorGrupo(
             DespesaFiltroDto despesaFiltroDto
         )
         {
@@ -117,7 +117,7 @@ namespace Application.Queries.Services.Telas
             return query.OrderByDescending(d => d.DataCompra);
         }
 
-        private async Task<PagedResult<DespesaQueryDto>> GetAllDespesas(
+        private async Task<PagedResult<DespesaDto>> GetAllDespesas(
             IQueryable<Despesa> query,
             int paginaAtual,
             int itensPorPagina

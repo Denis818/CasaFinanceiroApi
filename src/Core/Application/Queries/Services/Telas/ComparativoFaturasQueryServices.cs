@@ -10,10 +10,10 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Queries.Services.Telas
 {
     public class ComparativoFaturasQueryServices(IServiceProvider service)
-        : BaseQueryService<Despesa, DespesaQueryDto, IDespesaRepository>(service),
+        : BaseQueryService<Despesa, DespesaDto, IDespesaRepository>(service),
             IComparativoFaturasQueryServices
     {
-        protected override DespesaQueryDto MapToDTO(Despesa entity) => entity.MapToDTO();
+        protected override DespesaDto MapToDTO(Despesa entity) => entity.MapToDTO();
 
         public async Task<List<ComparativoFaturasQueryDto>> GetComparativoFaturasAsync(
             Guid grupoFaturaCode1,

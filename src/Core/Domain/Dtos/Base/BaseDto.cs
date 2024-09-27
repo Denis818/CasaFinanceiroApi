@@ -1,6 +1,6 @@
 ﻿namespace Domain.Dtos.Base
 {
-    public class QueryBaseDTO
+    public class BaseDto
     {
         public Guid Code { get; set; }
     }
