@@ -1,8 +1,10 @@
 ﻿using Application.Commands.Interfaces;
 using Application.Commands.Services;
+using Application.Commands.Services.ListaCompras;
 using Application.Queries.Interfaces;
 using Application.Queries.Interfaces.Despesa;
 using Application.Queries.Services;
+using Application.Queries.Services.ListaCompras;
 using Application.Queries.Services.Telas;
 using Application.Utilities;
 using Data.Repository.Categorias;

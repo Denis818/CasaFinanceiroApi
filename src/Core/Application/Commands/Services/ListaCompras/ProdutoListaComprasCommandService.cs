@@ -8,7 +8,7 @@ using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Commands.Services
+namespace Application.Commands.Services.ListaCompras
 {
     public class ProdutoListaComprasCommandService(IServiceProvider service)
         : BaseCommandService<ProdutoListaCompras, ProdutoListaComprasCommandDto, IProdutoListaComprasRepository>(service), IProdutoListaComprasCommandService

@@ -9,7 +9,7 @@ using iText.Kernel.Pdf;
 using iText.Layout;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Queries.Services
+namespace Application.Queries.Services.ListaCompras
 {
     public class ProdutoListaComprasQueryService(IServiceProvider service)
         : BaseQueryService<ProdutoListaCompras, ProdutoListaComprasQueryDto, IProdutoListaComprasRepository>(service), IProdutoListaComprasQueryService
