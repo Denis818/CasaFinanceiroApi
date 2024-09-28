@@ -124,7 +124,7 @@ namespace Application.Queries.Services.Telas
                     .ToListAsync();
 
                 var itensAgrupados = despesasPorCategoria.GroupBy(d =>
-                    NormalizeItemName(d.Item.ToLower())
+                    NormalizeItemName(d.Item)
                 );
 
                 foreach (var grupoItem in itensAgrupados)
