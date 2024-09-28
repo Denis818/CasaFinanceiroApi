@@ -71,7 +71,7 @@ namespace Application.Queries.Services.Telas
             return listaPaginada;
         }
 
-        public async Task<List<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaPorGrupoAsync()
+        public async Task<List<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaGraficoAsync()
         {
             var sugestoes = await _queryDespesasPorGrupo
                 .Where(d =>
@@ -80,7 +80,7 @@ namespace Application.Queries.Services.Telas
                     && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                     && d.Categoria.Code != _categoriaIds.CodInternet
                 )
-                .GroupBy(d => d.Item)
+                .GroupBy(d => NormalizeItemName(d.Item))
                 .Where(g => g.Select(d => d.Fornecedor).Distinct().Count() > 1)
                 .Select(group => new DespesasSugestaoEconomiaQueryDto
                 {

@@ -129,7 +129,7 @@ namespace Presentation.Api.V1.Finance.Consultas
 
         [HttpGet("sugestoes-economia")]
         public async Task<IEnumerable<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaPorGrupoAsync() =>
-            await auditoriaComprasConsultaServices.GetSugestoesEconomiaPorGrupoAsync();
+            await auditoriaComprasConsultaServices.GetSugestoesEconomiaGraficoAsync();
 
         #endregion
 
