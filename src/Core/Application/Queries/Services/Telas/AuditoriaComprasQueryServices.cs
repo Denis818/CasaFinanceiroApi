@@ -15,7 +15,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Queries.Services.Telas
 {
-    public class AuditoriaComprasQueryServices(IServiceProvider service, IDespesaFiltroService despesaFiltro)
+    public class AuditoriaComprasQueryServices(
+        IServiceProvider service,
+        IDespesaFiltroService despesaFiltro
+    )
         : BaseQueryService<Despesa, DespesaDto, IDespesaRepository>(service),
             IAuditoriaComprasQueryServices
     {
@@ -102,32 +105,27 @@ namespace Application.Queries.Services.Telas
         public async Task<IEnumerable<DespesasSugestaoDeFornecedorQueryDto>> SugestaoDeFornecedorMaisBarato
             (int paginaAtual, int itensPorPagina)
         {
-            var queryDespesasPorGrupo = _repository
-                .Get(d => d.GrupoFatura.Code == _grupoCode)
-                .Include(c => c.Categoria)
-                .Include(c => c.GrupoFatura);
-
+            List<DespesasSugestaoDeFornecedorQueryDto> sugestoes = [];
             var categorias = await _categoriaRepository.Get().ToListAsync();
 
-            List<DespesasSugestaoDeFornecedorQueryDto> sugestoes = new();
+            var despesasSomenteCasa = _queryDespesasPorGrupo
+                .Where(d =>
+                    d.Categoria.Code != _categoriaIds.CodAluguel
+                    && d.Categoria.Code != _categoriaIds.CodCondominio
+                    && d.Categoria.Code != _categoriaIds.CodContaDeLuz
+                    && d.Categoria.Code != _categoriaIds.CodInternet
+                )
+                .OrderByDescending(d => d.DataCompra);
 
             foreach (var categoria in categorias)
             {
-                var despesasSomenteCasa = _queryDespesasPorGrupo
-                    .Where(d =>
-                        d.Categoria.Code != _categoriaIds.CodAluguel
-                        && d.Categoria.Code != _categoriaIds.CodCondominio
-                        && d.Categoria.Code != _categoriaIds.CodContaDeLuz
-                        && d.Categoria.Code != _categoriaIds.CodInternet
-                    )
-                    .Include(c => c.Categoria)
-                    .Include(g => g.GrupoFatura)
-                    .OrderByDescending(d => d.DataCompra);
-
-                var itensAgrupados = await despesasSomenteCasa
-                    .Where(d => d.Categoria.Code == categoria.Code)
-                    .GroupBy(d => d.Item.ToLower())
+                var despesasPorCategoria = await despesasSomenteCasa
+                    .Where(d => d.CategoriaCode == categoria.Code)
                     .ToListAsync();
+
+                var itensAgrupados = despesasPorCategoria.GroupBy(d =>
+                    NormalizeItemName(d.Item.ToLower())
+                );
 
                 foreach (var grupoItem in itensAgrupados)
                 {
@@ -198,6 +196,12 @@ namespace Application.Queries.Services.Telas
             }
 
             return despesas;
+        }
+
+        private string NormalizeItemName(string itemName)
+        {
+            var words = itemName.ToLower().Split(' ');
+            return words[0];
         }
     }
 }

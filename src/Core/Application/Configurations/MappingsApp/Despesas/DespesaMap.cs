@@ -17,8 +17,8 @@ namespace Application.Configurations.MappingsApp
                 Fornecedor = despesa.Fornecedor,
                 DataCompra = despesa.DataCompra,
                 Total = despesa.Total,
-                GrupoFatura = despesa.GrupoFatura.MapToDTO(),
-                Categoria = despesa.Categoria.MapToDTO()
+                GrupoFatura = despesa.GrupoFatura?.MapToDTO(),
+                Categoria = despesa.Categoria?.MapToDTO()
             };
         }
 

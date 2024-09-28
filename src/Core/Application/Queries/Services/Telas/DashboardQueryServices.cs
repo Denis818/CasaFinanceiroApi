@@ -118,6 +118,8 @@ namespace Application.Queries.Services.Telas
 
         public async Task<RelatorioGastosDoGrupoQueryDto> GetRelatorioDeGastosDoGrupoAsync()
         {
+            var queryDespesasPorGrupo = _queryDespesasPorGrupo.Include(g => g.GrupoFatura.StatusFaturas);
+
             string grupoNome = _grupoFaturaRepository
                 .Get(g => g.Code == _grupoFatura.Code)
                 .AsNoTracking()
@@ -130,7 +132,7 @@ namespace Application.Queries.Services.Telas
                 return new();
             }
 
-            double totalGastoMoradia = await _queryDespesasPorGrupo
+            double totalGastoMoradia = await queryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code == _categoriaIds.CodAluguel
                     || d.Categoria.Code == _categoriaIds.CodCondominio
@@ -138,7 +140,7 @@ namespace Application.Queries.Services.Telas
                 )
                 .SumAsync(d => d.Total);
 
-            double totalGastosCasa = await _queryDespesasPorGrupo
+            double totalGastosCasa = await queryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code != _categoriaIds.CodAluguel
                     && d.Categoria.Code != _categoriaIds.CodCondominio
