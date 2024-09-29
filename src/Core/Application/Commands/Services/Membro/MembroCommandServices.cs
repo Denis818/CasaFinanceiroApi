@@ -34,7 +34,7 @@ namespace Application.Commands.Services
 
             var membro = membroDto.MapToEntity();
 
-            membro.DataInicio = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
+            membro.DataInicio = DateTimeZoneConverterPtBR.GetBrasiliaDateTimeZone();
 
             await _repository.InsertAsync(membro);
 

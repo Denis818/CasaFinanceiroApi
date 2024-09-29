@@ -52,6 +52,8 @@ namespace Web.Extensios.DependencyManagers
                         IssuerSigningKey = new SymmetricSecurityKey(key),
                         ValidateIssuer = true,
                         ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
                         ValidIssuer = config["TokenConfiguration:Issuer"],
                         ValidAudience = config["TokenConfiguration:Audience"]
                     };

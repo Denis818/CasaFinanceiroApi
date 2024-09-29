@@ -33,7 +33,7 @@ namespace Presentation.Attributes.Auth
                     ]
                 };
 
-                context.Result = new ObjectResult(response) { StatusCode = 401 };
+                context.Result = new ObjectResult(response) { StatusCode = 403 };
                 return;
             }
         }

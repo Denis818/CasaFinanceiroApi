@@ -12,7 +12,7 @@ namespace Domain.Converters.DatesTimes
         {
             var dateString = reader.GetString();
 
-            if(DateTime.TryParseExact(
+            if (DateTime.TryParseExact(
                 dateString,
                 DateFormat,
                 new CultureInfo("pt-BR"),

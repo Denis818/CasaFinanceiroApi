@@ -4,6 +4,7 @@ using Application.Commands.Services.Base;
 using Application.Configurations.MappingsApp;
 using Application.Helpers;
 using Application.Resources.Messages;
+using Domain.Converters.DatesTimes;
 using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories.Users;
@@ -94,12 +95,12 @@ namespace Application.Commands.Services
         private UserTokenDto GerarToken(Usuario usuario)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-
-            var tokenExpirationTime = DateTime.UtcNow.AddYears(
-                int.Parse(_configuration["TokenConfiguration:ExpireDays"])
-            );
-
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:key"]);
+
+            var dateTimeNow = DateTimeZoneConverterPtBR.GetBrasiliaDateTimeZone();
+            var timeExpiration = int.Parse(_configuration["TokenConfiguration:ExpireDays"]);
+
+            var tokenExpirationTime = dateTimeNow.AddDays(timeExpiration);
 
             var claims = new List<Claim>
             {
@@ -118,6 +119,7 @@ namespace Application.Commands.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
+                NotBefore = dateTimeNow,
                 Expires = tokenExpirationTime,
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),

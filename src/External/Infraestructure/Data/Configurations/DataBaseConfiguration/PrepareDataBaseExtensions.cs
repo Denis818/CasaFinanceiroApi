@@ -134,7 +134,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
 
             if (list.Count < 1)
             {
-                var dataInicio = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
+                var dataInicio = DateTimeZoneConverterPtBR.GetBrasiliaDateTimeZone();
 
                 var listMember = new List<Membro>
                 {
@@ -183,7 +183,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
 
             if (list.Count < 1)
             {
-                var dataCriacao = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
+                var dataCriacao = DateTimeZoneConverterPtBR.GetBrasiliaDateTimeZone();
 
                 string mesAtualName = dataCriacao.ToString("MMMM", new CultureInfo("pt-BR"));
 

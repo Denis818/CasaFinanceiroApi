@@ -48,7 +48,7 @@ namespace Application.Commands.Services
             }
 
             var grupoFatura = grupoDto.MapToEntity();
-            grupoFatura.DataCriacao = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
+            grupoFatura.DataCriacao = DateTimeZoneConverterPtBR.GetBrasiliaDateTimeZone();
 
             grupoFatura.StatusFaturas =
             [

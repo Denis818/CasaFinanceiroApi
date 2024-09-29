@@ -40,7 +40,7 @@ namespace Application.Commands.Services
             var despesa = despesaDto.MapToEntity();
 
             despesa.Total = (despesa.Preco * despesa.Quantidade).RoundTo(2);
-            despesa.DataCompra = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
+            despesa.DataCompra = DateTimeZoneConverterPtBR.GetBrasiliaDateTimeZone();
 
             await _repository.InsertAsync(despesa);
 
@@ -82,7 +82,7 @@ namespace Application.Commands.Services
                 var despesa = despesaDto.MapToEntity();
                 despesa.Total = (despesa.Preco * despesa.Quantidade).RoundTo(2);
 
-                despesa.DataCompra = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
+                despesa.DataCompra = DateTimeZoneConverterPtBR.GetBrasiliaDateTimeZone();
                 despesasParaInserir.Add(despesa);
             }
 
@@ -142,7 +142,7 @@ namespace Application.Commands.Services
             despesa.GrupoFatura = await _GrupoFaturaRepository.GetByCodigoAsync(despesaDto.GrupoFaturaCode);
 
             despesa.Total = despesa.Preco * despesa.Quantidade;
-            despesa.DataCompra = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
+            despesa.DataCompra = DateTimeZoneConverterPtBR.GetBrasiliaDateTimeZone();
 
             _repository.Update(despesa);
 

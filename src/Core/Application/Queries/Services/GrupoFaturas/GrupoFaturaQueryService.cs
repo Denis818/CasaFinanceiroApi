@@ -116,7 +116,7 @@ namespace Application.Queries.Services
 
         private async Task CreateDefaultGroupFatureAsync(string ano)
         {
-            var dataCriacao = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
+            var dataCriacao = DateTimeZoneConverterPtBR.GetBrasiliaDateTimeZone();
 
             string mesAtualName = dataCriacao.ToString("MMMM", new CultureInfo("pt-BR"));
 
