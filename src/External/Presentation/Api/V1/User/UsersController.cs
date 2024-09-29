@@ -19,7 +19,7 @@ namespace Presentation.Api.V1.User
     public class UsersController(IAuthCommandService _authService, IServiceProvider service)
         : MainController(service)
     {
-        [HttpPost("login")]
+        [HttpPost("auth/login")]
         public async Task<UserTokenDto> Login(UserCommandDto userDto)
         {
             if (userDto.Email.IsNullOrEmpty() || userDto.Password.IsNullOrEmpty())

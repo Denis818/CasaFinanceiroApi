@@ -6,6 +6,7 @@
         ClientError = 400,
         ServerError = 500,
         NotFount = 404,
-        AcessoNegado = 401
+        NaoAutenticado = 401,
+        AcessoNegado = 403
     }
 }

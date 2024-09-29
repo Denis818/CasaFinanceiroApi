@@ -11,7 +11,7 @@ namespace Presentation.Attributes.Auth
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if(!context.HttpContext.User.Identity.IsAuthenticated)
+            if (!context.HttpContext.User.Identity.IsAuthenticated)
             {
                 var response = new ResponseDTO<string>()
                 {
@@ -19,7 +19,7 @@ namespace Presentation.Attributes.Auth
                     [
                         new Notificacao(
                             "Você não esta autenticado.",
-                            EnumTipoNotificacao.AcessoNegado
+                            EnumTipoNotificacao.NaoAutenticado
                         )
                     ]
                 };

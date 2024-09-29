@@ -20,7 +20,7 @@ namespace Presentation.Attributes.Auth
                 context.HttpContext.User.Claims.Any(claim => claim.Value == permissao)
             );
 
-            if(!possuiTodasPermissoes)
+            if (!possuiTodasPermissoes)
             {
                 var response = new ResponseDTO<string>()
                 {
