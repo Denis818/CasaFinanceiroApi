@@ -79,6 +79,7 @@ namespace Application.Queries.Services.Telas
                     && d.Categoria.Code != _categoriaIds.CodCondominio
                     && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                     && d.Categoria.Code != _categoriaIds.CodInternet
+                    && !d.Item.ToLower().Contains("compra")
                 )
                 .ToListAsync();
 
@@ -115,6 +116,7 @@ namespace Application.Queries.Services.Telas
                     && d.Categoria.Code != _categoriaIds.CodCondominio
                     && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                     && d.Categoria.Code != _categoriaIds.CodInternet
+                    && !d.Item.ToLower().Contains("compra")
                 )
                 .OrderByDescending(d => d.DataCompra);
 
