@@ -71,26 +71,27 @@ namespace Application.Queries.Services.Telas
             return listaPaginada;
         }
 
-        public async Task<List<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaGraficoAsync()
+        public async Task<IEnumerable<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaGraficoAsync()
         {
-            var sugestoes = await _queryDespesasPorGrupo
+            var list = await _queryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code != _categoriaIds.CodAluguel
                     && d.Categoria.Code != _categoriaIds.CodCondominio
                     && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                     && d.Categoria.Code != _categoriaIds.CodInternet
                 )
-                .GroupBy(d => NormalizeItemName(d.Item))
-                .Where(g => g.Select(d => d.Fornecedor).Distinct().Count() > 1)
-                .Select(group => new DespesasSugestaoEconomiaQueryDto
-                {
-                    Item = group.Key,
-                    FornecedorMaisBarato = group.OrderBy(d => d.Preco).First().Fornecedor,
-                    PrecoMaisBarato = group.Min(d => d.Preco),
-                    PotencialEconomia = group.Max(d => d.Preco) - group.Min(d => d.Preco)
-                })
-                .Where(s => s.PotencialEconomia > 0)
                 .ToListAsync();
+
+            var sugestoes = list.GroupBy(d => NormalizeItemName(d.Item))
+                 .Where(g => g.Select(d => d.Fornecedor).Distinct().Count() > 1)
+                 .Select(group => new DespesasSugestaoEconomiaQueryDto
+                 {
+                     Item = group.Key,
+                     FornecedorMaisBarato = group.OrderBy(d => d.Preco).First().Fornecedor,
+                     PrecoMaisBarato = group.Min(d => d.Preco),
+                     PotencialEconomia = group.Max(d => d.Preco) - group.Min(d => d.Preco)
+                 })
+                 .Where(s => s.PotencialEconomia > 0);
 
             if (sugestoes.IsNullOrEmpty())
             {
