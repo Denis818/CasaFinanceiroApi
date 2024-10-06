@@ -1,6 +1,7 @@
 ﻿using Application.Queries.Interfaces.Despesas;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
+using System.Globalization;
 
 namespace Application.Queries.Services.Despesas
 {
@@ -31,7 +32,9 @@ namespace Application.Queries.Services.Despesas
         private IQueryable<Despesa> FilterByPrice(IQueryable<Despesa> query,
             string filter, EnumFiltroDespesa tipoFiltro)
         {
-            if (double.TryParse(filter.Replace(",", "."), out double precoValue))
+            var price = filter.Replace(",", ".");
+
+            if (double.TryParse(price, CultureInfo.InvariantCulture, out double precoValue))
             {
                 query = tipoFiltro switch
                 {
