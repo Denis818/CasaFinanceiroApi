@@ -6,64 +6,43 @@ namespace Application.Queries.Services.Despesas
 {
     public class DespesaFiltroService : IDespesaFiltroService
     {
-        public IOrderedQueryable<Despesa> GetDespesasFiltradas(
-            IQueryable<Despesa> query,
-            string filter,
-            EnumFiltroDespesa tipoFiltro
-        )
+        public IOrderedQueryable<Despesa> GetDespesasFiltradas(IQueryable<Despesa> query,
+            string filter, EnumFiltroDespesa tipoFiltro)
         {
-            switch (tipoFiltro)
+            filter = filter.ToLower();
+
+            query = tipoFiltro switch
             {
-                case EnumFiltroDespesa.Item:
-                query = query.Where(despesa =>
-                    despesa.Item.ToLower().Contains(filter.ToLower())
-                );
-                break;
+                EnumFiltroDespesa.Item => query.Where(despesa => despesa.Item.ToLower().Contains(filter)),
+                EnumFiltroDespesa.Fornecedor => query.Where(despesa => despesa.Fornecedor.ToLower().Contains(filter)),
+                EnumFiltroDespesa.GrupoFatura => query.Where(despesa => despesa.GrupoFatura.Nome.ToLower().Contains(filter)),
+                EnumFiltroDespesa.Categoria => query.Where(despesa => despesa.Categoria.Descricao.ToLower().Contains(filter)),
 
-                case EnumFiltroDespesa.Categoria:
-                query = query.Where(despesa =>
-                    despesa.Categoria.Descricao.ToLower().Contains(filter.ToLower())
-                );
-                break;
+                EnumFiltroDespesa.Preco or
+                EnumFiltroDespesa.PrecoMenorOuIgual or
+                EnumFiltroDespesa.PrecoMaiorOuIgual => FilterByPrice(query, filter, tipoFiltro),
 
-                case EnumFiltroDespesa.Fornecedor:
-                query = query.Where(despesa =>
-                    despesa.Fornecedor.ToLower().Contains(filter.ToLower())
-                );
-                break;
-
-                case EnumFiltroDespesa.GrupoFatura:
-                query = query.Where(despesa =>
-                    despesa.GrupoFatura.Nome.ToLower().Contains(filter.ToLower())
-                );
-                break;
-
-                case EnumFiltroDespesa.Preco:
-                if (double.TryParse(filter, out double precoValue))
-                {
-                    string filterPreco = filter.Replace(",", ".");
-                    query = query.Where(despesa => despesa.Preco == precoValue);
-                }
-                break;
-
-                case EnumFiltroDespesa.PrecoMenorOuIgual:
-                if (double.TryParse(filter, out double precoMenorIgualValue))
-                {
-                    string filterPreco = filter.Replace(",", ".");
-                    query = query.Where(despesa => despesa.Preco <= precoMenorIgualValue);
-                }
-                break;
-
-                case EnumFiltroDespesa.PrecoMaiorOuIgual:
-                if (double.TryParse(filter, out double precoMaiorOuIgualValue))
-                {
-                    string filterPreco = filter.Replace(",", ".");
-                    query = query.Where(despesa => despesa.Preco >= precoMaiorOuIgualValue);
-                }
-                break;
-            }
+                _ => query
+            };
 
             return query.OrderByDescending(d => d.DataCompra);
+        }
+
+        private IQueryable<Despesa> FilterByPrice(IQueryable<Despesa> query,
+            string filter, EnumFiltroDespesa tipoFiltro)
+        {
+            if (double.TryParse(filter.Replace(",", "."), out double precoValue))
+            {
+                query = tipoFiltro switch
+                {
+                    EnumFiltroDespesa.Preco => query.Where(despesa => despesa.Preco == precoValue),
+                    EnumFiltroDespesa.PrecoMenorOuIgual => query.Where(despesa => despesa.Preco <= precoValue),
+                    EnumFiltroDespesa.PrecoMaiorOuIgual => query.Where(despesa => despesa.Preco >= precoValue),
+                    _ => query
+                };
+            }
+
+            return query;
         }
     }
 }
