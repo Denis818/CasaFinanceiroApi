@@ -66,7 +66,7 @@ namespace Application.Queries.Services.Telas
 
             double valorSubtraido = totalDespesas - faturaCartao;
 
-            return (totalDespesas, Math.Abs(valorSubtraido));
+            return (totalDespesas, valorSubtraido);
         }
 
         public async Task<IList<ParametroDeAlertaDeGastos>> GetParametroDeAlertaDeGastos()
