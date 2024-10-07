@@ -117,7 +117,6 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                     new() { Descricao = "Limpeza" },
                     new() { Descricao = "Lanches" },
                     new() { Descricao = "Higiêne" },
-                    new() { Descricao = "Internet" },
                     new() { Descricao = "Conta de Luz" }
                 };
 

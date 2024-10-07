@@ -311,8 +311,7 @@ namespace Application.Commands.Services
         {
             return codeCategoria == _categoriaIds.CodAluguel
                 || codeCategoria == _categoriaIds.CodCondominio
-                || codeCategoria == _categoriaIds.CodContaDeLuz
-                || codeCategoria == _categoriaIds.CodInternet;
+                || codeCategoria == _categoriaIds.CodContaDeLuz;
         }
 
         private async Task<Despesa> GetDespesaByCodigoAsync(Guid code)

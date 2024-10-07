@@ -31,8 +31,7 @@ namespace Data.Repository.Categorias
                 codeCategoria == categoriaIds.CodAluguel
                 || codeCategoria == categoriaIds.CodCondominio
                 || codeCategoria == categoriaIds.CodContaDeLuz
-                || codeCategoria == categoriaIds.CodAlmoco
-                || codeCategoria == categoriaIds.CodInternet;
+                || codeCategoria == categoriaIds.CodAlmoco;
 
             return naoEhAlteravel;
         }
@@ -45,7 +44,6 @@ namespace Data.Repository.Categorias
             var idAluguel = await categ.FirstOrDefaultAsync(c => c.Descricao == "Aluguel");
             var idCondominio = await categ.FirstOrDefaultAsync(c => c.Descricao == "Condomínio");
             var idContaDeLuz = await categ.FirstOrDefaultAsync(c => c.Descricao == "Conta de Luz");
-            var idInternet = await categ.FirstOrDefaultAsync(c => c.Descricao == "Internet");
 
             return new CategoriaCodsDto
             {
@@ -53,7 +51,6 @@ namespace Data.Repository.Categorias
                 CodCondominio = idCondominio.Code,
                 CodContaDeLuz = idContaDeLuz.Code,
                 CodAlmoco = idAlmoco.Code,
-                CodInternet = idInternet.Code
             };
         }
     }
