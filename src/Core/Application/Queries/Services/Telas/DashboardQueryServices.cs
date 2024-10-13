@@ -382,7 +382,7 @@ namespace Application.Queries.Services.Telas
                     $"R$ {totalAlmocoDividioComJhon.ToFormatPriceBr()}"
                 },
                 {
-                    "Total com almoco/janta dividido com Jhon",
+                    "Total das despesas gerais somado com a parte do almço que foi divido com Jhon",
                     $"R$ {totalDespesasGeraisMaisAlmocoDividido.ToFormatPriceBr()}"
                 },
                 { "Total das Despesas", $"R$ {despesaGeraisMaisAlmoco.ToFormatPriceBr()}" },
