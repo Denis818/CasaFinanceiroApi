@@ -15,7 +15,7 @@ namespace Presentation.Api.V2
     [AutorizationFinance]
     [ApiVersion(ApiVersioning.V2)]
     [ApiVersionRoute("compras", "v2")]
-    //    [PermissoesFinance(EnumPermissoes.USU_000004)]
+    [PermissoesFinance(EnumPermissoes.USU_000004)]
     public class ComprasController(
         IServiceProvider serviceProvider,
         ICompraRepository compraRepository,
