@@ -15,6 +15,7 @@ using Data.Repository.Despesas;
 using Data.Repository.User;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Repositories.Categorias;
+using Domain.Interfaces.Repositories.Compras;
 using Domain.Interfaces.Repositories.GrupoFaturas;
 using Domain.Interfaces.Repositories.ListaCompras;
 using Domain.Interfaces.Repositories.Membros;
@@ -24,6 +25,7 @@ using Domain.Interfaces.Utilities;
 using Domain.Services;
 using Infraestructure.Data.Configurations;
 using Infraestructure.Data.Repository;
+using Infraestructure.Data.Repository.Compras;
 using Infraestructure.Data.Repository.ListaCompras;
 using Infraestructure.Data.Repository.Membros;
 using Presentation.ModelState;
@@ -51,6 +53,8 @@ namespace Web.Extensios.DependencyManagers
             services.AddScoped<IGrupoFaturaRepository, GrupoFaturaRepository>();
             services.AddScoped<IStatusFaturaRepository, StatusFaturaRepository>();
             services.AddScoped<IParametroDeAlertaDeGastosRepository, ParametroDeAlertaDeGastosRepository>();
+            services.AddScoped<ICompraRepository, CompraRepository>();
+            services.AddScoped<IRecebimentoRepository, RecebimentoRepository>();
         }
 
         public static void AddDependecyDomainServices(this IServiceCollection services)

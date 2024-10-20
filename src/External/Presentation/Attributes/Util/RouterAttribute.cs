@@ -2,7 +2,7 @@
 
 namespace Presentation.Attributes.Util
 {
-    public class ApiVersionRouteAttribute(string template) : RouteAttribute("api/v1/" + template)
+    public class ApiVersionRouteAttribute(string template, string versao = "v1") : RouteAttribute($"api/{versao}/" + template)
     {
     }
 }

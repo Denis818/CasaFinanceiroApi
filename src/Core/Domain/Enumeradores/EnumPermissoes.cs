@@ -21,5 +21,11 @@ namespace Domain.Enumeradores
         /// </summary>
         [Description("Permissao para deletar.")]
         USU_000003 = 3,
+
+        /// <summary>
+        /// Permissão para deletar.
+        /// </summary>
+        [Description("Permissao para Tela de calculos.")]
+        USU_000004 = 4,
     }
 }
