@@ -54,6 +54,7 @@ namespace Presentation.Api.V2
             existingCompra.Nome = compra.Nome;
             existingCompra.Parcelas = compra.Parcelas;
             existingCompra.ValorTotal = compra.ValorTotal;
+            existingCompra.DividioPorDois = compra.DividioPorDois;
             existingCompra.ValorPorParcela = compra.ValorTotal / compra.Parcelas;
 
             compraRepository.Update(existingCompra);
