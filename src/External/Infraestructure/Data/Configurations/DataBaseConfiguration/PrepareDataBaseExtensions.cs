@@ -25,13 +25,13 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
     {
         public static void PrepareDataBase(IServiceProvider service, string nomeDominio)
         {
-            //PrepareUserMaster(service, nomeDominio);
-            //PrepararVisitante(service);
-            //PrepararCategorias(service).Wait();
-            //PrepararMembros(service).Wait();
-            //PrepararGruposFaturas(service).Wait();
-            //PrepararParametroDeAlertaDeGastos(service).Wait();
-            //PrepararProdutoListaCompras(service).Wait();
+            PrepareUserMaster(service, nomeDominio);
+            PrepararVisitante(service);
+            PrepararCategorias(service).Wait();
+            PrepararMembros(service).Wait();
+            PrepararGruposFaturas(service).Wait();
+            PrepararParametroDeAlertaDeGastos(service).Wait();
+            PrepararProdutoListaCompras(service).Wait();
         }
 
         private static void PrepareUserMaster(IServiceProvider service, string nomeDominio)
@@ -39,8 +39,8 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             var usuarioRepository = service.GetRequiredService<IUsuarioRepository>();
             var authService = service.GetRequiredService<IAuthCommandService>();
 
-            string email = "denis@gmail.com";
-            string senha = "denis@123456";
+            string email = "master@gmail.com";
+            string senha = "master@123456";
 
             if (nomeDominio.Contains("dev") || nomeDominio.Contains("railway"))
             {
@@ -66,7 +66,6 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 EnumPermissoes.USU_000001,
                 EnumPermissoes.USU_000002,
                 EnumPermissoes.USU_000003,
-                EnumPermissoes.USU_000004,
             };
 
             usuarioRepository.InsertAsync(usuario).Wait();
