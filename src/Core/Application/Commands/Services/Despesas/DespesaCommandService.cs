@@ -40,7 +40,7 @@ namespace Application.Commands.Services
             var despesa = despesaDto.MapToEntity();
 
             despesa.Total = (despesa.Preco * despesa.Quantidade).RoundTo(2);
-            despesa.DataCompra = DateTimeZoneConverterPtBR.GetBrasiliaDateTimeZone();
+            despesa.DataCompra = DateTime.Now;
 
             await _repository.InsertAsync(despesa);
 
