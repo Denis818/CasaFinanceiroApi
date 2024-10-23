@@ -8,7 +8,7 @@ namespace Domain.Dtos
     public class DespesaDto : BaseDto
     {
 
-        [JsonConverter(typeof(LongDateFormatConverter))]
+       
         public DateTime DataCompra { get; set; }
         public string Item { get; set; }
         public double Preco { get; set; }
