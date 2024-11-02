@@ -27,5 +27,11 @@ namespace Domain.Enumeradores
         /// </summary>
         [Description("Permissao para Tela de calculos.")]
         USU_000004 = 4,
+
+        /// <summary>
+        /// Permissao para editar compra em Tela de calculos.
+        /// </summary>
+        [Description("Permissao para fazer alterações em Tela de calculos.")]
+        USU_000005 = 5,
     }
 }

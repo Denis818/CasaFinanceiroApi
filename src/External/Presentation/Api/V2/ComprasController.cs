@@ -33,6 +33,7 @@ namespace Presentation.Api.V2
             await compraRepository.Get(compra => compra.DividioPorDois).ToListAsync();
 
         [HttpPost]
+        [PermissoesFinance(EnumPermissoes.USU_000005)]
         public async Task<bool> InsertCompra(Compra compra)
         {
             compra.ValorPorParcela = compra.ValorTotal / compra.Parcelas;
@@ -41,7 +42,8 @@ namespace Presentation.Api.V2
             return await compraRepository.SaveChangesAsync();
         }
 
-        [HttpPut("{code:Guid}")]
+        [HttpPut]
+        [PermissoesFinance(EnumPermissoes.USU_000005)]
         public async Task<bool> UpdateCompra(Guid code, [FromBody] Compra compra)
         {
             var existingCompra = await compraRepository.GetByCodigoAsync(code);
@@ -61,7 +63,8 @@ namespace Presentation.Api.V2
             return await compraRepository.SaveChangesAsync();
         }
 
-        [HttpDelete("{code:Guid}")]
+        [HttpDelete]
+        [PermissoesFinance(EnumPermissoes.USU_000005)]
         public async Task<bool> DeleteCompra(Guid code)
         {
             var compra = await compraRepository.GetByCodigoAsync(code);
@@ -84,13 +87,20 @@ namespace Presentation.Api.V2
             await recebimentoRepository.Get().ToListAsync();
 
         [HttpPost("recebimentos")]
+        [PermissoesFinance(EnumPermissoes.USU_000005)]
         public async Task<bool> InsertRecebimento(Recebimento recebimento)
         {
+            if (recebimento.Data.Date > DateTime.Now)
+            {
+                Notificar(EnumTipoNotificacao.ClientError, "Data não pode ser futura.");
+                return false;
+            }
             await recebimentoRepository.InsertAsync(recebimento);
             return await recebimentoRepository.SaveChangesAsync();
         }
 
-        [HttpPut("recebimentos/{code:Guid}")]
+        [HttpPut("recebimentos")]
+        [PermissoesFinance(EnumPermissoes.USU_000005)]
         public async Task<bool> UpdateRecebimento(Guid code, [FromBody] Recebimento recebimento)
         {
             var existingRecebimento = await recebimentoRepository.GetByCodigoAsync(code);
@@ -107,7 +117,8 @@ namespace Presentation.Api.V2
             return await recebimentoRepository.SaveChangesAsync();
         }
 
-        [HttpDelete("recebimentos/{code:Guid}")]
+        [HttpDelete("recebimentos")]
+        [PermissoesFinance(EnumPermissoes.USU_000005)]
         public async Task<bool> DeleteRecebimento(Guid code)
         {
             var recebimento = await recebimentoRepository.GetByCodigoAsync(code);

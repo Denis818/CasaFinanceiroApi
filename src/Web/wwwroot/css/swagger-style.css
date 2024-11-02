@@ -6,6 +6,10 @@
     display: none;
 }
 
+.swagger-ui svg:not(:root) {
+    display: none;
+}
+
 .swagger-ui .topbar a {
     max-width: 470px
 }

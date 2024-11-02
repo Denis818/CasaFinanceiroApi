@@ -29,7 +29,7 @@ namespace Domain.Converters.DatesTimes
 
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.ToString(DateFormat, new CultureInfo("pt-BR")));
+            writer.WriteStringValue(value.ToString("d 'de' MMM 'de' yyyy", new CultureInfo("pt-BR")));
         }
     }
 
