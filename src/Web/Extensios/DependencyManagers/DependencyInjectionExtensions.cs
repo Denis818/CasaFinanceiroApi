@@ -15,19 +15,21 @@ using Data.Repository.Despesas;
 using Data.Repository.User;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Repositories.Categorias;
-using Domain.Interfaces.Repositories.Compras;
+using Domain.Interfaces.Repositories.Cobrancas;
 using Domain.Interfaces.Repositories.GrupoFaturas;
 using Domain.Interfaces.Repositories.ListaCompras;
 using Domain.Interfaces.Repositories.Membros;
+using Domain.Interfaces.Repositories.Permissoes;
 using Domain.Interfaces.Repositories.Users;
 using Domain.Interfaces.Services.Despesa;
 using Domain.Interfaces.Utilities;
 using Domain.Services;
 using Infraestructure.Data.Configurations;
 using Infraestructure.Data.Repository;
-using Infraestructure.Data.Repository.Compras;
+using Infraestructure.Data.Repository.Cobrancas;
 using Infraestructure.Data.Repository.ListaCompras;
 using Infraestructure.Data.Repository.Membros;
+using Infraestructure.Data.Repository.Permissoes;
 using Presentation.ModelState;
 using Presentation.ModelState.Interface;
 using Web.Middleware;
@@ -46,6 +48,7 @@ namespace Web.Extensios.DependencyManagers
         public static void AddDependecyRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IPermissaoRepository, PermissaoRepository>();
             services.AddScoped<IDespesaRepository, DespesaRepository>();
             services.AddScoped<IProdutoListaComprasRepository, ProdutoListaComprasRepository>();
             services.AddScoped<IMembroRepository, MembroRepository>();
@@ -53,8 +56,8 @@ namespace Web.Extensios.DependencyManagers
             services.AddScoped<IGrupoFaturaRepository, GrupoFaturaRepository>();
             services.AddScoped<IStatusFaturaRepository, StatusFaturaRepository>();
             services.AddScoped<IParametroDeAlertaDeGastosRepository, ParametroDeAlertaDeGastosRepository>();
-            services.AddScoped<ICompraRepository, CompraRepository>();
-            services.AddScoped<IRecebimentoRepository, RecebimentoRepository>();
+            services.AddScoped<ICobrancaRepository, CobrancaRepository>();
+            services.AddScoped<IPagamentoRepository, PagamentoRepository>();
         }
 
         public static void AddDependecyDomainServices(this IServiceCollection services)

@@ -1,8 +1,8 @@
 ﻿using Domain.Models.Base;
 
-namespace Domain.Models.Compras
+namespace Domain.Models.Cobrancas
 {
-    public class Compra : EntityBase
+    public class Cobranca : EntityBase
     {
         public int Id { get; set; }
         public string Nome { get; set; }

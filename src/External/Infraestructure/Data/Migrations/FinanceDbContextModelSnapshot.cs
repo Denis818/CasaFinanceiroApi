@@ -49,7 +49,7 @@ namespace Data.Migrations
                     b.ToTable("Categorias", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.Compras.Compra", b =>
+            modelBuilder.Entity("Domain.Models.Cobrancas.Cobranca", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,10 +79,10 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Compras", (string)null);
+                    b.ToTable("Cobrancas", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.Compras.Recebimento", b =>
+            modelBuilder.Entity("Domain.Models.Cobrancas.Pagamento", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,7 +102,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Recebimentos", (string)null);
+                    b.ToTable("Pagamentos", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Despesas.Despesa", b =>

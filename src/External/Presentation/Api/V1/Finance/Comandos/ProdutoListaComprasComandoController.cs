@@ -20,17 +20,17 @@ namespace Presentation.Api.V1.Finance.Comandos
         : MainController(service)
     {
         [HttpPost]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.LISTACOMPRA_000001)]
         public async Task<bool> PostAsync(ProdutoListaComprasCommandDto item) =>
               await ProdutoListaComprasCommandService.InsertAsync(item);
 
         [HttpPut]
-        [PermissoesFinance(EnumPermissoes.USU_000002)]
+        [PermissoesFinance(EnumPermissoes.LISTACOMPRA_000002)]
         public async Task<bool> PutAsync(Guid code, ProdutoListaComprasCommandDto item) =>
             await ProdutoListaComprasCommandService.UpdateAsync(code, item);
 
         [HttpDelete]
-        [PermissoesFinance(EnumPermissoes.USU_000003)]
+        [PermissoesFinance(EnumPermissoes.LISTACOMPRA_000003)]
         public async Task<bool> DeleteAsync(Guid code) => await ProdutoListaComprasCommandService.DeleteAsync(code);
 
     }

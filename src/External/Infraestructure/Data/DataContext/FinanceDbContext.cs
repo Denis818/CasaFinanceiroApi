@@ -1,5 +1,5 @@
 ﻿using Domain.Models.Categorias;
-using Domain.Models.Compras;
+using Domain.Models.Cobrancas;
 using Domain.Models.Despesas;
 using Domain.Models.GrupoFaturas;
 using Domain.Models.ListaCompras;
@@ -22,8 +22,8 @@ namespace Data.DataContext
         public DbSet<Membro> Membros { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Permissao> Permissoes { get; set; }
-        public DbSet<Recebimento> Recebimentos { get; set; }
-        public DbSet<Compra> Compras { get; set; }
+        public DbSet<Pagamento> Pagamentos { get; set; }
+        public DbSet<Cobranca> Cobrancas { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

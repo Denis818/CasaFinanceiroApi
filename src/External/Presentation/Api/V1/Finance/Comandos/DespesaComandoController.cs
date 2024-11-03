@@ -23,27 +23,27 @@ namespace Presentation.Api.V1.Finance.Comandos
     ) : MainController(service)
     {
         [HttpPost]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.DESPESA_000001)]
         public async Task<bool> PostAsync(DespesaCommandDto vendaDto) =>
             await _despesaComandoService.InsertAsync(vendaDto);
 
         [HttpPut]
-        [PermissoesFinance(EnumPermissoes.USU_000002)]
+        [PermissoesFinance(EnumPermissoes.DESPESA_000002)]
         public async Task<bool> PutAsync(Guid code, DespesaCommandDto vendaDto) =>
             await _despesaComandoService.UpdateAsync(code, vendaDto);
 
         [HttpDelete]
-        [PermissoesFinance(EnumPermissoes.USU_000003)]
+        [PermissoesFinance(EnumPermissoes.DESPESA_000003)]
         public async Task<bool> DeleteAsync(Guid code) => await _despesaComandoService.DeleteAsync(code);
 
         [HttpPost("inserir-lote")]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.DESPESA_000001)]
         public async Task<bool> PostRangeAsync(
             IAsyncEnumerable<DespesaCommandDto> vendaDto
         ) => await _despesaComandoService.InsertRangeAsync(vendaDto);
 
         [HttpPut("parametro-alerta-gastos")]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.DESPESA_000004)]
         public async Task<bool> PutParametroDeAlertaDeGastosAsync(
             List<ParametroDeAlertaDeGastosCommandDto> parametroDeAlertaDeGastosDto
         ) => await _parametroDeAlertaDeGastosCommand.Update(parametroDeAlertaDeGastosDto);

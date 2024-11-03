@@ -1,14 +1,14 @@
-﻿using Domain.Models.Compras;
+﻿using Domain.Models.Cobrancas;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infraestructure.Data.Mappings.Compras
 {
-    internal class CompraMapping : IEntityTypeConfiguration<Compra>
+    internal class CompraMapping : IEntityTypeConfiguration<Cobranca>
     {
-        public void Configure(EntityTypeBuilder<Compra> builder)
+        public void Configure(EntityTypeBuilder<Cobranca> builder)
         {
-            builder.ToTable("Compras");
+            builder.ToTable("Cobrancas");
 
             builder.HasKey(c => c.Id);
 

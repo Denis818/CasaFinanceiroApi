@@ -29,7 +29,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 dbContext.Database.SetConnectionString(company.ConnectionString);
                 dbContext.Database.Migrate();
 
-                PrepareDataBaseExtensions.PrepareDataBase(
+                new PrepareDataBaseExtensions().PrepareDataBase(
                     scope.ServiceProvider,
                     company.NomeDominio
                 );

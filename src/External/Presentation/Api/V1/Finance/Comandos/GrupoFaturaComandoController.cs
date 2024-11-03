@@ -21,22 +21,22 @@ namespace Presentation.Api.V1.Finance.Comandos
         IGrupoFaturaCommandService _grupoFaturaComandoService) : MainController(service)
     {
         [HttpPost]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.GRUPOFATURA_000001)]
         public async Task<bool> PostAsync(GrupoFaturaCommandDto grupoFaturaDto) =>
             await _grupoFaturaComandoService.InsertAsync(grupoFaturaDto);
 
         [HttpPut]
-        [PermissoesFinance(EnumPermissoes.USU_000002)]
+        [PermissoesFinance(EnumPermissoes.GRUPOFATURA_000002)]
         public async Task<bool> PutAsync(Guid code, GrupoFaturaCommandDto grupoFaturaDto) =>
             await _grupoFaturaComandoService.UpdateAsync(code, grupoFaturaDto);
 
         [HttpDelete]
-        [PermissoesFinance(EnumPermissoes.USU_000003)]
+        [PermissoesFinance(EnumPermissoes.GRUPOFATURA_000003)]
         public async Task<bool> DeleteAsync(Guid code) => await _grupoFaturaComandoService.DeleteAsync(code);
 
         [HttpPut("status-fatura")]
         [GetIdGroupInHeaderFilter]
-        [PermissoesFinance(EnumPermissoes.USU_000002)]
+        [PermissoesFinance(EnumPermissoes.STATUSFATURA_000002)]
         public async Task<bool> PutStatusFaturaAsync(
             EnumFaturaTipo faturaNome,
             EnumStatusFatura status

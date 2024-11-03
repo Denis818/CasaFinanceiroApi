@@ -2,9 +2,9 @@
 using Domain.Models.Base;
 using System.Text.Json.Serialization;
 
-namespace Domain.Models.Compras
+namespace Domain.Models.Cobrancas
 {
-    public class Recebimento : EntityBase
+    public class Pagamento : EntityBase
     {
         public int Id { get; set; }
 

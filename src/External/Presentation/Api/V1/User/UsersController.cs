@@ -37,7 +37,26 @@ namespace Presentation.Api.V1.User
         public UserInfoDto UserInfo() =>
             new(
                 HttpContext.User.Identity.Name,
-                _authService.VerificarPermissao(EnumPermissoes.USU_000001)
+                _authService.VerificarPermissao(
+                    EnumPermissoes.CATEGORIA_000001,
+                    EnumPermissoes.CATEGORIA_000002,
+                    EnumPermissoes.CATEGORIA_000003,
+                    EnumPermissoes.MEMBRO_000001,
+                    EnumPermissoes.MEMBRO_000002,
+                    EnumPermissoes.MEMBRO_000003,
+                    EnumPermissoes.DESPESA_000001,
+                    EnumPermissoes.DESPESA_000002,
+                    EnumPermissoes.DESPESA_000003,
+                    EnumPermissoes.GRUPOFATURA_000001,
+                    EnumPermissoes.GRUPOFATURA_000002,
+                    EnumPermissoes.GRUPOFATURA_000003,
+                    EnumPermissoes.STATUSFATURA_000001,
+                    EnumPermissoes.STATUSFATURA_000002,
+                    EnumPermissoes.STATUSFATURA_000003,
+                    EnumPermissoes.LISTACOMPRA_000001,
+                    EnumPermissoes.LISTACOMPRA_000002,
+                    EnumPermissoes.LISTACOMPRA_000003
+                )
             );
     }
 }

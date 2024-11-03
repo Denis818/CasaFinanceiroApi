@@ -1,14 +1,14 @@
-﻿using Domain.Models.Compras;
+﻿using Domain.Models.Cobrancas;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infraestructure.Data.Mappings.Compras
 {
-    internal class RecebimentoMapping : IEntityTypeConfiguration<Recebimento>
+    internal class RecebimentoMapping : IEntityTypeConfiguration<Pagamento>
     {
-        public void Configure(EntityTypeBuilder<Recebimento> builder)
+        public void Configure(EntityTypeBuilder<Pagamento> builder)
         {
-            builder.ToTable("Recebimentos");
+            builder.ToTable("Pagamentos");
 
             builder.HasKey(r => r.Id);
 

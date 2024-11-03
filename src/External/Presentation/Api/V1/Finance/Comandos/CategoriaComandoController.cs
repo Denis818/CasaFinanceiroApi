@@ -22,17 +22,17 @@ namespace Presentation.Api.V1.Finance.Comandos
     {
         #region CRUD
         [HttpPost]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.CATEGORIA_000001)]
         public async Task<bool> PostAsync(CategoriaCommandDto categoriaDto) =>
             await _categoriaComandoServices.InsertAsync(categoriaDto);
 
         [HttpPut]
-        [PermissoesFinance(EnumPermissoes.USU_000002)]
+        [PermissoesFinance(EnumPermissoes.CATEGORIA_000002)]
         public async Task<bool> PutAsync(Guid code, CategoriaCommandDto categoriaDto) =>
             await _categoriaComandoServices.UpdateAsync(code, categoriaDto);
 
         [HttpDelete]
-        [PermissoesFinance(EnumPermissoes.USU_000003)]
+        [PermissoesFinance(EnumPermissoes.CATEGORIA_000003)]
         public async Task<bool> DeleteAsync(Guid code) => await _categoriaComandoServices.DeleteAsync(code);
         #endregion
     }

@@ -7,6 +7,7 @@ using Application.Resources.Messages;
 using Domain.Converters.DatesTimes;
 using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
+using Domain.Interfaces.Repositories.Permissoes;
 using Domain.Interfaces.Repositories.Users;
 using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,11 @@ using System.Text;
 
 namespace Application.Commands.Services
 {
-    public class AuthCommandService(IServiceProvider service, IConfiguration _configuration)
+    public class AuthCommandService(
+        IServiceProvider service,
+        IConfiguration _configuration,
+        IPermissaoRepository _permissaoRepository
+    )
         : BaseCommandService<Usuario, UserCommandDto, IUsuarioRepository>(service),
             IAuthCommandService
     {
@@ -72,15 +77,27 @@ namespace Application.Commands.Services
                 .Include(p => p.Permissoes)
                 .FirstOrDefaultAsync();
 
+            if (usuario == null)
+            {
+                throw new Exception("Usuário não encontrado.");
+            }
+
             foreach (var permissao in userPermissao.Permissoes)
             {
-                var possuiPermissao = usuario
-                    .Permissoes.Where(p => p.Descricao == permissao.ToString())
-                    .FirstOrDefault();
+                var permissaoExistente = await _permissaoRepository
+                    .Get(p => p.Descricao == permissao.ToString())
+                    .FirstOrDefaultAsync();
 
-                if (possuiPermissao is null)
+                if (permissaoExistente == null)
                 {
-                    usuario.Permissoes.Add(new Permissao { Descricao = permissao.ToString() });
+                    permissaoExistente = new Permissao { Descricao = permissao.ToString() };
+                    await _permissaoRepository.InsertAsync(permissaoExistente);
+                    await _permissaoRepository.SaveChangesAsync();
+                }
+
+                if (!usuario.Permissoes.Any(up => up.Descricao == permissaoExistente.Descricao))
+                {
+                    usuario.Permissoes.Add(permissaoExistente);
                 }
             }
 

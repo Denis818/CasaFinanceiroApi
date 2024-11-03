@@ -23,7 +23,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
 {
     public class PrepareDataBaseExtensions
     {
-        public static void PrepareDataBase(IServiceProvider service, string nomeDominio)
+        public void PrepareDataBase(IServiceProvider service, string nomeDominio)
         {
             PrepareUserMaster(service, nomeDominio);
             PrepararVisitante(service);
@@ -34,13 +34,13 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             PrepararProdutoListaCompras(service).Wait();
         }
 
-        private static void PrepareUserMaster(IServiceProvider service, string nomeDominio)
+        private void PrepareUserMaster(IServiceProvider service, string nomeDominio)
         {
             var usuarioRepository = service.GetRequiredService<IUsuarioRepository>();
             var authService = service.GetRequiredService<IAuthCommandService>();
 
             string email = "master@gmail.com";
-            string senha = "master@123456";
+            string senha = "Master@123456";
 
             if (nomeDominio.Contains("dev") || nomeDominio.Contains("railway"))
             {
@@ -61,12 +61,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 Permissoes = []
             };
 
-            var permissoes = new EnumPermissoes[]
-            {
-                EnumPermissoes.USU_000001,
-                EnumPermissoes.USU_000002,
-                EnumPermissoes.USU_000003,
-            };
+            var permissoes = PrepararPermissoes();
 
             usuarioRepository.InsertAsync(usuario).Wait();
             usuarioRepository.SaveChangesAsync().Wait();
@@ -76,7 +71,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 .Wait();
         }
 
-        private static void PrepararVisitante(IServiceProvider service)
+        private void PrepararVisitante(IServiceProvider service)
         {
             var usuarioRepository = service.GetRequiredService<IUsuarioRepository>();
             var authService = service.GetRequiredService<IAuthCommandService>();
@@ -101,7 +96,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             usuarioRepository.SaveChangesAsync().Wait();
         }
 
-        private static async Task PrepararCategorias(IServiceProvider service)
+        private async Task PrepararCategorias(IServiceProvider service)
         {
             var categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
 
@@ -125,7 +120,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             }
         }
 
-        private static async Task PrepararMembros(IServiceProvider service)
+        private async Task PrepararMembros(IServiceProvider service)
         {
             var memberRepository = service.GetRequiredService<IMembroRepository>();
 
@@ -174,7 +169,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             }
         }
 
-        private static async Task PrepararGruposFaturas(IServiceProvider service)
+        private async Task PrepararGruposFaturas(IServiceProvider service)
         {
             var grupoFaturaRepository = service.GetRequiredService<IGrupoFaturaRepository>();
 
@@ -213,7 +208,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             }
         }
 
-        private static async Task PrepararParametroDeAlertaDeGastos(IServiceProvider service)
+        private async Task PrepararParametroDeAlertaDeGastos(IServiceProvider service)
         {
             var parametroDeAlertaDeGastosRepository =
                 service.GetRequiredService<IParametroDeAlertaDeGastosRepository>();
@@ -251,9 +246,10 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             }
         }
 
-        private static async Task PrepararProdutoListaCompras(IServiceProvider service)
+        private async Task PrepararProdutoListaCompras(IServiceProvider service)
         {
-            var ProdutoListaComprasRepository = service.GetRequiredService<IProdutoListaComprasRepository>();
+            var ProdutoListaComprasRepository =
+                service.GetRequiredService<IProdutoListaComprasRepository>();
 
             var list = await ProdutoListaComprasRepository.Get().ToListAsync();
 
@@ -287,6 +283,55 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 await ProdutoListaComprasRepository.InsertRangeAsync(itensIniciais);
                 await ProdutoListaComprasRepository.SaveChangesAsync();
             }
+        }
+
+        private EnumPermissoes[] PrepararPermissoes()
+        {
+            return
+            [
+                // Categoria
+                EnumPermissoes.CATEGORIA_000001,
+                EnumPermissoes.CATEGORIA_000002,
+                EnumPermissoes.CATEGORIA_000003,
+
+                // Membro
+                EnumPermissoes.MEMBRO_000001,
+                EnumPermissoes.MEMBRO_000002,
+                EnumPermissoes.MEMBRO_000003,
+
+                // Despesa
+                EnumPermissoes.DESPESA_000001,
+                EnumPermissoes.DESPESA_000002,
+                EnumPermissoes.DESPESA_000003,
+                EnumPermissoes.DESPESA_000004,
+                 
+                // Grupo Fatura
+                EnumPermissoes.GRUPOFATURA_000001,
+                EnumPermissoes.GRUPOFATURA_000002,
+                EnumPermissoes.GRUPOFATURA_000003,
+
+                // Status Fatura
+                EnumPermissoes.STATUSFATURA_000001,
+                EnumPermissoes.STATUSFATURA_000002,
+                EnumPermissoes.STATUSFATURA_000003,
+
+                // Lista de Compras
+                EnumPermissoes.LISTACOMPRA_000001,
+                EnumPermissoes.LISTACOMPRA_000002,
+                EnumPermissoes.LISTACOMPRA_000003,
+
+                ////Cobrtança
+                //EnumPermissoes.COBRANCA_000001,
+                //EnumPermissoes.COBRANCA_000002,
+                //EnumPermissoes.COBRANCA_000003,
+                //EnumPermissoes.COBRANCA_000004,
+
+                ////Pagamento
+                //EnumPermissoes.PAGAMENTO_000001,
+                //EnumPermissoes.PAGAMENTO_000002,
+                //EnumPermissoes.PAGAMENTO_000003,
+                //EnumPermissoes.PAGAMENTO_000004,
+            ];
         }
     }
 }
