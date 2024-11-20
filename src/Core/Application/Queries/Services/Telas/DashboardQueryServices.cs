@@ -302,7 +302,6 @@ namespace Application.Queries.Services.Telas
         {
             List<MembroDto> todosMembros = await _membroRepository
                 .Get(m => m.DataInicio <= _grupoFatura.DataCriacao)
-                .AsNoTracking()
                 .Select(m => m.MapToDTO())
                 .ToListAsync();
 
