@@ -25,9 +25,9 @@ namespace Data.Repository.Categorias
             }
         }
 
-        public async Task<bool> IdentificarCategoriaParaAcaoAsync(Guid codeCategoria)
+        public bool IdentificarCategoriaParaAcaoAsync(Guid codeCategoria)
         {
-            var categoriaIds = await GetCods.GetCategoriaCodesAsync(_service);
+            var categoriaIds = GetCods.CategoriaCod;
 
             var naoEhAlteravel =
                 codeCategoria == categoriaIds.CodAluguel

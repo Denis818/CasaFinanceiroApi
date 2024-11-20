@@ -16,9 +16,9 @@ namespace Infraestructure.Data.Repository.Membros
         public async Task<Membro> ExisteAsync(string nome) =>
             await Get(d => d.Nome == nome).FirstOrDefaultAsync();
 
-        public async Task<bool> ValidaMembroParaAcao(Guid codeMembro)
+        public bool ValidaMembroParaAcao(Guid codeMembro)
         {
-            var membroI = await GetCods.GetMembersIds(_service);
+            var membroI = GetCods.MembroCod;
 
             var ehAlteravel =
                 codeMembro == membroI.CodJhon

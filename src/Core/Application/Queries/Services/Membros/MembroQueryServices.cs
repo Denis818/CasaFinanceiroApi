@@ -95,7 +95,7 @@ namespace Application.Queries.Services
         )
         {
             var resumoMensal = await _dashboardConsultaServices.GetDespesasDivididasMensal();
-            var membroIds = await GetCods.GetMembersIds(_service);
+            var membroIds = GetCods.MembroCod;
 
             double valorPorMembro =
                 resumoMensal

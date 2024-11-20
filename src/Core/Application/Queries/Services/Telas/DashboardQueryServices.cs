@@ -37,7 +37,8 @@ namespace Application.Queries.Services.Telas
         private readonly IDespesaDomainServices _despesaDomainServices;
 
         private static MembroIdDto _membroId;
-        private readonly GrupoFaturaDto _grupoFatura;
+        private readonly Lazy<GrupoFaturaDto> _lazyGrupoFatura;
+        protected GrupoFaturaDto _grupoFatura => _lazyGrupoFatura.Value;
 
         public DashboardQueryServices(
             IServiceProvider service,
@@ -51,8 +52,11 @@ namespace Application.Queries.Services.Telas
             _membroRepository = membroRepository;
             _despesaDomainServices = despesaDomainServices;
 
-            _membroId ??= GetCods.GetMembersIds(service).Result;
-            _grupoFatura = _grupoFaturaRepository.GetByCodigoAsync(_grupoCode).Result?.MapToDTO();
+            _membroId ??= GetCods.MembroCod;
+
+            _lazyGrupoFatura = new Lazy<GrupoFaturaDto>(
+                () => _grupoFaturaRepository.GetByCodigoAsync(_grupoCode).Result?.MapToDTO()
+            );
         }
 
         protected override DespesaDto MapToDTO(Despesa entity) => entity.MapToDTO();
@@ -80,7 +84,6 @@ namespace Application.Queries.Services.Telas
 
             var despesasPorGrupo = await _repository
                 .Get(despesa => despesa.GrupoFatura.Ano == ano)
-                .AsNoTracking()
                 .GroupBy(d => d.GrupoFatura.Nome)
                 .Select(group => new DespesasPorGrupoQueryDto
                 {

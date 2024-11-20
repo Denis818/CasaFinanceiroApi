@@ -1,8 +1,6 @@
 ﻿using Domain.Dtos;
 using Domain.Interfaces.Repositories.Categorias;
 using Domain.Interfaces.Repositories.Membros;
-using Domain.Models.Categorias;
-using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,8 +8,8 @@ namespace Application.Constantes
 {
     public class GetCods
     {
-        public static List<Membro> Membros;
-        public static List<Categoria> Categorias;
+        public static CategoriaCodsDto CategoriaCod { get; private set; }
+        public static MembroIdDto MembroCod { get; private set; }
 
         private static readonly string[] MembrosArray = ["Jhon", "Peu", "Laila"];
 
@@ -23,17 +21,19 @@ namespace Application.Constantes
             "Conta de Luz"
         ];
 
-        public static async Task<MembroIdDto> GetMembersIds(IServiceProvider service)
+        public static async Task GetMembersIds(IServiceCollection services)
         {
-            var memberRepo = service.GetRequiredService<IMembroRepository>();
+            using var scope = services.BuildServiceProvider().CreateScope();
 
-            Membros ??= await memberRepo.Get(m => MembrosArray.Contains(m.Nome)).ToListAsync();
+            var memberRepo = scope.ServiceProvider.GetRequiredService<IMembroRepository>();
 
-            Guid? codeJhon = Membros.FirstOrDefault(c => c.Nome.StartsWith("Jhon"))?.Code;
-            Guid? codePeu = Membros.FirstOrDefault(c => c.Nome.StartsWith("Peu"))?.Code;
-            Guid? codeLaila = Membros.FirstOrDefault(c => c.Nome.StartsWith("Laila"))?.Code;
+            var membros = await memberRepo.Get(m => MembrosArray.Contains(m.Nome)).ToListAsync();
 
-            return new MembroIdDto
+            Guid? codeJhon = membros.FirstOrDefault(c => c.Nome.StartsWith("Jhon"))?.Code;
+            Guid? codePeu = membros.FirstOrDefault(c => c.Nome.StartsWith("Peu"))?.Code;
+            Guid? codeLaila = membros.FirstOrDefault(c => c.Nome.StartsWith("Laila"))?.Code;
+
+            MembroCod = new MembroIdDto
             {
                 CodJhon = codeJhon ??= new Guid("00000000-0000-0000-0000-000000000000"),
                 CodPeu = codePeu ??= new Guid("00000000-0000-0000-0000-000000000000"),
@@ -41,21 +41,22 @@ namespace Application.Constantes
             };
         }
 
-        public static async Task<CategoriaCodsDto> GetCategoriaCodesAsync(IServiceProvider service)
+        public static async Task GetCategoriaCodesAsync(IServiceCollection services)
         {
-            var categoriaRepo = service.GetRequiredService<ICategoriaRepository>();
+            using var scope = services.BuildServiceProvider().CreateScope();
+            var categoriaRepo = scope.ServiceProvider.GetRequiredService<ICategoriaRepository>();
 
-            Categorias ??= await categoriaRepo
+            var categorias = await categoriaRepo
                 .Get()
                 .Where(c => CategoriasArray.Contains(c.Descricao))
                 .ToListAsync();
 
-            var idAlmoco = Categorias.FirstOrDefault(c => c.Descricao == "Almoço/Janta");
-            var idAluguel = Categorias.FirstOrDefault(c => c.Descricao == "Aluguel");
-            var idCondominio = Categorias.FirstOrDefault(c => c.Descricao == "Condomínio");
-            var idContaDeLuz = Categorias.FirstOrDefault(c => c.Descricao == "Conta de Luz");
+            var idAlmoco = categorias.FirstOrDefault(c => c.Descricao == "Almoço/Janta");
+            var idAluguel = categorias.FirstOrDefault(c => c.Descricao == "Aluguel");
+            var idCondominio = categorias.FirstOrDefault(c => c.Descricao == "Condomínio");
+            var idContaDeLuz = categorias.FirstOrDefault(c => c.Descricao == "Conta de Luz");
 
-            return new CategoriaCodsDto
+            CategoriaCod = new CategoriaCodsDto
             {
                 CodAluguel = idAluguel.Code,
                 CodCondominio = idCondominio.Code,

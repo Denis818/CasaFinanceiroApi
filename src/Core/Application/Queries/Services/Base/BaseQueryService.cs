@@ -46,7 +46,7 @@ namespace Application.Queries.Services.Base
                 ?? new Guid("00000000-0000-0000-0000-000000000000")
             );
 
-            _categoriaIds ??= GetCods.GetCategoriaCodesAsync(service).Result;
+            _categoriaIds ??= GetCods.CategoriaCod;
 
             _lazyQueryDespesasPorGrupo = new Lazy<IList<Despesa>>(
                 () =>

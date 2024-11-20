@@ -64,7 +64,7 @@ namespace Application.Commands.Services
             if (categoria.Descricao == categoriaDto.Descricao)
                 return false;
 
-            bool isValid = await _repository.IdentificarCategoriaParaAcaoAsync(categoria.Code);
+            bool isValid = _repository.IdentificarCategoriaParaAcaoAsync(categoria.Code);
 
             if (isValid)
             {
@@ -121,7 +121,7 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            bool isValid = await _repository.IdentificarCategoriaParaAcaoAsync(categoria.Code);
+            bool isValid =  _repository.IdentificarCategoriaParaAcaoAsync(categoria.Code);
 
             if (isValid)
             {

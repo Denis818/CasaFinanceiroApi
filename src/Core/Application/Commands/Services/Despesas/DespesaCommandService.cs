@@ -24,9 +24,8 @@ namespace Application.Commands.Services
         : BaseCommandService<Despesa, DespesaCommandDto, IDespesaRepository>(service),
             IDespesaCommandService
     {
-        private readonly IServiceProvider _service = service;
 
-        private readonly CategoriaCodsDto _categoriaIds = GetCods.GetCategoriaCodesAsync(service).Result;
+        private readonly CategoriaCodsDto _categoriaIds = GetCods.CategoriaCod;
 
         protected override Despesa MapToEntity(DespesaCommandDto entity) => entity.MapToEntity();
 

@@ -76,7 +76,7 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            if (await _repository.ValidaMembroParaAcao(membro.Code))
+            if (_repository.ValidaMembroParaAcao(membro.Code))
             {
                 Notificar(EnumTipoNotificacao.ClientError, Message.AvisoMembroImutavel);
                 return false;
@@ -122,7 +122,7 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            if (await _repository.ValidaMembroParaAcao(membro.Code))
+            if (_repository.ValidaMembroParaAcao(membro.Code))
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.AvisoMembroImutavel);
                 return false;
