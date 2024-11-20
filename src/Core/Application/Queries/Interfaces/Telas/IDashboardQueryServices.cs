@@ -4,9 +4,9 @@ namespace Application.Queries.Interfaces.Telas
 {
     public interface IDashboardQueryServices
     {
-        Task<byte[]> ExportarPdfRelatorioDeDespesaCasa();
-        Task<byte[]> ExportarPdfRelatorioDeDespesaMoradia();
-        Task<DespesasDivididasMensalQueryDto> GetDespesasDivididasMensalAsync();
+        byte[] ExportarPdfRelatorioDeDespesaCasa();
+        byte[] ExportarPdfRelatorioDeDespesaMoradia();
+        DespesasDivididasMensalQueryDto GetDespesasDivididasMensal();
         Task<IEnumerable<DespesasPorGrupoQueryDto>> GetDespesaGrupoParaGraficoAsync(string ano);
         Task<RelatorioGastosDoGrupoQueryDto> GetRelatorioDeGastosDoGrupoAsync();
     }

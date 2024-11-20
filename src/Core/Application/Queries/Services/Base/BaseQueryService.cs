@@ -19,8 +19,8 @@ namespace Application.Queries.Services.Base
         where TQueryDTO : BaseDto
     {
         private readonly INotifier _notificador;
-        private readonly IDespesaRepository _despesaRepository;
 
+        protected readonly IDespesaRepository _despesaRepository;
         protected readonly TIRepository _repository;
         protected readonly HttpContext _httpContext;
         protected readonly ICategoriaRepository _categoriaRepository;
@@ -28,8 +28,8 @@ namespace Application.Queries.Services.Base
         protected readonly Guid _grupoCode;
         protected static CategoriaCodsDto _categoriaIds;
 
-        private readonly Lazy<IQueryable<Despesa>> _lazyQueryDespesasPorGrupo;
-        protected IQueryable<Despesa> QueryDespesasPorGrupo => _lazyQueryDespesasPorGrupo.Value;
+        private readonly Lazy<IList<Despesa>> _lazyQueryDespesasPorGrupo;
+        protected IList<Despesa> QueryDespesasPorGrupo => _lazyQueryDespesasPorGrupo.Value;
 
         public BaseQueryService(IServiceProvider service)
         {
@@ -47,13 +47,15 @@ namespace Application.Queries.Services.Base
 
             _categoriaIds ??= _categoriaRepository.GetCategoriaCodesAsync().Result;
 
-            _lazyQueryDespesasPorGrupo = new Lazy<IQueryable<Despesa>>(
+            _lazyQueryDespesasPorGrupo = new Lazy<IList<Despesa>>(
                 () =>
                     _despesaRepository
                         .Get(d => d.GrupoFaturaCode == _grupoCode)
                         .Include(c => c.Categoria)
                         .Include(g => g.GrupoFatura)
+                        .Include(g => g.GrupoFatura.StatusFaturas).ToListAsync().Result
             );
+
         }
 
         public void Notificar(EnumTipoNotificacao tipo, string message) =>

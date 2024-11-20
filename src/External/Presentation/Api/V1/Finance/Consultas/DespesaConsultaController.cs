@@ -36,17 +36,17 @@ namespace Presentation.Api.V1.Finance.Consultas
         ) => await dashboardConsultaServices.GetDespesaGrupoParaGraficoAsync(ano);
 
         [HttpGet("despesas-dividas-por-membro")]
-        public async Task<DespesasDivididasMensalQueryDto> GetDespesasDivididasMensalAsync() =>
-            await dashboardConsultaServices.GetDespesasDivididasMensalAsync();
+        public DespesasDivididasMensalQueryDto GetDespesasDivididasMensalAsync() =>
+            dashboardConsultaServices.GetDespesasDivididasMensal();
 
         [HttpGet("relatorio-gastos-grupo")]
         public async Task<RelatorioGastosDoGrupoQueryDto> GetRelatorioDeGastosDoGrupoAsync() =>
             await dashboardConsultaServices.GetRelatorioDeGastosDoGrupoAsync();
 
         [HttpGet("pdf-despesas-casa")]
-        public async Task<FileContentResult> ExportarPdfRelatorioDeDespesaCasa()
+        public FileContentResult ExportarPdfRelatorioDeDespesaCasa()
         {
-            byte[] pdfBytes = await dashboardConsultaServices.ExportarPdfRelatorioDeDespesaCasa();
+            byte[] pdfBytes = dashboardConsultaServices.ExportarPdfRelatorioDeDespesaCasa();
 
             var contentDisposition = new ContentDisposition
             {
@@ -60,10 +60,9 @@ namespace Presentation.Api.V1.Finance.Consultas
         }
 
         [HttpGet("pdf-despesas-moradia")]
-        public async Task<FileContentResult> ExportarPdfRelatorioDeDespesaMoradia()
+        public FileContentResult ExportarPdfRelatorioDeDespesaMoradia()
         {
-            byte[] pdfBytes =
-                await dashboardConsultaServices.ExportarPdfRelatorioDeDespesaMoradia();
+            byte[] pdfBytes = dashboardConsultaServices.ExportarPdfRelatorioDeDespesaMoradia();
 
             var contentDisposition = new ContentDisposition
             {
@@ -117,9 +116,9 @@ namespace Presentation.Api.V1.Finance.Consultas
         }
 
         [HttpGet("sugestoes-fornecedor")]
-        public async Task<IEnumerable<DespesasSugestaoDeFornecedorQueryDto>> SugestaoDeFornecedorMaisBarato(
-            int paginaAtual = 1,
-            int itensPorPagina = 10)
+        public async Task<
+            IEnumerable<DespesasSugestaoDeFornecedorQueryDto>
+        > SugestaoDeFornecedorMaisBarato(int paginaAtual = 1, int itensPorPagina = 10)
         {
             return await auditoriaComprasConsultaServices.SugestaoDeFornecedorMaisBarato(
                 paginaAtual,
@@ -128,16 +127,22 @@ namespace Presentation.Api.V1.Finance.Consultas
         }
 
         [HttpGet("sugestoes-economia")]
-        public async Task<IEnumerable<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaPorGrupoAsync() =>
-            await auditoriaComprasConsultaServices.GetSugestoesEconomiaGraficoAsync();
+        public IEnumerable<DespesasSugestaoEconomiaQueryDto> GetSugestoesEconomiaPorGrupoAsync() =>
+            auditoriaComprasConsultaServices.GetSugestoesEconomiaGrafico();
 
         #endregion
 
         #region Comparativo de Faturas
         [HttpGet("comparativo-faturas")]
-        public async Task<ActionResult<List<ComparativoFaturasQueryDto>>> GetComparativoFaturas(Guid grupoFaturaCode1, Guid grupoFaturaCode2)
+        public async Task<ActionResult<List<ComparativoFaturasQueryDto>>> GetComparativoFaturas(
+            Guid grupoFaturaCode1,
+            Guid grupoFaturaCode2
+        )
         {
-            var resultado = await comparativoFaturasQueryServices.GetComparativoFaturasAsync(grupoFaturaCode1, grupoFaturaCode2);
+            var resultado = await comparativoFaturasQueryServices.GetComparativoFaturasAsync(
+                grupoFaturaCode1,
+                grupoFaturaCode2
+            );
             return Ok(resultado);
         }
         #endregion

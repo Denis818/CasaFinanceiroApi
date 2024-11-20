@@ -71,7 +71,7 @@ namespace Application.Queries.Services
             }
 
             string message = isMoradia
-                ? await MensagemValoresMoradiaDividosAsync(pix, membro.Nome, titleMessage)
+                ? MensagemValoresMoradiaDividos(pix, membro.Nome, titleMessage)
                 : await MensagemValoresCasaDividosAsync(pix, membro, titleMessage);
 
             string encodedMessage = Uri.EscapeDataString(message);
@@ -90,7 +90,7 @@ namespace Application.Queries.Services
             string titleMessage
         )
         {
-            var resumoMensal = await _dashboardConsultaServices.GetDespesasDivididasMensalAsync();
+            var resumoMensal = _dashboardConsultaServices.GetDespesasDivididasMensal();
             var membroIds = await _repository.GetMembersIds();
 
             double valorPorMembro =
@@ -120,13 +120,13 @@ namespace Application.Queries.Services
             return title + messageBody + ConviteParaSite;
         }
 
-        private async Task<string> MensagemValoresMoradiaDividosAsync(
+        private string MensagemValoresMoradiaDividos(
             string pix,
             string membroNome,
             string titleMessage
         )
         {
-            var resumoMensal = await _dashboardConsultaServices.GetDespesasDivididasMensalAsync();
+            var resumoMensal = _dashboardConsultaServices.GetDespesasDivididasMensal();
 
             double valorPorMembro =
                 resumoMensal
