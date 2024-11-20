@@ -39,6 +39,7 @@ namespace Application.Queries.Services.Telas
                             d.GrupoFaturaCode == grupoFaturaCode1 && d.CategoriaId == categoria.Id
                         )
                         .Sum(d => d.Total),
+
                     DespesaGrupoFatura2 = despesas
                         .Where(d =>
                             d.GrupoFaturaCode == grupoFaturaCode2 && d.CategoriaId == categoria.Id
