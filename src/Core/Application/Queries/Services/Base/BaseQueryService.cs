@@ -26,8 +26,8 @@ namespace Application.Queries.Services.Base
         protected readonly ICategoriaRepository _categoriaRepository;
 
         protected readonly Guid _grupoCode;
-        protected readonly CategoriaCodsDto _categoriaIds;
-        protected readonly IQueryable<Despesa> _queryDespesasPorGrupo;
+        protected static CategoriaCodsDto _categoriaIds;
+        protected IQueryable<Despesa> _queryDespesasPorGrupo;
 
         public BaseQueryService(IServiceProvider service)
         {
@@ -38,11 +38,12 @@ namespace Application.Queries.Services.Base
             _httpContext = service.GetRequiredService<IHttpContextAccessor>().HttpContext;
             _categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
 
-            _categoriaIds = _categoriaRepository.GetCategoriaCodesAsync().Result;
             _grupoCode = (Guid)(
                 _httpContext.Items["grupo-fatura-code"]
                 ?? new Guid("00000000-0000-0000-0000-000000000000")
             );
+
+            _categoriaIds ??= _categoriaRepository.GetCategoriaCodesAsync().Result;
 
             _queryDespesasPorGrupo = _despesaRepository
                 .Get(d => d.GrupoFaturaCode == _grupoCode)

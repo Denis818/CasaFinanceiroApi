@@ -34,7 +34,7 @@ namespace Application.Queries.Services.Telas
         private readonly IMembroRepository _membroRepository;
         private readonly IDespesaDomainServices _despesaDomainServices;
 
-        private readonly MembroIdDto _membroId;
+        private static MembroIdDto _membroId;
         private readonly GrupoFaturaDto _grupoFatura;
 
         public DashboardQueryServices(
@@ -49,7 +49,7 @@ namespace Application.Queries.Services.Telas
             _membroRepository = membroRepository;
             _despesaDomainServices = despesaDomainServices;
 
-            _membroId = _membroRepository.GetMembersIds();
+            _membroId ??= _membroRepository.GetMembersIds().Result;
             _grupoFatura = _grupoFaturaRepository.GetByCodigoAsync(_grupoCode).Result?.MapToDTO();
         }
 

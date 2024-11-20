@@ -11,6 +11,14 @@ namespace Data.Repository.Categorias
         : RepositoryBase<Categoria, FinanceDbContext>(service),
             ICategoriaRepository
     {
+        private readonly string[] CategoriasArray =
+        [
+            "Almoço/Janta",
+            "Aluguel",
+            "Condomínio",
+            "Conta de Luz"
+        ];
+
         public async Task<Categoria> ExisteAsync(Guid? code = null, string nome = "")
         {
             if (nome != null)
@@ -38,12 +46,14 @@ namespace Data.Repository.Categorias
 
         public async Task<CategoriaCodsDto> GetCategoriaCodesAsync()
         {
-            var categ = Get();
+            var categorias = await Get()
+                .Where(c => CategoriasArray.Contains(c.Descricao))
+                .ToListAsync();
 
-            var idAlmoco = await categ.FirstOrDefaultAsync(c => c.Descricao == "Almoço/Janta");
-            var idAluguel = await categ.FirstOrDefaultAsync(c => c.Descricao == "Aluguel");
-            var idCondominio = await categ.FirstOrDefaultAsync(c => c.Descricao == "Condomínio");
-            var idContaDeLuz = await categ.FirstOrDefaultAsync(c => c.Descricao == "Conta de Luz");
+            var idAlmoco = categorias.FirstOrDefault(c => c.Descricao == "Almoço/Janta");
+            var idAluguel = categorias.FirstOrDefault(c => c.Descricao == "Aluguel");
+            var idCondominio = categorias.FirstOrDefault(c => c.Descricao == "Condomínio");
+            var idContaDeLuz = categorias.FirstOrDefault(c => c.Descricao == "Conta de Luz");
 
             return new CategoriaCodsDto
             {

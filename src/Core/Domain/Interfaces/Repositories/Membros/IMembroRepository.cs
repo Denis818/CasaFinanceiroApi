@@ -7,7 +7,7 @@ namespace Domain.Interfaces.Repositories.Membros
     public interface IMembroRepository : IRepositoryBase<Membro>
     {
         Task<Membro> ExisteAsync(string nome);
-        bool ValidaMembroParaAcao(Guid codeMembro);
-        MembroIdDto GetMembersIds();
+        Task<bool> ValidaMembroParaAcao(Guid codeMembro);
+        Task<MembroIdDto> GetMembersIds();
     }
 }
