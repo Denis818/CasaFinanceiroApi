@@ -71,7 +71,9 @@ namespace Application.Queries.Services.Telas
             return listaPaginada;
         }
 
-        public async Task<IEnumerable<DespesasSugestaoEconomiaQueryDto>> GetSugestoesEconomiaGraficoAsync()
+        public async Task<
+            IEnumerable<DespesasSugestaoEconomiaQueryDto>
+        > GetSugestoesEconomiaGraficoAsync()
         {
             var list = await _queryDespesasPorGrupo
                 .Where(d =>
@@ -83,15 +85,15 @@ namespace Application.Queries.Services.Telas
                 .ToListAsync();
 
             var sugestoes = list.GroupBy(d => NormalizeItemName(d.Item))
-                 .Where(g => g.Select(d => d.Fornecedor).Distinct().Count() > 1)
-                 .Select(group => new DespesasSugestaoEconomiaQueryDto
-                 {
-                     Item = group.Key,
-                     FornecedorMaisBarato = group.OrderBy(d => d.Preco).First().Fornecedor,
-                     PrecoMaisBarato = group.Min(d => d.Preco),
-                     PotencialEconomia = group.Max(d => d.Preco) - group.Min(d => d.Preco)
-                 })
-                 .Where(s => s.PotencialEconomia > 0);
+                .Where(g => g.Select(d => d.Fornecedor).Distinct().Count() > 1)
+                .Select(group => new DespesasSugestaoEconomiaQueryDto
+                {
+                    Item = group.Key,
+                    FornecedorMaisBarato = group.OrderBy(d => d.Preco).First().Fornecedor,
+                    PrecoMaisBarato = group.Min(d => d.Preco),
+                    PotencialEconomia = group.Max(d => d.Preco) - group.Min(d => d.Preco)
+                })
+                .Where(s => s.PotencialEconomia > 0);
 
             if (sugestoes.IsNullOrEmpty())
             {
@@ -103,30 +105,30 @@ namespace Application.Queries.Services.Telas
             return sugestoes;
         }
 
-        public async Task<IEnumerable<DespesasSugestaoDeFornecedorQueryDto>> SugestaoDeFornecedorMaisBarato
-            (int paginaAtual, int itensPorPagina)
+        public async Task<
+            IEnumerable<DespesasSugestaoDeFornecedorQueryDto>
+        > SugestaoDeFornecedorMaisBarato(int paginaAtual, int itensPorPagina)
         {
             List<DespesasSugestaoDeFornecedorQueryDto> sugestoes = [];
             var categorias = await _categoriaRepository.Get().ToListAsync();
 
-            var despesasSomenteCasa = _queryDespesasPorGrupo
+            var despesasSomenteCasa = await _queryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code != _categoriaIds.CodAluguel
                     && d.Categoria.Code != _categoriaIds.CodCondominio
                     && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                     && !d.Item.ToLower().Contains("compra")
                 )
-                .OrderByDescending(d => d.DataCompra);
+                .OrderByDescending(d => d.DataCompra)
+                .ToListAsync();
 
             foreach (var categoria in categorias)
             {
-                var despesasPorCategoria = await despesasSomenteCasa
-                    .Where(d => d.CategoriaCode == categoria.Code)
-                    .ToListAsync();
-
-                var itensAgrupados = despesasPorCategoria.GroupBy(d =>
-                    NormalizeItemName(d.Item)
+                var despesasPorCategoria = despesasSomenteCasa.Where(d =>
+                    d.CategoriaCode == categoria.Code
                 );
+
+                var itensAgrupados = despesasPorCategoria.GroupBy(d => NormalizeItemName(d.Item));
 
                 foreach (var grupoItem in itensAgrupados)
                 {
