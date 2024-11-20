@@ -119,6 +119,8 @@ namespace Application.Queries.Services.Telas
 
         public async Task<RelatorioGastosDoGrupoQueryDto> GetRelatorioDeGastosDoGrupoAsync()
         {
+            var queryDespesasPorGrupo = QueryDespesasPorGrupo.Include(g => g.GrupoFatura.StatusFaturas);
+
             var grupoNome = await _grupoFaturaRepository
                 .Get(g => g.Code == _grupoFatura.Code)
                 .AsNoTracking()
@@ -130,21 +132,21 @@ namespace Application.Queries.Services.Telas
                 return new();
             }
 
-            double totalGastoMoradia = QueryDespesasPorGrupo
+            double totalGastoMoradia = await queryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code == _categoriaIds.CodAluguel
                     || d.Categoria.Code == _categoriaIds.CodCondominio
                     || d.Categoria.Code == _categoriaIds.CodContaDeLuz
                 )
-                .Sum(d => d.Total);
+                .SumAsync(d => d.Total);
 
-            double totalGastosCasa = QueryDespesasPorGrupo
+            double totalGastosCasa = await queryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code != _categoriaIds.CodAluguel
                     && d.Categoria.Code != _categoriaIds.CodCondominio
                     && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                 )
-                .Sum(d => d.Total);
+                .SumAsync(d => d.Total);
 
             var totalGeral = totalGastoMoradia + totalGastosCasa;
 
@@ -186,19 +188,19 @@ namespace Application.Queries.Services.Telas
             int membrosForaJhonCount = todosMembros.Where(m => m.Code != _membroId.CodJhon).Count();
 
             // Despesas gerais Limpesa, Higiêne etc... (Fora Almoço)
-            double totalDespesaGeraisForaAlmoco = QueryDespesasPorGrupo
+            double totalDespesaGeraisForaAlmoco = await QueryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code != _categoriaIds.CodAluguel
                     && d.Categoria.Code != _categoriaIds.CodCondominio
                     && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                     && d.Categoria.Code != _categoriaIds.CodAlmoco
                 )
-                .Sum(d => d.Total);
+                .SumAsync(d => d.Total);
 
             //Total somente do almoço
-            double valorTotalAlmoco = QueryDespesasPorGrupo
+            double valorTotalAlmoco = await QueryDespesasPorGrupo
                 .Where(despesa => despesa.Categoria.Code == _categoriaIds.CodAlmoco)
-                .Sum(despesa => despesa.Total);
+                .SumAsync(despesa => despesa.Total);
 
             var custosDespesasCasa = new DespesasCustosDespesasCasaDto
             {
@@ -219,7 +221,7 @@ namespace Application.Queries.Services.Telas
         {
             var grupoListMembrosDespesa = await GetGrupoListMembrosDespesa();
 
-            var custosDespesasMoradiaDto = GetCustosDespesasMoradiaAsync();
+            var custosDespesasMoradiaDto = await GetCustosDespesasMoradiaAsync();
 
             if (
                 custosDespesasMoradiaDto.ContaDeLuz == 0
@@ -265,27 +267,27 @@ namespace Application.Queries.Services.Telas
             };
         }
 
-        private DespesasCustosMoradiaDto GetCustosDespesasMoradiaAsync()
+        private async Task<DespesasCustosMoradiaDto> GetCustosDespesasMoradiaAsync()
         {
             var listAluguel = QueryDespesasPorGrupo.Where(d =>
                 d.Categoria.Code == _categoriaIds.CodAluguel
             );
 
-            var parcelaApartamento = listAluguel
+            var parcelaApartamento = await listAluguel
                 .Where(aluguel => aluguel.Item.ToLower().Contains("ap ponto"))
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
-            var parcelaCaixa = listAluguel
+            var parcelaCaixa = await listAluguel
                 .Where(aluguel => aluguel.Item.ToLower().Contains("caixa"))
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
-            var contaDeLuz = QueryDespesasPorGrupo
+            var contaDeLuz = await QueryDespesasPorGrupo
                 .Where(despesa => despesa.Categoria.Code == _categoriaIds.CodContaDeLuz)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
-            var condominio = QueryDespesasPorGrupo
+            var condominio = await QueryDespesasPorGrupo
                 .Where(despesa => despesa.Categoria.Code == _categoriaIds.CodCondominio)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             return new DespesasCustosMoradiaDto()
             {
@@ -311,10 +313,10 @@ namespace Application.Queries.Services.Telas
                 .Where(m => m.Code != _membroId.CodPeu)
                 .ToList();
 
-            List<DespesaDto> listAluguel = QueryDespesasPorGrupo
+            List<DespesaDto> listAluguel = await QueryDespesasPorGrupo
                 .Where(d => d.Categoria.Code == _categoriaIds.CodAluguel)
                 .Select(m => m.MapToDTO())
-                .ToList();
+                .ToListAsync();
 
             return new GrupoListMembrosDespesaDto()
             {

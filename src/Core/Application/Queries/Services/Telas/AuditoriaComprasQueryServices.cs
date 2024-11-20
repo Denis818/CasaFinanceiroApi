@@ -71,15 +71,18 @@ namespace Application.Queries.Services.Telas
             return listaPaginada;
         }
 
-        public IEnumerable<DespesasSugestaoEconomiaQueryDto> GetSugestoesEconomiaGrafico()
+        public async Task<
+            IEnumerable<DespesasSugestaoEconomiaQueryDto>
+        > GetSugestoesEconomiaGraficoAsync()
         {
-            var list = QueryDespesasPorGrupo
+            var list = await QueryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code != _categoriaIds.CodAluguel
                     && d.Categoria.Code != _categoriaIds.CodCondominio
                     && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                     && !d.Item.ToLower().Contains("compra")
-                );
+                )
+                .ToListAsync();
 
             var sugestoes = list.GroupBy(d => NormalizeItemName(d.Item))
                 .Where(g => g.Select(d => d.Fornecedor).Distinct().Count() > 1)
@@ -109,14 +112,15 @@ namespace Application.Queries.Services.Telas
             List<DespesasSugestaoDeFornecedorQueryDto> sugestoes = [];
             var categorias = await _categoriaRepository.Get().ToListAsync();
 
-            var despesasSomenteCasa = QueryDespesasPorGrupo
+            var despesasSomenteCasa = await QueryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code != _categoriaIds.CodAluguel
                     && d.Categoria.Code != _categoriaIds.CodCondominio
                     && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                     && !d.Item.ToLower().Contains("compra")
                 )
-                .OrderByDescending(d => d.DataCompra);
+                .OrderByDescending(d => d.DataCompra)
+                .ToListAsync();
 
             foreach (var categoria in categorias)
             {
