@@ -18,6 +18,7 @@ using iText.Layout;
 using iText.Layout.Properties;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
 namespace Application.Queries.Services.Telas
 {
     public class DashboardQueryServices
@@ -118,41 +119,38 @@ namespace Application.Queries.Services.Telas
 
         public async Task<RelatorioGastosDoGrupoQueryDto> GetRelatorioDeGastosDoGrupoAsync()
         {
-            var queryDespesasPorGrupo = QueryDespesasPorGrupo.Include(g => g.GrupoFatura.StatusFaturas);
-
-            string grupoNome = _grupoFaturaRepository
+            var grupoNome = await _grupoFaturaRepository
                 .Get(g => g.Code == _grupoFatura.Code)
                 .AsNoTracking()
-                .FirstOrDefault()
-                ?.Nome;
+                .FirstOrDefaultAsync();
 
-            if (grupoNome.IsNullOrEmpty())
+            if (grupoNome.Nome.IsNullOrEmpty())
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.SelecioneUmGrupoDesesa);
                 return new();
             }
 
-            double totalGastoMoradia = await queryDespesasPorGrupo
+            double totalGastoMoradia = QueryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code == _categoriaIds.CodAluguel
                     || d.Categoria.Code == _categoriaIds.CodCondominio
                     || d.Categoria.Code == _categoriaIds.CodContaDeLuz
                 )
-                .SumAsync(d => d.Total);
+                .Sum(d => d.Total);
 
-            double totalGastosCasa = await queryDespesasPorGrupo
+            double totalGastosCasa = QueryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code != _categoriaIds.CodAluguel
                     && d.Categoria.Code != _categoriaIds.CodCondominio
                     && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                 )
-                .SumAsync(d => d.Total);
+                .Sum(d => d.Total);
 
             var totalGeral = totalGastoMoradia + totalGastosCasa;
 
             return new RelatorioGastosDoGrupoQueryDto
             {
-                GrupoFaturaNome = grupoNome,
+                GrupoFaturaNome = grupoNome.Nome,
                 TotalGeral = totalGeral.RoundTo(2),
                 TotalGastosCasa = totalGastosCasa.RoundTo(2),
                 TotalGastosMoradia = totalGastoMoradia.RoundTo(2),
@@ -188,19 +186,19 @@ namespace Application.Queries.Services.Telas
             int membrosForaJhonCount = todosMembros.Where(m => m.Code != _membroId.CodJhon).Count();
 
             // Despesas gerais Limpesa, Higiêne etc... (Fora Almoço)
-            double totalDespesaGeraisForaAlmoco = await QueryDespesasPorGrupo
+            double totalDespesaGeraisForaAlmoco = QueryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code != _categoriaIds.CodAluguel
                     && d.Categoria.Code != _categoriaIds.CodCondominio
                     && d.Categoria.Code != _categoriaIds.CodContaDeLuz
                     && d.Categoria.Code != _categoriaIds.CodAlmoco
                 )
-                .SumAsync(d => d.Total);
+                .Sum(d => d.Total);
 
             //Total somente do almoço
-            double valorTotalAlmoco = await QueryDespesasPorGrupo
+            double valorTotalAlmoco = QueryDespesasPorGrupo
                 .Where(despesa => despesa.Categoria.Code == _categoriaIds.CodAlmoco)
-                .SumAsync(despesa => despesa.Total);
+                .Sum(despesa => despesa.Total);
 
             var custosDespesasCasa = new DespesasCustosDespesasCasaDto
             {
@@ -221,7 +219,7 @@ namespace Application.Queries.Services.Telas
         {
             var grupoListMembrosDespesa = await GetGrupoListMembrosDespesa();
 
-            var custosDespesasMoradiaDto = await GetCustosDespesasMoradiaAsync();
+            var custosDespesasMoradiaDto = GetCustosDespesasMoradiaAsync();
 
             if (
                 custosDespesasMoradiaDto.ContaDeLuz == 0
@@ -267,27 +265,27 @@ namespace Application.Queries.Services.Telas
             };
         }
 
-        private async Task<DespesasCustosMoradiaDto> GetCustosDespesasMoradiaAsync()
+        private DespesasCustosMoradiaDto GetCustosDespesasMoradiaAsync()
         {
             var listAluguel = QueryDespesasPorGrupo.Where(d =>
                 d.Categoria.Code == _categoriaIds.CodAluguel
             );
 
-            var parcelaApartamento = await listAluguel
+            var parcelaApartamento = listAluguel
                 .Where(aluguel => aluguel.Item.ToLower().Contains("ap ponto"))
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
-            var parcelaCaixa = await listAluguel
+            var parcelaCaixa = listAluguel
                 .Where(aluguel => aluguel.Item.ToLower().Contains("caixa"))
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
-            var contaDeLuz = await QueryDespesasPorGrupo
+            var contaDeLuz = QueryDespesasPorGrupo
                 .Where(despesa => despesa.Categoria.Code == _categoriaIds.CodContaDeLuz)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
-            var condominio = await QueryDespesasPorGrupo
+            var condominio = QueryDespesasPorGrupo
                 .Where(despesa => despesa.Categoria.Code == _categoriaIds.CodCondominio)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
             return new DespesasCustosMoradiaDto()
             {
@@ -313,10 +311,10 @@ namespace Application.Queries.Services.Telas
                 .Where(m => m.Code != _membroId.CodPeu)
                 .ToList();
 
-            List<DespesaDto> listAluguel = await QueryDespesasPorGrupo
+            List<DespesaDto> listAluguel = QueryDespesasPorGrupo
                 .Where(d => d.Categoria.Code == _categoriaIds.CodAluguel)
                 .Select(m => m.MapToDTO())
-                .ToListAsync();
+                .ToList();
 
             return new GrupoListMembrosDespesaDto()
             {

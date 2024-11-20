@@ -14,14 +14,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries.Services.Telas
 {
-    public class PainelControleQueryServices(
-        IServiceProvider service,
-        IDespesaFiltroService despesaFiltro,
-        IParametroDeAlertaDeGastosRepository _parametroDeAlertaDeGastosRepository
-    )
-        : BaseQueryService<Despesa, DespesaDto, IDespesaRepository>(service),
+    public class PainelControleQueryServices
+        : BaseQueryService<Despesa, DespesaDto, IDespesaRepository>,
             IPainelControleQueryServices
     {
+        private readonly IDespesaFiltroService _despesaFiltro;
+        private readonly IParametroDeAlertaDeGastosRepository _parametroDeAlertaDeGastosRepository;
+
+        private readonly IQueryable<Despesa> _queryDespesas;
+
+        public PainelControleQueryServices(
+            IServiceProvider service,
+            IDespesaFiltroService despesaFiltro,
+            IParametroDeAlertaDeGastosRepository parametroDeAlertaDeGastosRepository
+        )
+            : base(service)
+        {
+            _despesaFiltro = despesaFiltro;
+            _parametroDeAlertaDeGastosRepository = parametroDeAlertaDeGastosRepository;
+
+            _queryDespesas = _despesaRepository
+                .Get(d => d.GrupoFaturaCode == _grupoCode)
+                .Include(c => c.Categoria)
+                .Include(g => g.GrupoFatura);
+        }
+
         protected override DespesaDto MapToDTO(Despesa entity) => entity.MapToDTO();
 
         #region Painel de Controle
@@ -33,14 +50,14 @@ namespace Application.Queries.Services.Telas
             if (string.IsNullOrEmpty(despesaFiltroDto.Filter))
             {
                 return await GetAllDespesas(
-                    QueryDespesasPorGrupo,
+                    _queryDespesas,
                     despesaFiltroDto.PaginaAtual,
                     despesaFiltroDto.ItensPorPagina
                 );
             }
 
-            var query = despesaFiltro.GetDespesasFiltradas(
-                QueryDespesasPorGrupo,
+            var query = _despesaFiltro.GetDespesasFiltradas(
+                _queryDespesas,
                 despesaFiltroDto.Filter,
                 despesaFiltroDto.TipoFiltro
             );
@@ -56,7 +73,7 @@ namespace Application.Queries.Services.Telas
 
         public async Task<(double, double)> CompararFaturaComTotalDeDespesas(double faturaCartao)
         {
-            double totalDespesas = await QueryDespesasPorGrupo
+            double totalDespesas = await _queryDespesas
                 .Where(despesa =>
                     despesa.Categoria.Code != _categoriaIds.CodAluguel
                     && despesa.Categoria.Code != _categoriaIds.CodContaDeLuz
