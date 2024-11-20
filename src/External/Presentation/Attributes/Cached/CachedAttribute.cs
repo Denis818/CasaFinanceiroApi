@@ -23,11 +23,11 @@ namespace Presentation.Attributes.Cached
             ActionExecutionDelegate next
         )
         {
-            var faturaCode = (Guid)(context.HttpContext.Items["grupo-fatura-code"] ?? new Guid("00000000-0000-0000-0000-000000000000"));
+            string grupoId = context.HttpContext.Request.Headers["grupo-fatura-code"];
 
-            if (FaturaCode != faturaCode)
+            if (Guid.TryParse(grupoId, out Guid grupoFaturasId) && FaturaCode != grupoFaturasId)
             {
-                FaturaCode = faturaCode;
+                FaturaCode = grupoFaturasId;
                 CleanCache();
             }
 
