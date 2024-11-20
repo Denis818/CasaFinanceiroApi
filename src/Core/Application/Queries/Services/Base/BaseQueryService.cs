@@ -29,6 +29,7 @@ namespace Application.Queries.Services.Base
         protected static CategoriaCodsDto _categoriaIds;
 
         private readonly Lazy<IQueryable<Despesa>> _lazyQueryDespesasPorGrupo;
+
         protected IQueryable<Despesa> QueryDespesasPorGrupo => _lazyQueryDespesasPorGrupo.Value;
 
         public BaseQueryService(IServiceProvider service)
