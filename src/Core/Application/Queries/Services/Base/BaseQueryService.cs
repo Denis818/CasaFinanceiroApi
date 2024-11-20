@@ -27,7 +27,9 @@ namespace Application.Queries.Services.Base
 
         protected readonly Guid _grupoCode;
         protected static CategoriaCodsDto _categoriaIds;
-        protected IQueryable<Despesa> _queryDespesasPorGrupo;
+
+        private readonly Lazy<IQueryable<Despesa>> _lazyQueryDespesasPorGrupo;
+        protected IQueryable<Despesa> QueryDespesasPorGrupo => _lazyQueryDespesasPorGrupo.Value;
 
         public BaseQueryService(IServiceProvider service)
         {
@@ -45,10 +47,13 @@ namespace Application.Queries.Services.Base
 
             _categoriaIds ??= _categoriaRepository.GetCategoriaCodesAsync().Result;
 
-            _queryDespesasPorGrupo = _despesaRepository
-                .Get(d => d.GrupoFaturaCode == _grupoCode)
-                .Include(c => c.Categoria)
-                .Include(g => g.GrupoFatura);
+            _lazyQueryDespesasPorGrupo = new Lazy<IQueryable<Despesa>>(
+                () =>
+                    _despesaRepository
+                        .Get(d => d.GrupoFaturaCode == _grupoCode)
+                        .Include(c => c.Categoria)
+                        .Include(g => g.GrupoFatura)
+            );
         }
 
         public void Notificar(EnumTipoNotificacao tipo, string message) =>

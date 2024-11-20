@@ -33,14 +33,14 @@ namespace Application.Queries.Services.Telas
             if (string.IsNullOrEmpty(despesaFiltroDto.Filter))
             {
                 return await GetAllDespesas(
-                    _queryDespesasPorGrupo,
+                    QueryDespesasPorGrupo,
                     despesaFiltroDto.PaginaAtual,
                     despesaFiltroDto.ItensPorPagina
                 );
             }
 
             var query = despesaFiltro.GetDespesasFiltradas(
-                _queryDespesasPorGrupo,
+                QueryDespesasPorGrupo,
                 despesaFiltroDto.Filter,
                 despesaFiltroDto.TipoFiltro
             );
@@ -56,7 +56,7 @@ namespace Application.Queries.Services.Telas
 
         public async Task<(double, double)> CompararFaturaComTotalDeDespesas(double faturaCartao)
         {
-            double totalDespesas = await _queryDespesasPorGrupo
+            double totalDespesas = await QueryDespesasPorGrupo
                 .Where(despesa =>
                     despesa.Categoria.Code != _categoriaIds.CodAluguel
                     && despesa.Categoria.Code != _categoriaIds.CodContaDeLuz

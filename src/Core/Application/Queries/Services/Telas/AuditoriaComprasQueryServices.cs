@@ -75,7 +75,7 @@ namespace Application.Queries.Services.Telas
             IEnumerable<DespesasSugestaoEconomiaQueryDto>
         > GetSugestoesEconomiaGraficoAsync()
         {
-            var list = await _queryDespesasPorGrupo
+            var list = await QueryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code != _categoriaIds.CodAluguel
                     && d.Categoria.Code != _categoriaIds.CodCondominio
@@ -112,7 +112,7 @@ namespace Application.Queries.Services.Telas
             List<DespesasSugestaoDeFornecedorQueryDto> sugestoes = [];
             var categorias = await _categoriaRepository.Get().ToListAsync();
 
-            var despesasSomenteCasa = await _queryDespesasPorGrupo
+            var despesasSomenteCasa = await QueryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Code != _categoriaIds.CodAluguel
                     && d.Categoria.Code != _categoriaIds.CodCondominio
