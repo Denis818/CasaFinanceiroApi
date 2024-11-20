@@ -1,4 +1,5 @@
 ﻿using Application.Configurations.MappingsApp;
+using Application.Constantes;
 using Application.Queries.Interfaces;
 using Application.Queries.Interfaces.Telas;
 using Application.Queries.Services.Base;
@@ -18,6 +19,9 @@ namespace Application.Queries.Services
         IServiceProvider service
     ) : BaseQueryService<Membro, MembroDto, IMembroRepository>(service), IMembroQueryServices
     {
+
+        private readonly IServiceProvider _service = service;
+
         const string ConviteParaSite =
             "\r\n\r\nPara saber mais detalhes sobre os valores acesse:\r\n"
             + "https://casa-financeiro-app.netlify.app/portal"
@@ -71,7 +75,7 @@ namespace Application.Queries.Services
             }
 
             string message = isMoradia
-                ? MensagemValoresMoradiaDividos(pix, membro.Nome, titleMessage)
+                ? await MensagemValoresMoradiaDividos(pix, membro.Nome, titleMessage)
                 : await MensagemValoresCasaDividosAsync(pix, membro, titleMessage);
 
             string encodedMessage = Uri.EscapeDataString(message);
@@ -90,8 +94,8 @@ namespace Application.Queries.Services
             string titleMessage
         )
         {
-            var resumoMensal = _dashboardConsultaServices.GetDespesasDivididasMensal();
-            var membroIds = await _repository.GetMembersIds();
+            var resumoMensal = await _dashboardConsultaServices.GetDespesasDivididasMensal();
+            var membroIds = await GetCods.GetMembersIds(_service);
 
             double valorPorMembro =
                 resumoMensal
@@ -120,13 +124,13 @@ namespace Application.Queries.Services
             return title + messageBody + ConviteParaSite;
         }
 
-        private string MensagemValoresMoradiaDividos(
+        private async Task<string> MensagemValoresMoradiaDividos(
             string pix,
             string membroNome,
             string titleMessage
         )
         {
-            var resumoMensal = _dashboardConsultaServices.GetDespesasDivididasMensal();
+            var resumoMensal = await _dashboardConsultaServices.GetDespesasDivididasMensal();
 
             double valorPorMembro =
                 resumoMensal

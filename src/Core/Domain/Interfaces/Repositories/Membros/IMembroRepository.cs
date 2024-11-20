@@ -1,5 +1,4 @@
-﻿using Domain.Dtos;
-using Domain.Interfaces.Repositories.Base;
+﻿using Domain.Interfaces.Repositories.Base;
 using Domain.Models.Membros;
 
 namespace Domain.Interfaces.Repositories.Membros
@@ -8,6 +7,5 @@ namespace Domain.Interfaces.Repositories.Membros
     {
         Task<Membro> ExisteAsync(string nome);
         Task<bool> ValidaMembroParaAcao(Guid codeMembro);
-        Task<MembroIdDto> GetMembersIds();
     }
 }

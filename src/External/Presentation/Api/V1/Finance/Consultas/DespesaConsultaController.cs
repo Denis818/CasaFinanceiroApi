@@ -36,17 +36,17 @@ namespace Presentation.Api.V1.Finance.Consultas
         ) => await dashboardConsultaServices.GetDespesaGrupoParaGraficoAsync(ano);
 
         [HttpGet("despesas-dividas-por-membro")]
-        public DespesasDivididasMensalQueryDto GetDespesasDivididasMensalAsync() =>
-            dashboardConsultaServices.GetDespesasDivididasMensal();
+        public async Task<DespesasDivididasMensalQueryDto> GetDespesasDivididasMensalAsync() =>
+            await dashboardConsultaServices.GetDespesasDivididasMensal();
 
         [HttpGet("relatorio-gastos-grupo")]
         public async Task<RelatorioGastosDoGrupoQueryDto> GetRelatorioDeGastosDoGrupoAsync() =>
             await dashboardConsultaServices.GetRelatorioDeGastosDoGrupoAsync();
 
         [HttpGet("pdf-despesas-casa")]
-        public FileContentResult ExportarPdfRelatorioDeDespesaCasa()
+        public async Task<FileContentResult> ExportarPdfRelatorioDeDespesaCasa()
         {
-            byte[] pdfBytes = dashboardConsultaServices.ExportarPdfRelatorioDeDespesaCasa();
+            byte[] pdfBytes = await dashboardConsultaServices.ExportarPdfRelatorioDeDespesaCasa();
 
             var contentDisposition = new ContentDisposition
             {
@@ -60,9 +60,10 @@ namespace Presentation.Api.V1.Finance.Consultas
         }
 
         [HttpGet("pdf-despesas-moradia")]
-        public FileContentResult ExportarPdfRelatorioDeDespesaMoradia()
+        public async Task<FileContentResult> ExportarPdfRelatorioDeDespesaMoradia()
         {
-            byte[] pdfBytes = dashboardConsultaServices.ExportarPdfRelatorioDeDespesaMoradia();
+            byte[] pdfBytes =
+                await dashboardConsultaServices.ExportarPdfRelatorioDeDespesaMoradia();
 
             var contentDisposition = new ContentDisposition
             {

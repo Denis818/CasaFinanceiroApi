@@ -1,4 +1,5 @@
-﻿using Domain.Dtos;
+﻿using Application.Constantes;
+using Domain.Dtos;
 using Domain.Dtos.Base;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
@@ -45,7 +46,7 @@ namespace Application.Queries.Services.Base
                 ?? new Guid("00000000-0000-0000-0000-000000000000")
             );
 
-            _categoriaIds ??= _categoriaRepository.GetCategoriaCodesAsync().Result;
+            _categoriaIds ??= GetCods.GetCategoriaCodesAsync(service).Result;
 
             _lazyQueryDespesasPorGrupo = new Lazy<IList<Despesa>>(
                 () =>

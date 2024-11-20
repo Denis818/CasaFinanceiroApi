@@ -2,6 +2,7 @@
 using Application.Commands.Interfaces;
 using Application.Commands.Services.Base;
 using Application.Configurations.MappingsApp;
+using Application.Constantes;
 using Application.Resources.Messages;
 using Domain.Converters.DatesTimes;
 using Domain.Dtos;
@@ -23,7 +24,9 @@ namespace Application.Commands.Services
         : BaseCommandService<Despesa, DespesaCommandDto, IDespesaRepository>(service),
             IDespesaCommandService
     {
-        private readonly CategoriaCodsDto _categoriaIds = _categoriaRepository.GetCategoriaCodesAsync().Result;
+        private readonly IServiceProvider _service = service;
+
+        private readonly CategoriaCodsDto _categoriaIds = GetCods.GetCategoriaCodesAsync(service).Result;
 
         protected override Despesa MapToEntity(DespesaCommandDto entity) => entity.MapToEntity();
 

@@ -1,6 +1,6 @@
-﻿using Data.DataContext;
+﻿using Application.Constantes;
+using Data.DataContext;
 using Data.Repository.Base;
-using Domain.Dtos;
 using Domain.Interfaces.Repositories.Categorias;
 using Domain.Models.Categorias;
 using Microsoft.EntityFrameworkCore;
@@ -11,13 +11,7 @@ namespace Data.Repository.Categorias
         : RepositoryBase<Categoria, FinanceDbContext>(service),
             ICategoriaRepository
     {
-        private readonly string[] CategoriasArray =
-        [
-            "Almoço/Janta",
-            "Aluguel",
-            "Condomínio",
-            "Conta de Luz"
-        ];
+        private readonly IServiceProvider _service = service;
 
         public async Task<Categoria> ExisteAsync(Guid? code = null, string nome = "")
         {
@@ -33,7 +27,7 @@ namespace Data.Repository.Categorias
 
         public async Task<bool> IdentificarCategoriaParaAcaoAsync(Guid codeCategoria)
         {
-            var categoriaIds = await GetCategoriaCodesAsync();
+            var categoriaIds = await GetCods.GetCategoriaCodesAsync(_service);
 
             var naoEhAlteravel =
                 codeCategoria == categoriaIds.CodAluguel
@@ -42,26 +36,6 @@ namespace Data.Repository.Categorias
                 || codeCategoria == categoriaIds.CodAlmoco;
 
             return naoEhAlteravel;
-        }
-
-        public async Task<CategoriaCodsDto> GetCategoriaCodesAsync()
-        {
-            var categorias = await Get()
-                .Where(c => CategoriasArray.Contains(c.Descricao))
-                .ToListAsync();
-
-            var idAlmoco = categorias.FirstOrDefault(c => c.Descricao == "Almoço/Janta");
-            var idAluguel = categorias.FirstOrDefault(c => c.Descricao == "Aluguel");
-            var idCondominio = categorias.FirstOrDefault(c => c.Descricao == "Condomínio");
-            var idContaDeLuz = categorias.FirstOrDefault(c => c.Descricao == "Conta de Luz");
-
-            return new CategoriaCodsDto
-            {
-                CodAluguel = idAluguel.Code,
-                CodCondominio = idCondominio.Code,
-                CodContaDeLuz = idContaDeLuz.Code,
-                CodAlmoco = idAlmoco.Code,
-            };
         }
     }
 }

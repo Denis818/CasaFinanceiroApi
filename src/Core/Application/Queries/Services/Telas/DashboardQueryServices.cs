@@ -1,4 +1,5 @@
 ﻿using Application.Configurations.MappingsApp;
+using Application.Constantes;
 using Application.Helpers;
 using Application.Queries.Dtos;
 using Application.Queries.Interfaces.Telas;
@@ -38,8 +39,6 @@ namespace Application.Queries.Services.Telas
         private static MembroIdDto _membroId;
         private readonly GrupoFaturaDto _grupoFatura;
 
-        private readonly List<MembroDto> _todosMembros;
-
         public DashboardQueryServices(
             IServiceProvider service,
             IGrupoFaturaRepository grupoFaturaRepository,
@@ -52,15 +51,8 @@ namespace Application.Queries.Services.Telas
             _membroRepository = membroRepository;
             _despesaDomainServices = despesaDomainServices;
 
-            _membroId ??= _membroRepository.GetMembersIds().Result;
+            _membroId ??= GetCods.GetMembersIds(service).Result;
             _grupoFatura = _grupoFaturaRepository.GetByCodigoAsync(_grupoCode).Result?.MapToDTO();
-
-            _todosMembros = _membroRepository
-                .Get(m => m.DataInicio <= _grupoFatura.DataCriacao)
-                .AsNoTracking()
-                .Select(m => m.MapToDTO())
-                .ToListAsync()
-                .Result;
         }
 
         protected override DespesaDto MapToDTO(Despesa entity) => entity.MapToDTO();
@@ -108,15 +100,17 @@ namespace Application.Queries.Services.Telas
             return result;
         }
 
-        public DespesasDivididasMensalQueryDto GetDespesasDivididasMensal()
+        public async Task<DespesasDivididasMensalQueryDto> GetDespesasDivididasMensal()
         {
+            var membersByDate = await GetMembersByBate();
             //Aluguel + Condomínio + Conta de Luz
-            var distribuicaoCustosMoradia = CalcularDistribuicaoCustosMoradia();
+            var distribuicaoCustosMoradia = CalcularDistribuicaoCustosMoradia(membersByDate);
 
             //Despesas de casa como almoço, Limpeza, higiene etc...
-            var distribuicaoCustosCasa = CalcularDistribuicaoCustosCasa();
+            var distribuicaoCustosCasa = CalcularDistribuicaoCustosCasa(membersByDate);
 
             var despesasPorMembro = DistribuirDespesasEntreMembros(
+                membersByDate,
                 distribuicaoCustosCasa.DespesaGeraisMaisAlmocoDividioPorMembro,
                 distribuicaoCustosCasa.TotalAlmocoParteDoJhon,
                 distribuicaoCustosMoradia.DistribuicaoCustos.ValorParaMembrosForaPeu,
@@ -166,16 +160,19 @@ namespace Application.Queries.Services.Telas
             };
         }
 
-        public byte[] ExportarPdfRelatorioDeDespesaCasa()
+        public async Task<byte[]> ExportarPdfRelatorioDeDespesaCasa()
         {
-            var custosCasaDto = CalcularDistribuicaoCustosCasa();
+            var members = await GetMembersByBate();
+            var custosCasaDto = CalcularDistribuicaoCustosCasa(members);
 
             return GerarRelatorioDespesaCasaPdf(custosCasaDto);
         }
 
-        public byte[] ExportarPdfRelatorioDeDespesaMoradia()
+        public async Task<byte[]> ExportarPdfRelatorioDeDespesaMoradia()
         {
-            var custosMoradiaDto = CalcularDistribuicaoCustosMoradia();
+            var members = await GetMembersByBate();
+
+            var custosMoradiaDto = CalcularDistribuicaoCustosMoradia(members);
 
             return GerarRelatorioDespesaMoradiaPdf(custosMoradiaDto);
         }
@@ -184,11 +181,11 @@ namespace Application.Queries.Services.Telas
 
         #region Calculo Despesas
 
-        private DespesasDistribuicaoCustosCasaDto CalcularDistribuicaoCustosCasa()
+        private DespesasDistribuicaoCustosCasaDto CalcularDistribuicaoCustosCasa(
+            List<MembroDto> todosMembros
+        )
         {
-            int membrosForaJhonCount = _todosMembros
-                .Where(m => m.Code != _membroId.CodJhon)
-                .Count();
+            int membrosForaJhonCount = todosMembros.Where(m => m.Code != _membroId.CodJhon).Count();
 
             // Despesas gerais Limpesa, Higiêne etc... (Fora Almoço)
             double totalDespesaGeraisForaAlmoco = QueryDespesasPorGrupo
@@ -207,7 +204,7 @@ namespace Application.Queries.Services.Telas
 
             var custosDespesasCasa = new DespesasCustosDespesasCasaDto
             {
-                TodosMembros = _todosMembros,
+                TodosMembros = todosMembros,
                 ValorTotalAlmoco = valorTotalAlmoco,
                 TotalDespesaGeraisForaAlmoco = totalDespesaGeraisForaAlmoco,
                 MembrosForaJhonCount = membrosForaJhonCount
@@ -220,9 +217,11 @@ namespace Application.Queries.Services.Telas
             return distribuicaoCustosCasa;
         }
 
-        private DetalhamentoDespesasMoradiaDto CalcularDistribuicaoCustosMoradia()
+        private DetalhamentoDespesasMoradiaDto CalcularDistribuicaoCustosMoradia(
+            List<MembroDto> todosMembros
+        )
         {
-            var grupoListMembrosDespesa = GetGrupoListMembrosDespesa();
+            var grupoListMembrosDespesa = GetGrupoListMembrosDespesa(todosMembros);
 
             var custosDespesasMoradiaDto = GetCustosDespesasMoradiaAsync();
 
@@ -301,9 +300,9 @@ namespace Application.Queries.Services.Telas
             };
         }
 
-        private GrupoListMembrosDespesaDto GetGrupoListMembrosDespesa()
+        private GrupoListMembrosDespesaDto GetGrupoListMembrosDespesa(List<MembroDto> todosMembros)
         {
-            var listMembroForaJhonLaila = _todosMembros
+            var listMembroForaJhonLaila = todosMembros
                 .Where(m => m.Code != _membroId.CodJhon && m.Code != _membroId.CodLaila)
                 .ToList();
 
@@ -579,6 +578,7 @@ namespace Application.Queries.Services.Telas
         #region Metodos de Suporte
 
         private IEnumerable<DespesaPorMembroQueryDto> DistribuirDespesasEntreMembros(
+            List<MembroDto> todosMembros,
             double despesaGeraisMaisAlmocoDividioPorMembro,
             double almocoParteDoJhon,
             double aluguelCondominioContaLuzPorMembroForaPeu,
@@ -597,7 +597,7 @@ namespace Application.Queries.Services.Telas
                 }
             }
 
-            var valoresPorMembro = _todosMembros.Select(member => new DespesaPorMembroQueryDto
+            var valoresPorMembro = todosMembros.Select(member => new DespesaPorMembroQueryDto
             {
                 Nome = member.Nome,
 
@@ -613,6 +613,15 @@ namespace Application.Queries.Services.Telas
             });
 
             return valoresPorMembro;
+        }
+
+        public async Task<List<MembroDto>> GetMembersByBate()
+        {
+            return await _membroRepository
+                .Get(m => m.DataInicio <= _grupoFatura.DataCriacao)
+                .AsNoTracking()
+                .Select(m => m.MapToDTO())
+                .ToListAsync();
         }
 
         #endregion
