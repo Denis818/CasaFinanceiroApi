@@ -2,10 +2,8 @@
 using Application.Commands.Interfaces;
 using Application.Commands.Services.Base;
 using Application.Configurations.MappingsApp;
-using Application.Constantes;
 using Application.Resources.Messages;
 using Domain.Converters.DatesTimes;
-using Domain.Dtos;
 using Domain.Enumeradores;
 using Domain.Extensions.Help;
 using Domain.Interfaces.Repositories;
@@ -18,15 +16,12 @@ namespace Application.Commands.Services
 {
     public class DespesaCommandService(
         IServiceProvider service,
-        IGrupoFaturaRepository _GrupoFaturaRepository,
+        IGrupoFaturaRepository _grupoFaturaRepository,
         ICategoriaRepository _categoriaRepository
     )
         : BaseCommandService<Despesa, DespesaCommandDto, IDespesaRepository>(service),
             IDespesaCommandService
     {
-
-        private readonly CategoriaCodsDto _categoriaIds = GetCods.CategoriaCod;
-
         protected override Despesa MapToEntity(DespesaCommandDto entity) => entity.MapToEntity();
 
         public async Task<bool> InsertAsync(DespesaCommandDto despesaDto)
@@ -141,7 +136,9 @@ namespace Application.Commands.Services
 
             despesa.MapUpdateEntity(despesaDto);
 
-            despesa.GrupoFatura = await _GrupoFaturaRepository.GetByCodigoAsync(despesaDto.GrupoFaturaCode);
+            despesa.GrupoFatura = await _grupoFaturaRepository.GetByCodigoAsync(
+                despesaDto.GrupoFaturaCode
+            );
 
             despesa.Total = despesa.Preco * despesa.Quantidade;
             despesa.DataCompra = DateTimeZoneConverterPtBR.GetBrasiliaDateTimeZone();
@@ -195,7 +192,7 @@ namespace Application.Commands.Services
         )
         {
             var categoria = await _categoriaRepository.ExisteAsync(despesaDto.CategoriaCode);
-            var grupoFatura = await _GrupoFaturaRepository.ExisteAsync(despesaDto.GrupoFaturaCode);
+            var grupoFatura = await _grupoFaturaRepository.ExisteAsync(despesaDto.GrupoFaturaCode);
 
             if (categoria is null)
             {
@@ -219,7 +216,7 @@ namespace Application.Commands.Services
             despesaDto.GrupoFaturaId = grupoFatura.Id;
 
             if (
-                despesaDto.CategoriaCode == _categoriaIds.CodAluguel
+                despesaDto.CategoriaCode == CategoriaCods.CodAluguel
                 && !despesaDto.Item.ToLower().Contains("caixa")
                 && !despesaDto.Item.ToLower().Contains("parcela ap ponto")
             )
@@ -229,7 +226,7 @@ namespace Application.Commands.Services
             }
 
             if (
-                despesaDto.CategoriaCode == _categoriaIds.CodCondominio
+                despesaDto.CategoriaCode == CategoriaCods.CodCondominio
                 && !despesaDto.Item.Contains(
                     "condomínio ap ponto",
                     StringComparison.CurrentCultureIgnoreCase
@@ -280,7 +277,7 @@ namespace Application.Commands.Services
             foreach (var despesa in listExistentes)
             {
                 if (
-                    despesa.Categoria.Code == _categoriaIds.CodAluguel
+                    despesa.Categoria.Code == CategoriaCods.CodAluguel
                     && despesa.Item.Equals(despesaDto.Item, StringComparison.OrdinalIgnoreCase)
                 )
                 {
@@ -293,7 +290,7 @@ namespace Application.Commands.Services
                     );
                     return false;
                 }
-                else if (despesa.Categoria.Code != _categoriaIds.CodAluguel)
+                else if (despesa.Categoria.Code != CategoriaCods.CodAluguel)
                 {
                     Notificar(
                         EnumTipoNotificacao.Informacao,
@@ -311,9 +308,9 @@ namespace Application.Commands.Services
 
         private bool EhDespesaMensal(Guid codeCategoria)
         {
-            return codeCategoria == _categoriaIds.CodAluguel
-                || codeCategoria == _categoriaIds.CodCondominio
-                || codeCategoria == _categoriaIds.CodContaDeLuz;
+            return codeCategoria == CategoriaCods.CodAluguel
+                || codeCategoria == CategoriaCods.CodCondominio
+                || codeCategoria == CategoriaCods.CodContaDeLuz;
         }
 
         private async Task<Despesa> GetDespesaByCodigoAsync(Guid code)

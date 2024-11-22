@@ -1,10 +1,10 @@
-﻿using Application.Constantes;
-using Domain.Dtos;
+﻿using Domain.Dtos;
 using Domain.Dtos.Base;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Repositories.Base;
 using Domain.Interfaces.Repositories.Categorias;
+using Domain.Interfaces.Repositories.Membros;
 using Domain.Interfaces.Utilities;
 using Domain.Models.Base;
 using Domain.Models.Despesas;
@@ -21,16 +21,21 @@ namespace Application.Queries.Services.Base
     {
         private readonly INotifier _notificador;
 
+        protected readonly Guid _grupoCode;
+
         protected readonly IDespesaRepository _despesaRepository;
+        protected readonly IMembroRepository _membroRepository;
         protected readonly TIRepository _repository;
         protected readonly HttpContext _httpContext;
         protected readonly ICategoriaRepository _categoriaRepository;
 
-        protected readonly Guid _grupoCode;
-        protected static CategoriaCodsDto _categoriaIds;
+        protected IList<Despesa> ListDespesasPorGrupo => _lazyListDespesasPorGrupo.Value;
+        private readonly Lazy<IList<Despesa>> _lazyListDespesasPorGrupo;
 
-        private readonly Lazy<IList<Despesa>> _lazyQueryDespesasPorGrupo;
-        protected IList<Despesa> QueryDespesasPorGrupo => _lazyQueryDespesasPorGrupo.Value;
+        public MembroIdDto MembroCods => _lazyMembroIds.Value;
+        private readonly Lazy<MembroIdDto> _lazyMembroIds;
+        public CategoriaCodsDto CategoriaCods => _lazyCategoriaIds.Value;
+        private readonly Lazy<CategoriaCodsDto> _lazyCategoriaIds;
 
         public BaseQueryService(IServiceProvider service)
         {
@@ -40,23 +45,13 @@ namespace Application.Queries.Services.Base
             _repository = service.GetRequiredService<TIRepository>();
             _httpContext = service.GetRequiredService<IHttpContextAccessor>().HttpContext;
             _categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
+            _membroRepository = service.GetRequiredService<IMembroRepository>();
 
-            _grupoCode = (Guid)(
-                _httpContext.Items["grupo-fatura-code"]
-                ?? new Guid("00000000-0000-0000-0000-000000000000")
-            );
+            _grupoCode = GetGrupoFaturaCode();
 
-            _categoriaIds ??= GetCods.CategoriaCod;
-
-            _lazyQueryDespesasPorGrupo = new Lazy<IList<Despesa>>(
-                () =>
-                    _despesaRepository
-                        .Get(d => d.GrupoFaturaCode == _grupoCode)
-                        .Include(c => c.Categoria)
-                        .Include(g => g.GrupoFatura)
-                        .Include(g => g.GrupoFatura.StatusFaturas).ToListAsync().Result
-            );
-
+            _lazyListDespesasPorGrupo = _despesaRepository.GetListDespesasPorGrupo(_grupoCode);
+            _lazyMembroIds = _membroRepository.GetMembroCods();
+            _lazyCategoriaIds = _categoriaRepository.GetCategoriaCods();
         }
 
         public void Notificar(EnumTipoNotificacao tipo, string message) =>
@@ -71,5 +66,13 @@ namespace Application.Queries.Services.Base
         }
 
         protected abstract TQueryDTO MapToDTO(TEntity entity);
+
+        private Guid GetGrupoFaturaCode()
+        {
+            return (Guid)(
+                _httpContext.Items["grupo-fatura-code"]
+                ?? new Guid("00000000-0000-0000-0000-000000000000")
+            );
+        }
     }
 }

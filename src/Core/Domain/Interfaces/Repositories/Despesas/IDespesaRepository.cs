@@ -5,5 +5,6 @@ namespace Domain.Interfaces.Repositories
 {
     public interface IDespesaRepository : IRepositoryBase<Despesa>
     {
+        Lazy<IList<Despesa>> GetListDespesasPorGrupo(Guid grupoCod);
     }
 }

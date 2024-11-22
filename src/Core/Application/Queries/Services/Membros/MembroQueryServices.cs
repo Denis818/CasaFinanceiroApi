@@ -1,5 +1,4 @@
 ﻿using Application.Configurations.MappingsApp;
-using Application.Constantes;
 using Application.Queries.Interfaces;
 using Application.Queries.Interfaces.Telas;
 using Application.Queries.Services.Base;
@@ -15,13 +14,10 @@ using System.Text.RegularExpressions;
 namespace Application.Queries.Services
 {
     public class MembroQueryServices(
-        IDashboardQueryServices _dashboardConsultaServices,
-        IServiceProvider service
+        IServiceProvider service,
+        IDashboardQueryServices _dashboardConsultaServices
     ) : BaseQueryService<Membro, MembroDto, IMembroRepository>(service), IMembroQueryServices
     {
-
-        private readonly IServiceProvider _service = service;
-
         const string ConviteParaSite =
             "\r\n\r\nPara saber mais detalhes sobre os valores acesse:\r\n"
             + "https://casa-financeiro-app.netlify.app/portal"
@@ -95,7 +91,6 @@ namespace Application.Queries.Services
         )
         {
             var resumoMensal = await _dashboardConsultaServices.GetDespesasDivididasMensal();
-            var membroIds = GetCods.MembroCod;
 
             double valorPorMembro =
                 resumoMensal
@@ -108,7 +103,7 @@ namespace Application.Queries.Services
 
             string messageBody = "";
 
-            if (membro.Code == membroIds.CodJhon)
+            if (membro.Code == MembroCods.CodJhon)
             {
                 messageBody =
                     $"Sua parte no almoço ficou esse valor: *R$ {valorPorMembro:F2}*."

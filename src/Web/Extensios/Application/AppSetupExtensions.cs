@@ -1,5 +1,4 @@
-﻿using Application.Constantes;
-using AspNetCoreRateLimit;
+﻿using AspNetCoreRateLimit;
 using Presentation.Version;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -39,9 +38,6 @@ namespace Web.Extensios.Application
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddApiDependencyServices(builder.Configuration);
             builder.Services.AddSwaggerConfiguration();
-
-            GetCods.GetMembersIds(builder.Services).Wait();
-            GetCods.GetCategoriaCodesAsync(builder.Services).Wait();
 
             if (builder.Environment.IsProduction())
             {

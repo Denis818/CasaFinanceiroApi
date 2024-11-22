@@ -75,9 +75,9 @@ namespace Application.Queries.Services.Telas
         {
             double totalDespesas = await _queryDespesas
                 .Where(despesa =>
-                    despesa.Categoria.Code != _categoriaIds.CodAluguel
-                    && despesa.Categoria.Code != _categoriaIds.CodContaDeLuz
-                    && despesa.Categoria.Code != _categoriaIds.CodCondominio
+                    despesa.Categoria.Code != CategoriaCods.CodAluguel
+                    && despesa.Categoria.Code != CategoriaCods.CodContaDeLuz
+                    && despesa.Categoria.Code != CategoriaCods.CodCondominio
                 )
                 .SumAsync(despesa => despesa.Total);
 

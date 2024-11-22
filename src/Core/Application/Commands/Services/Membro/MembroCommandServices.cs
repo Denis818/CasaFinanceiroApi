@@ -4,6 +4,7 @@ using Application.Commands.Services.Base;
 using Application.Configurations.MappingsApp;
 using Application.Resources.Messages;
 using Domain.Converters.DatesTimes;
+using Domain.Dtos;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories.Membros;
 using Domain.Models.Membros;
@@ -11,9 +12,16 @@ using System.Text.RegularExpressions;
 
 namespace Application.Commands.Services
 {
-    public class MembroCommandServices(IServiceProvider service)
-        : BaseCommandService<Membro, MembroCommandDto, IMembroRepository>(service), IMembroComandoServices
+    public class MembroCommandServices
+        : BaseCommandService<Membro, MembroCommandDto, IMembroRepository>, IMembroComandoServices
     {
+        public MembroIdDto MembroCods => _lazyMembroIds.Value;
+        private readonly Lazy<MembroIdDto> _lazyMembroIds;
+
+        public MembroCommandServices(IServiceProvider service) : base(service)
+        {
+            _lazyMembroIds = _repository.GetMembroCods();
+        }
         protected override Membro MapToEntity(MembroCommandDto entity) => entity.MapToEntity();
 
         public async Task<bool> InsertAsync(MembroCommandDto membroDto)
@@ -76,7 +84,7 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            if (_repository.ValidaMembroParaAcao(membro.Code))
+            if (ValidaMembroParaAcao(membro.Code))
             {
                 Notificar(EnumTipoNotificacao.ClientError, Message.AvisoMembroImutavel);
                 return false;
@@ -122,7 +130,7 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            if (_repository.ValidaMembroParaAcao(membro.Code))
+            if (ValidaMembroParaAcao(membro.Code))
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.AvisoMembroImutavel);
                 return false;
@@ -160,6 +168,16 @@ namespace Application.Commands.Services
             {
                 return telefone;
             }
+        }
+
+        public bool ValidaMembroParaAcao(Guid codeMembro)
+        {
+            var ehAlteravel =
+                codeMembro == MembroCods.CodJhon
+                || codeMembro == MembroCods.CodPeu
+                || codeMembro == MembroCods.CodLaila;
+
+            return ehAlteravel;
         }
 
         #endregion

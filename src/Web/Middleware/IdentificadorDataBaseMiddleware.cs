@@ -24,7 +24,7 @@ namespace Web.Middleware
             await next(context);
         }
 
-        private async Task<string> IdentificarStringConexao(HttpContext context)
+        public async Task<string> IdentificarStringConexao(HttpContext context)
         {
             string origin = context.Request.Headers["Origin"].ToString();
 

@@ -64,7 +64,7 @@ namespace Application.Commands.Services
             if (categoria.Descricao == categoriaDto.Descricao)
                 return false;
 
-            bool isValid = _repository.IdentificarCategoriaParaAcaoAsync(categoria.Code);
+            bool isValid = IdentificarCategoriaParaAcaoAsync(categoria.Code);
 
             if (isValid)
             {
@@ -121,7 +121,7 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            bool isValid =  _repository.IdentificarCategoriaParaAcaoAsync(categoria.Code);
+            bool isValid =  IdentificarCategoriaParaAcaoAsync(categoria.Code);
 
             if (isValid)
             {
@@ -141,6 +141,17 @@ namespace Application.Commands.Services
             }
 
             return true;
+        }
+
+        public bool IdentificarCategoriaParaAcaoAsync(Guid codeCategoria)
+        {
+            var naoEhAlteravel =
+                codeCategoria == CategoriaCods.CodAluguel
+                || codeCategoria == CategoriaCods.CodCondominio
+                || codeCategoria == CategoriaCods.CodContaDeLuz
+                || codeCategoria == CategoriaCods.CodAlmoco;
+
+            return naoEhAlteravel;
         }
     }
 }

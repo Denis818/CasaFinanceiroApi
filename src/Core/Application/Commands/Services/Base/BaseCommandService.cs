@@ -1,5 +1,7 @@
-﻿using Domain.Enumeradores;
+﻿using Domain.Dtos;
+using Domain.Enumeradores;
 using Domain.Interfaces.Repositories.Base;
+using Domain.Interfaces.Repositories.Categorias;
 using Domain.Interfaces.Utilities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -18,6 +20,12 @@ namespace Application.Commands.Services.Base
         private readonly INotifier _notificador = service.GetRequiredService<INotifier>();
 
         protected readonly TIRepository _repository = service.GetRequiredService<TIRepository>();
+
+        public CategoriaCodsDto CategoriaCods => _lazyCategoriaIds.Value;
+
+        private readonly Lazy<CategoriaCodsDto> _lazyCategoriaIds = service
+            .GetRequiredService<ICategoriaRepository>()
+            .GetCategoriaCods();
 
         protected readonly HttpContext _httpContext = service
             .GetRequiredService<IHttpContextAccessor>()

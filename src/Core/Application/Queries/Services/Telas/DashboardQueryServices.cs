@@ -1,5 +1,4 @@
 ﻿using Application.Configurations.MappingsApp;
-using Application.Constantes;
 using Application.Helpers;
 using Application.Queries.Dtos;
 using Application.Queries.Interfaces.Telas;
@@ -11,7 +10,6 @@ using Domain.Enumeradores;
 using Domain.Extensions.Help;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Repositories.GrupoFaturas;
-using Domain.Interfaces.Repositories.Membros;
 using Domain.Interfaces.Services.Despesa;
 using Domain.Models.Despesas;
 using iText.Kernel.Pdf;
@@ -33,26 +31,20 @@ namespace Application.Queries.Services.Telas
             new(new PdfTableStyle(textAlignmentColumnKey: TextAlignment.LEFT));
 
         private readonly IGrupoFaturaRepository _grupoFaturaRepository;
-        private readonly IMembroRepository _membroRepository;
         private readonly IDespesaDomainServices _despesaDomainServices;
 
-        private static MembroIdDto _membroId;
         private readonly Lazy<GrupoFaturaDto> _lazyGrupoFatura;
         protected GrupoFaturaDto _grupoFatura => _lazyGrupoFatura.Value;
 
         public DashboardQueryServices(
             IServiceProvider service,
             IGrupoFaturaRepository grupoFaturaRepository,
-            IMembroRepository membroRepository,
             IDespesaDomainServices despesaDomainServices
         )
             : base(service)
         {
             _grupoFaturaRepository = grupoFaturaRepository;
-            _membroRepository = membroRepository;
             _despesaDomainServices = despesaDomainServices;
-
-            _membroId ??= GetCods.MembroCod;
 
             _lazyGrupoFatura = new Lazy<GrupoFaturaDto>(
                 () => _grupoFaturaRepository.GetByCodigoAsync(_grupoCode).Result?.MapToDTO()
@@ -136,19 +128,19 @@ namespace Application.Queries.Services.Telas
                 return new();
             }
 
-            double totalGastoMoradia = QueryDespesasPorGrupo
+            double totalGastoMoradia = ListDespesasPorGrupo
                 .Where(d =>
-                    d.Categoria.Code == _categoriaIds.CodAluguel
-                    || d.Categoria.Code == _categoriaIds.CodCondominio
-                    || d.Categoria.Code == _categoriaIds.CodContaDeLuz
+                    d.Categoria.Code == CategoriaCods.CodAluguel
+                    || d.Categoria.Code == CategoriaCods.CodCondominio
+                    || d.Categoria.Code == CategoriaCods.CodContaDeLuz
                 )
                 .Sum(d => d.Total);
 
-            double totalGastosCasa = QueryDespesasPorGrupo
+            double totalGastosCasa = ListDespesasPorGrupo
                 .Where(d =>
-                    d.Categoria.Code != _categoriaIds.CodAluguel
-                    && d.Categoria.Code != _categoriaIds.CodCondominio
-                    && d.Categoria.Code != _categoriaIds.CodContaDeLuz
+                    d.Categoria.Code != CategoriaCods.CodAluguel
+                    && d.Categoria.Code != CategoriaCods.CodCondominio
+                    && d.Categoria.Code != CategoriaCods.CodContaDeLuz
                 )
                 .Sum(d => d.Total);
 
@@ -188,21 +180,23 @@ namespace Application.Queries.Services.Telas
             List<MembroDto> todosMembros
         )
         {
-            int membrosForaJhonCount = todosMembros.Where(m => m.Code != _membroId.CodJhon).Count();
+            int membrosForaJhonCount = todosMembros
+                .Where(m => m.Code != MembroCods.CodJhon)
+                .Count();
 
             // Despesas gerais Limpesa, Higiêne etc... (Fora Almoço)
-            double totalDespesaGeraisForaAlmoco = QueryDespesasPorGrupo
+            double totalDespesaGeraisForaAlmoco = ListDespesasPorGrupo
                 .Where(d =>
-                    d.Categoria.Code != _categoriaIds.CodAluguel
-                    && d.Categoria.Code != _categoriaIds.CodCondominio
-                    && d.Categoria.Code != _categoriaIds.CodContaDeLuz
-                    && d.Categoria.Code != _categoriaIds.CodAlmoco
+                    d.Categoria.Code != CategoriaCods.CodAluguel
+                    && d.Categoria.Code != CategoriaCods.CodCondominio
+                    && d.Categoria.Code != CategoriaCods.CodContaDeLuz
+                    && d.Categoria.Code != CategoriaCods.CodAlmoco
                 )
                 .Sum(d => d.Total);
 
             //Total somente do almoço
-            double valorTotalAlmoco = QueryDespesasPorGrupo
-                .Where(despesa => despesa.Categoria.Code == _categoriaIds.CodAlmoco)
+            double valorTotalAlmoco = ListDespesasPorGrupo
+                .Where(despesa => despesa.Categoria.Code == CategoriaCods.CodAlmoco)
                 .Sum(despesa => despesa.Total);
 
             var custosDespesasCasa = new DespesasCustosDespesasCasaDto
@@ -274,8 +268,8 @@ namespace Application.Queries.Services.Telas
 
         private DespesasCustosMoradiaDto GetCustosDespesasMoradiaAsync()
         {
-            var listAluguel = QueryDespesasPorGrupo.Where(d =>
-                d.Categoria.Code == _categoriaIds.CodAluguel
+            var listAluguel = ListDespesasPorGrupo.Where(d =>
+                d.Categoria.Code == CategoriaCods.CodAluguel
             );
 
             var parcelaApartamento = listAluguel
@@ -286,12 +280,12 @@ namespace Application.Queries.Services.Telas
                 .Where(aluguel => aluguel.Item.ToLower().Contains("caixa"))
                 .FirstOrDefault();
 
-            var contaDeLuz = QueryDespesasPorGrupo
-                .Where(despesa => despesa.Categoria.Code == _categoriaIds.CodContaDeLuz)
+            var contaDeLuz = ListDespesasPorGrupo
+                .Where(despesa => despesa.Categoria.Code == CategoriaCods.CodContaDeLuz)
                 .FirstOrDefault();
 
-            var condominio = QueryDespesasPorGrupo
-                .Where(despesa => despesa.Categoria.Code == _categoriaIds.CodCondominio)
+            var condominio = ListDespesasPorGrupo
+                .Where(despesa => despesa.Categoria.Code == CategoriaCods.CodCondominio)
                 .FirstOrDefault();
 
             return new DespesasCustosMoradiaDto()
@@ -306,15 +300,15 @@ namespace Application.Queries.Services.Telas
         private GrupoListMembrosDespesaDto GetGrupoListMembrosDespesa(List<MembroDto> todosMembros)
         {
             var listMembroForaJhonLaila = todosMembros
-                .Where(m => m.Code != _membroId.CodJhon && m.Code != _membroId.CodLaila)
+                .Where(m => m.Code != MembroCods.CodJhon && m.Code != MembroCods.CodLaila)
                 .ToList();
 
             var listMembroForaJhonPeu = listMembroForaJhonLaila
-                .Where(m => m.Code != _membroId.CodPeu)
+                .Where(m => m.Code != MembroCods.CodPeu)
                 .ToList();
 
-            var listAluguel = QueryDespesasPorGrupo
-                .Where(d => d.Categoria.Code == _categoriaIds.CodAluguel)
+            var listAluguel = ListDespesasPorGrupo
+                .Where(d => d.Categoria.Code == CategoriaCods.CodAluguel)
                 .Select(m => m.MapToDTO())
                 .ToList();
 
@@ -590,7 +584,7 @@ namespace Application.Queries.Services.Telas
         {
             double ValorMoradia(MembroDto membro)
             {
-                if (membro.Code == _membroId.CodPeu)
+                if (membro.Code == MembroCods.CodPeu)
                 {
                     return aluguelCondominioContaLuzParaPeu.RoundTo(2);
                 }
@@ -605,12 +599,12 @@ namespace Application.Queries.Services.Telas
                 Nome = member.Nome,
 
                 ValorDespesaCasa =
-                    member.Code == _membroId.CodJhon
+                    member.Code == MembroCods.CodJhon
                         ? Math.Max(almocoParteDoJhon.RoundTo(2), 0)
                         : Math.Max(despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2), 0),
 
                 ValorDespesaMoradia =
-                    member.Code == _membroId.CodJhon || member.Code == _membroId.CodLaila
+                    member.Code == MembroCods.CodJhon || member.Code == MembroCods.CodLaila
                         ? -1
                         : ValorMoradia(member).RoundTo(2)
             });

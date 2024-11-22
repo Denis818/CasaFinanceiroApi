@@ -73,11 +73,11 @@ namespace Application.Queries.Services.Telas
 
         public IEnumerable<DespesasSugestaoEconomiaQueryDto> GetSugestoesEconomiaGrafico()
         {
-            var list = QueryDespesasPorGrupo
+            var list = ListDespesasPorGrupo
                 .Where(d =>
-                    d.Categoria.Code != _categoriaIds.CodAluguel
-                    && d.Categoria.Code != _categoriaIds.CodCondominio
-                    && d.Categoria.Code != _categoriaIds.CodContaDeLuz
+                    d.Categoria.Code != CategoriaCods.CodAluguel
+                    && d.Categoria.Code != CategoriaCods.CodCondominio
+                    && d.Categoria.Code != CategoriaCods.CodContaDeLuz
                     && !d.Item.ToLower().Contains("compra")
                 );
 
@@ -109,11 +109,11 @@ namespace Application.Queries.Services.Telas
             List<DespesasSugestaoDeFornecedorQueryDto> sugestoes = [];
             var categorias = await _categoriaRepository.Get().ToListAsync();
 
-            var despesasSomenteCasa = QueryDespesasPorGrupo
+            var despesasSomenteCasa = ListDespesasPorGrupo
                 .Where(d =>
-                    d.Categoria.Code != _categoriaIds.CodAluguel
-                    && d.Categoria.Code != _categoriaIds.CodCondominio
-                    && d.Categoria.Code != _categoriaIds.CodContaDeLuz
+                    d.Categoria.Code != CategoriaCods.CodAluguel
+                    && d.Categoria.Code != CategoriaCods.CodCondominio
+                    && d.Categoria.Code != CategoriaCods.CodContaDeLuz
                     && !d.Item.ToLower().Contains("compra")
                 )
                 .OrderByDescending(d => d.DataCompra);
