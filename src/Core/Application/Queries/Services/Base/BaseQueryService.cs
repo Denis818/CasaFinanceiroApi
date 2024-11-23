@@ -1,4 +1,5 @@
-﻿using Domain.Dtos;
+﻿using Application.Extensions;
+using Domain.Dtos;
 using Domain.Dtos.Base;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
@@ -34,6 +35,7 @@ namespace Application.Queries.Services.Base
 
         public MembroIdDto MembroCods => _lazyMembroIds.Value;
         private readonly Lazy<MembroIdDto> _lazyMembroIds;
+
         public CategoriaCodsDto CategoriaCods => _lazyCategoriaIds.Value;
         private readonly Lazy<CategoriaCodsDto> _lazyCategoriaIds;
 
@@ -47,8 +49,7 @@ namespace Application.Queries.Services.Base
             _categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
             _membroRepository = service.GetRequiredService<IMembroRepository>();
 
-            _grupoCode = GetGrupoFaturaCode();
-
+            _grupoCode = _httpContext.GetCurrentGrupoFaturaCode();
             _lazyListDespesasPorGrupo = _despesaRepository.GetListDespesasPorGrupo(_grupoCode);
             _lazyMembroIds = _membroRepository.GetMembroCods();
             _lazyCategoriaIds = _categoriaRepository.GetCategoriaCods();
@@ -62,17 +63,10 @@ namespace Application.Queries.Services.Base
             var result = await _repository
                 .Get(entity => entity.Code == codigo)
                 .FirstOrDefaultAsync();
+
             return MapToDTO(result);
         }
 
         protected abstract TQueryDTO MapToDTO(TEntity entity);
-
-        private Guid GetGrupoFaturaCode()
-        {
-            return (Guid)(
-                _httpContext.Items["grupo-fatura-code"]
-                ?? new Guid("00000000-0000-0000-0000-000000000000")
-            );
-        }
     }
 }

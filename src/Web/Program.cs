@@ -1,3 +1,4 @@
+using Application.Helpers;
 using AspNetCoreRateLimit;
 using Web.Extensios.Application;
 using Web.Extensios.DependencyManagers;
@@ -9,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.ConfigureApplication();
 
 var app = builder.Build();
+
+ServiceLocator.Configure(app.Services);
 
 app.ConfigureSwaggerUI();
 

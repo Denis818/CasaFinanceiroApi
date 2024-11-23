@@ -20,36 +20,17 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Queries.Services.Telas
 {
-    public class DashboardQueryServices
-        : BaseQueryService<Despesa, DespesaDto, IDespesaRepository>,
-            IDashboardQueryServices
+    public class DashboardQueryServices(
+        IServiceProvider service,
+        IGrupoFaturaRepository _grupoFaturaRepository,
+        IDespesaDomainServices _despesaDomainServices
+    ) : BaseQueryService<Despesa, DespesaDto, IDespesaRepository>(service), IDashboardQueryServices
     {
         private readonly PdfTableHelper _pdfTableCasa =
             new(new PdfTableStyle(textAlignmentColumnKey: TextAlignment.LEFT));
 
         private readonly PdfTableHelper _pdfTableMoradia =
             new(new PdfTableStyle(textAlignmentColumnKey: TextAlignment.LEFT));
-
-        private readonly IGrupoFaturaRepository _grupoFaturaRepository;
-        private readonly IDespesaDomainServices _despesaDomainServices;
-
-        private readonly Lazy<GrupoFaturaDto> _lazyGrupoFatura;
-        protected GrupoFaturaDto _grupoFatura => _lazyGrupoFatura.Value;
-
-        public DashboardQueryServices(
-            IServiceProvider service,
-            IGrupoFaturaRepository grupoFaturaRepository,
-            IDespesaDomainServices despesaDomainServices
-        )
-            : base(service)
-        {
-            _grupoFaturaRepository = grupoFaturaRepository;
-            _despesaDomainServices = despesaDomainServices;
-
-            _lazyGrupoFatura = new Lazy<GrupoFaturaDto>(
-                () => _grupoFaturaRepository.GetByCodigoAsync(_grupoCode).Result?.MapToDTO()
-            );
-        }
 
         protected override DespesaDto MapToDTO(Despesa entity) => entity.MapToDTO();
 
@@ -118,7 +99,7 @@ namespace Application.Queries.Services.Telas
         public async Task<RelatorioGastosDoGrupoQueryDto> GetRelatorioDeGastosDoGrupoAsync()
         {
             var grupoNome = await _grupoFaturaRepository
-                .Get(g => g.Code == _grupoFatura.Code)
+                .Get(g => g.Code == _grupoCode)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
 
@@ -614,9 +595,10 @@ namespace Application.Queries.Services.Telas
 
         public async Task<List<MembroDto>> GetMembersByBate()
         {
+            var grupoFatura = await _grupoFaturaRepository.GetByCodigoAsync(_grupoCode);
+
             return await _membroRepository
-                .Get(m => m.DataInicio <= _grupoFatura.DataCriacao)
-                .AsNoTracking()
+                .Get(m => m.DataInicio <= grupoFatura.DataCriacao)
                 .Select(m => m.MapToDTO())
                 .ToListAsync();
         }
