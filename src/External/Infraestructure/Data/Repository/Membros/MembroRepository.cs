@@ -20,8 +20,6 @@ namespace Infraestructure.Data.Repository.Membros
             {
                 var membros = Get(m => MembrosArray.Contains(m.Nome)).ToListAsync().Result;
 
-                var s = Get().ToList();
-
                 Guid? codeJhon = membros.FirstOrDefault(c => c.Nome.StartsWith("Jhon"))?.Code;
                 Guid? codePeu = membros.FirstOrDefault(c => c.Nome.StartsWith("Peu"))?.Code;
                 Guid? codeLaila = membros.FirstOrDefault(c => c.Nome.StartsWith("Laila"))?.Code;
