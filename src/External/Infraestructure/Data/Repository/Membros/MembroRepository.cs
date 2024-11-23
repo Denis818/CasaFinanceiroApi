@@ -9,7 +9,7 @@ namespace Infraestructure.Data.Repository.Membros
 {
     public class MembroRepository(IServiceProvider service) : RepositoryBase<Membro, FinanceDbContext>(service), IMembroRepository
     {
-        private static readonly string[] MembrosArray = ["Jhon", "Peu", "Laila"];
+        private static readonly string[] MembrosArray = ["Jhon Lenon", "Peu", "Laila"];
 
         public async Task<Membro> ExisteAsync(string nome) =>
             await Get(d => d.Nome == nome).FirstOrDefaultAsync();
@@ -19,6 +19,8 @@ namespace Infraestructure.Data.Repository.Membros
             return new Lazy<MembroIdDto>(() =>
             {
                 var membros = Get(m => MembrosArray.Contains(m.Nome)).ToListAsync().Result;
+
+                var s = Get().ToList();
 
                 Guid? codeJhon = membros.FirstOrDefault(c => c.Nome.StartsWith("Jhon"))?.Code;
                 Guid? codePeu = membros.FirstOrDefault(c => c.Nome.StartsWith("Peu"))?.Code;

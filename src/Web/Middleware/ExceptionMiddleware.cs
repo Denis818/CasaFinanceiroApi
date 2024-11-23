@@ -10,7 +10,6 @@ namespace Web.Middleware
         {
             try
             {
-                Console.WriteLine("\n\n\n Começouuu --\n");
                 await next(context);
             }
             catch (Exception ex)
