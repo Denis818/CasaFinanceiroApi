@@ -11,11 +11,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <NoWarn>1701;1702;NU1902;NU1903;NU1608;</NoWarn>
+		<NoWarn>1701;1702;NU1902;NU1903</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <NoWarn>1701;1702;NU1902;NU1903;NU1608;</NoWarn>
+		<NoWarn>1701;1702;NU1902;NU1903</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -29,15 +29,15 @@
 		<PackageReference Include="Serilog.Settings.Configuration" Version="8.0.4" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\External\Infraestructure\Infraestructure.csproj" />
-	  <ProjectReference Include="..\External\Presentation\Presentation.csproj" />
+		<ProjectReference Include="..\External\Infraestructure\Infraestructure.csproj" />
+		<ProjectReference Include="..\External\Presentation\Presentation.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
