@@ -8,7 +8,6 @@ using Domain.Enumeradores;
 using Domain.Interfaces.Repositories.Membros;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
 
 namespace Application.Queries.Services
@@ -97,7 +96,7 @@ namespace Application.Queries.Services
                     .DespesasPorMembro.FirstOrDefault(m => m.Nome == membro.Nome)
                     ?.ValorDespesaCasa ?? 0;
 
-            string title = titleMessage.IsNullOrEmpty()
+            string title = string.IsNullOrEmpty(titleMessage)
                 ? $"Olá {membro.Nome}, tudo bem? Essas são as despesas desse mês:\r\n\r\n"
                 : titleMessage + "\r\n\r\n";
 
@@ -133,7 +132,7 @@ namespace Application.Queries.Services
                     .FirstOrDefault()
                     ?.ValorDespesaMoradia ?? 0;
 
-            string title = titleMessage.IsNullOrEmpty()
+            string title = string.IsNullOrEmpty(titleMessage)
                 ? $"Olá {membroNome}, tudo bem? Essas são as despesas desse mês:\r\n\r\n"
                 : titleMessage + "\r\n\r\n";
 

@@ -22,7 +22,7 @@ namespace Presentation.Api.V1.User
         [HttpPost("auth/login")]
         public async Task<UserTokenDto> Login(UserCommandDto userDto)
         {
-            if (userDto.Email.IsNullOrEmpty() || userDto.Password.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(userDto.Email) || string.IsNullOrEmpty(userDto.Password))
             {
                 Notificar(EnumTipoNotificacao.ClientError, "Email ou Senha incorretos.");
                 return null;

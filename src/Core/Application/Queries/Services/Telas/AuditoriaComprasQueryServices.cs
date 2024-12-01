@@ -11,7 +11,6 @@ using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Queries.Services.Telas
 {
@@ -56,7 +55,7 @@ namespace Application.Queries.Services.Telas
                 despesaFiltroDto.ItensPorPagina
             );
 
-            if (listaPaginada.Itens.IsNullOrEmpty())
+            if (listaPaginada.Itens.Count == 0)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -92,7 +91,7 @@ namespace Application.Queries.Services.Telas
                 })
                 .Where(s => s.PotencialEconomia > 0);
 
-            if (sugestoes.IsNullOrEmpty())
+            if (!sugestoes.Any())
             {
                 Notificar(EnumTipoNotificacao.Informacao, "Não há sugestões.");
 

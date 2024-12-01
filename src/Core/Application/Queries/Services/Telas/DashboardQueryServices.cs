@@ -16,7 +16,6 @@ using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Properties;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Queries.Services.Telas
 {
@@ -103,7 +102,7 @@ namespace Application.Queries.Services.Telas
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
 
-            if (grupoNome.Nome.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(grupoNome.Nome))
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.SelecioneUmGrupoDesesa);
                 return new();

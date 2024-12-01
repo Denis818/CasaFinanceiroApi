@@ -4,6 +4,6 @@
     {
         public int TotalItens { get; set; }
         public int PaginaAtual { get; set; }
-        public List<T> Itens { get; set; }
+        public List<T> Itens { get; set; } = [];
     }
 }
