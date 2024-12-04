@@ -4,5 +4,6 @@
     {
         public string Nome { get; set; }
         public string Ano { get; set; }
+        public double? Desconto { get; set; }
     }
 }

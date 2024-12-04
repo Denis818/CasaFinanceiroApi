@@ -5,6 +5,7 @@
         public List<MembroDto> TodosMembros { get; set; }
         public double ValorTotalAlmoco { get; set; }
         public double TotalDespesaGeraisForaAlmoco { get; set; }
+        public double Desconto { get; set; }
         public int MembrosForaJhonCount { get; set; }
     }
 }

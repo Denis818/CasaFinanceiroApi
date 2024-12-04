@@ -101,7 +101,7 @@ namespace Application.Commands.Services
                 return false;
             }
 
-            if (grupoFatura.Nome == grupoDto.Nome)
+            if (grupoFatura.Nome == grupoDto.Nome && grupoFatura.Desconto == grupoDto.Desconto)
                 return false;
 
             if (await _repository.ExisteAsync(nome: grupoDto.Nome) is GrupoFatura GrupoFaturaExiste)

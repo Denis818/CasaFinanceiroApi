@@ -9,7 +9,6 @@ using Domain.Dtos.Despesas;
 using Domain.Enumeradores;
 using Domain.Extensions.Help;
 using Domain.Interfaces.Repositories;
-using Domain.Interfaces.Repositories.GrupoFaturas;
 using Domain.Interfaces.Services.Despesa;
 using Domain.Models.Despesas;
 using iText.Kernel.Pdf;
@@ -21,7 +20,6 @@ namespace Application.Queries.Services.Telas
 {
     public class DashboardQueryServices(
         IServiceProvider service,
-        IGrupoFaturaRepository _grupoFaturaRepository,
         IDespesaDomainServices _despesaDomainServices
     ) : BaseQueryService<Despesa, DespesaDto, IDespesaRepository>(service), IDashboardQueryServices
     {
@@ -97,12 +95,7 @@ namespace Application.Queries.Services.Telas
 
         public async Task<RelatorioGastosDoGrupoQueryDto> GetRelatorioDeGastosDoGrupoAsync()
         {
-            var grupoNome = await _grupoFaturaRepository
-                .Get(g => g.Code == _grupoCode)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
-
-            if (string.IsNullOrEmpty(grupoNome.Nome))
+            if (string.IsNullOrEmpty(_grupoFatura.Nome))
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.SelecioneUmGrupoDesesa);
                 return new();
@@ -128,7 +121,7 @@ namespace Application.Queries.Services.Telas
 
             return new RelatorioGastosDoGrupoQueryDto
             {
-                GrupoFaturaNome = grupoNome.Nome,
+                GrupoFaturaNome = _grupoFatura.Nome,
                 TotalGeral = totalGeral.RoundTo(2),
                 TotalGastosCasa = totalGastosCasa.RoundTo(2),
                 TotalGastosMoradia = totalGastoMoradia.RoundTo(2),
@@ -179,11 +172,14 @@ namespace Application.Queries.Services.Telas
                 .Where(despesa => despesa.Categoria.Code == CategoriaCods.CodAlmoco)
                 .Sum(despesa => despesa.Total);
 
+            double desconto = _grupoFatura == null ? 0 : _grupoFatura.Desconto ?? 0;
+
             var custosDespesasCasa = new DespesasCustosDespesasCasaDto
             {
                 TodosMembros = todosMembros,
                 ValorTotalAlmoco = valorTotalAlmoco,
                 TotalDespesaGeraisForaAlmoco = totalDespesaGeraisForaAlmoco,
+                Desconto = desconto,
                 MembrosForaJhonCount = membrosForaJhonCount
             };
 
@@ -345,21 +341,27 @@ namespace Application.Queries.Services.Telas
             int countMembros
         )
         {
-            var columnsValoresCalculados = new Dictionary<string, string>
+
+            double desconto = _grupoFatura == null ? 0 : _grupoFatura.Desconto ?? 0;
+
+            var columnsValoresCalculados = new Dictionary<string, string>();
+
+            columnsValoresCalculados.Add("Total de membros", $"{countMembros}");
+            columnsValoresCalculados.Add("Despesas fora almoço", $"R$ {totalDespesaGeraisForaAlmoco.ToFormatPriceBr()}");
+
+            if (desconto == 0)
             {
-                { "Total de membros", $"{countMembros}" },
-                { "Despesas fora almoço", $"R$ {totalDespesaGeraisForaAlmoco.ToFormatPriceBr()}" },
-                { "Despesas somente almoço", $"R$ {totalSomenteAlmoco.ToFormatPriceBr()}" },
-                {
-                    "Almoço fora parte do Jhon",
-                    $"R$ {totalAlmocoDividioComJhon.ToFormatPriceBr()}"
-                },
-                {
-                    "Total das despesas gerais somado com a parte do almço que foi divido com Jhon",
-                    $"R$ {totalDespesasGeraisMaisAlmocoDividido.ToFormatPriceBr()}"
-                },
-                { "Total das Despesas", $"R$ {despesaGeraisMaisAlmoco.ToFormatPriceBr()}" },
-            };
+                columnsValoresCalculados.Add("Despesas somente almoço", $"R$ {totalSomenteAlmoco.ToFormatPriceBr()}");
+            }
+            else
+            {
+                columnsValoresCalculados.Add($"Despesas somente almoço com desconto de R$ {desconto.ToFormatPriceBr()}", $"R$ {totalSomenteAlmoco.ToFormatPriceBr()}");
+            }
+
+            columnsValoresCalculados.Add("Almoço fora parte do Jhon", $"R$ {totalAlmocoDividioComJhon.ToFormatPriceBr()}");
+            columnsValoresCalculados.Add("Total das despesas gerais somado com a parte do almço que foi divido com Jhon", $"R$ {totalDespesasGeraisMaisAlmocoDividido.ToFormatPriceBr()}");
+            columnsValoresCalculados.Add("Total das Despesas", $"R$ {despesaGeraisMaisAlmoco.ToFormatPriceBr()}");
+
 
             _pdfTableCasa.CreateTable(doc, "Despesas somente da Casa", columnsValoresCalculados);
         }

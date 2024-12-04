@@ -24,5 +24,14 @@ namespace Infraestructure.Data.Repository
 
             return GrupoFatura;
         }
+
+
+        public Lazy<GrupoFatura> GetGrupoFatura(Guid grupoCode)
+        {
+            return new Lazy<GrupoFatura>(() =>
+            {
+                return Get(g => g.Code == grupoCode).FirstOrDefault();
+            });
+        }
     }
 }

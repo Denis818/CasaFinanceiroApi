@@ -57,6 +57,10 @@ namespace Domain.Services
             DespesasCustosDespesasCasaDto custosDespesasCasa
         )
         {
+            //Aplciando desconto
+            custosDespesasCasa.ValorTotalAlmoco =
+                (custosDespesasCasa.ValorTotalAlmoco -= custosDespesasCasa.Desconto).RountToZeroIfNegative();
+
             //  Almoço divido com Jhon
             double totalAlmocoParteDoJhon =
                 custosDespesasCasa.ValorTotalAlmoco / custosDespesasCasa.TodosMembros.Count;

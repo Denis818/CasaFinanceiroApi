@@ -16,6 +16,7 @@ namespace Infraestructure.Data.Mappings.Despesas
 
             builder.Property(c => c.Code).IsRequired().HasColumnType("char(36)").IsRequired().ValueGeneratedOnAdd();
 
+            builder.Property(d => d.Desconto).HasColumnType("double(7, 2)").IsRequired(false);
             builder.Property(d => d.DataCriacao).HasColumnName("Data_Criacao").HasColumnType("datetime(6)").IsRequired();
             builder.Property(c => c.Nome).HasColumnType("varchar(30)").IsRequired();
             builder.Property(c => c.Ano).HasColumnType("varchar(15)").IsRequired();

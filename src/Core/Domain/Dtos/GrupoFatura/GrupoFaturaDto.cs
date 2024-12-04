@@ -10,6 +10,7 @@ namespace Domain.Dtos
         public string Ano { get; set; }
         public int QuantidadeDespesas { get; set; }
         public double TotalDespesas { get; set; }
+        public double? Desconto { get; set; }
         public IList<StatusFaturaDto> StatusFaturas { get; set; } = [];
 
         [JsonConverter(typeof(LongDateFormatConverter))]

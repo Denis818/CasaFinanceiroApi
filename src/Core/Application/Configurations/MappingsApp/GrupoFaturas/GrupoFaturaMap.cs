@@ -13,6 +13,7 @@ namespace Application.Configurations.MappingsApp
                 Nome = grupoFatura.Nome,
                 Ano = grupoFatura.Ano,
                 Code = grupoFatura.Code,
+                Desconto = grupoFatura.Desconto,
                 DataCriacao = grupoFatura.DataCriacao,
                 StatusFaturas = grupoFatura.StatusFaturas.Select(s => s.MapToDTO()).ToList()
             };
@@ -24,6 +25,7 @@ namespace Application.Configurations.MappingsApp
             {
                 Nome = grupoFaturaDto.Nome,
                 Ano = grupoFaturaDto.Ano,
+                Desconto = grupoFaturaDto.Desconto,
             };
         }
 
@@ -34,6 +36,7 @@ namespace Application.Configurations.MappingsApp
         {
             grupoFatura.Nome = grupoFaturaDto.Nome;
             grupoFatura.Ano = grupoFaturaDto.Ano;
+            grupoFatura.Desconto = grupoFaturaDto.Desconto;
         }
     }
 }

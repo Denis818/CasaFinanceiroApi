@@ -15,9 +15,7 @@ namespace Application.Queries.Services
 {
     public class GrupoFaturaQueryService(
         IServiceProvider service,
-        IStatusFaturaRepository _statusFaturaRepository,
-        IGrupoFaturaRepository _grupoFaturaRepository
-    )
+        IStatusFaturaRepository _statusFaturaRepository)
         : BaseQueryService<GrupoFatura, GrupoFaturaDto, IGrupoFaturaRepository>(service),
             IGrupoFaturaQueryService
     {
@@ -35,6 +33,7 @@ namespace Application.Queries.Services
                     Code = fatura.Code,
                     Nome = fatura.Nome,
                     Ano = fatura.Ano,
+                    Desconto = fatura.Desconto,
                     QuantidadeDespesas = fatura.Despesas.Count,
                     TotalDespesas = fatura.Despesas.Sum(despesa => despesa.Total),
                     StatusFaturas = fatura

@@ -5,10 +5,12 @@ using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Repositories.Base;
 using Domain.Interfaces.Repositories.Categorias;
+using Domain.Interfaces.Repositories.GrupoFaturas;
 using Domain.Interfaces.Repositories.Membros;
 using Domain.Interfaces.Utilities;
 using Domain.Models.Base;
 using Domain.Models.Despesas;
+using Domain.Models.GrupoFaturas;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +31,7 @@ namespace Application.Queries.Services.Base
         protected readonly TIRepository _repository;
         protected readonly HttpContext _httpContext;
         protected readonly ICategoriaRepository _categoriaRepository;
+        protected readonly IGrupoFaturaRepository _grupoFaturaRepository;
 
         protected IList<Despesa> ListDespesasPorGrupo => _lazyListDespesasPorGrupo.Value;
         private readonly Lazy<IList<Despesa>> _lazyListDespesasPorGrupo;
@@ -39,6 +42,9 @@ namespace Application.Queries.Services.Base
         public CategoriaCodsDto CategoriaCods => _lazyCategoriaIds.Value;
         private readonly Lazy<CategoriaCodsDto> _lazyCategoriaIds;
 
+        public GrupoFatura _grupoFatura => _lazyGrupoFatura.Value;
+        private readonly Lazy<GrupoFatura> _lazyGrupoFatura;
+
         public BaseQueryService(IServiceProvider service)
         {
             _notificador = service.GetRequiredService<INotifier>();
@@ -47,12 +53,14 @@ namespace Application.Queries.Services.Base
             _repository = service.GetRequiredService<TIRepository>();
             _httpContext = service.GetRequiredService<IHttpContextAccessor>().HttpContext;
             _categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
+            _grupoFaturaRepository = service.GetRequiredService<IGrupoFaturaRepository>();
             _membroRepository = service.GetRequiredService<IMembroRepository>();
 
             _grupoCode = _httpContext.GetCurrentGrupoFaturaCode();
             _lazyListDespesasPorGrupo = _despesaRepository.GetListDespesasPorGrupo(_grupoCode);
             _lazyMembroIds = _membroRepository.GetMembroCods();
             _lazyCategoriaIds = _categoriaRepository.GetCategoriaCods();
+            _lazyGrupoFatura = _grupoFaturaRepository.GetGrupoFatura(_grupoCode);
         }
 
         public void Notificar(EnumTipoNotificacao tipo, string message) =>
